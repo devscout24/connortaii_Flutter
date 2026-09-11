@@ -179,7 +179,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     },
                     child: Icon(
                       isObscureText ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.grey600,
+                      color: AppColors.grey400,
                     ),
                   ),
                 ),
@@ -213,7 +213,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       isConfirmPasswordObscureText
                           ? Icons.visibility_off
                           : Icons.visibility,
-                      color: AppColors.grey600,
+                      color: AppColors.grey400,
                     ),
                   ),
                 ),

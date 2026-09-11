@@ -1,5 +1,7 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
+import 'package:connortaii_app/assets_helper/app_image.dart';
+import 'package:connortaii_app/common_widget/custom_back_button.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
@@ -86,117 +88,125 @@ class _ForgotUpdatePasswordScreenState extends State<ForgotUpdatePasswordScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 48.h),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              UIHelper.verticalSpace(40.h),
-              Center(
-                child: Text(
-                  'Set a Password',
-                  style: TextFontStyle.headlinePoppins60024white.copyWith(
-                    color: AppColors.titleTextColor,
-                  ),
-                  textAlign: TextAlign.center,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 52.h),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                UIHelper.verticalSpace(6.h),
+                CustomBackButton(
+                  onTap: () {
+                    NavigationService.goBack;
+                  },
                 ),
-              ),
-              UIHelper.verticalSpace(8.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Center(
+                UIHelper.verticalSpace(4.h),
+                Center(child: Image.asset(AppImages.passwordImage)),
+                UIHelper.verticalSpace(40.h),
+                Center(
                   child: Text(
-                    "Set a new password to continue the account",
-                    style: TextFontStyle.headlinePoppins40016.copyWith(
-                      color: AppColors.textColor,
+                    'Create New Password',
+                    style: TextFontStyle.headlinePoppins60026,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                UIHelper.verticalSpace(8.h),
+                Center(
+                  child: Text(
+                    "Your new password must be different from previously used passwords",
+                    style: TextFontStyle.headlinePoppins50016.copyWith(
+                      color: AppColors.grey500,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ),
-              ),
-              UIHelper.verticalSpace(20.h),
-              CustomTextFormField(
-                controller: passwordController,
-                hintText: 'Password',
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                prefixIcon: SvgPicture.asset(AppIcons.passwordIcon),
-                validator: ValidatorKit.combine([
-                  ValidatorKit.required(),
-                  ValidatorKit.password(),
-                ]),
-                obscureText: isPasswordObscureText,
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isPasswordObscureText = !isPasswordObscureText;
-                    });
-                  },
-                  child: Icon(
-                    isPasswordObscureText
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                    color: AppColors.primaryColor,
-                  ),
+                UIHelper.verticalSpace(20.h),
+                Text(
+                  'Email',
+                  style: TextFontStyle.headlinePoppins50016,
+                  textAlign: TextAlign.start,
                 ),
-              ),
-              UIHelper.verticalSpace(12.h),
-              CustomTextFormField(
-                controller: confirmPasswordController,
-                hintText: 'Confirm Password',
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                prefixIcon: SvgPicture.asset(AppIcons.passwordIcon),
-                validator: ValidatorKit.combine([
-                  ValidatorKit.required(),
-                  ValidatorKit.confirmPassword(() {
-                    return passwordController.text;
-                  }),
-                ]),
-                obscureText: isConfirmPasswordObscureText,
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isConfirmPasswordObscureText =
-                          !isConfirmPasswordObscureText;
-                    });
-                  },
-                  child: Icon(
-                    isConfirmPasswordObscureText
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ),
-              UIHelper.verticalSpace(24.h),
-              isLoading
-                  ? Center(
-                      child: SpinKitCircle(
-                        color: AppColors.buttonbgColor,
-                        size: 60.h,
-                      ),
-                    )
-                  : CustomButton(
-                      onTap: () {
-                        NavigationService.navigateTo(Routes.loginScreen);
-                        // changePasswordMethod();
-                      },
-                      title: 'Change',
+                UIHelper.verticalSpace(8.h),
+                CustomTextFormField(
+                  controller: passwordController,
+                  hintText: 'Password',
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: SvgPicture.asset(AppIcons.passwordIcon),
+                  validator: ValidatorKit.combine([
+                    ValidatorKit.required(),
+                    ValidatorKit.password(),
+                  ]),
+                  obscureText: isPasswordObscureText,
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPasswordObscureText = !isPasswordObscureText;
+                      });
+                    },
+                    child: Icon(
+                      isPasswordObscureText
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: AppColors.grey400,
                     ),
-              UIHelper.verticalSpace(8.h),
-              CustomButton(
-                onTap: () {
-                  NavigationService.goBack;
-                },
-                title: 'Cancel',
-                fillColor: Colors.transparent,
-                textColor: AppColors.secondaryButtonBg,
-              ),
-            ],
+                  ),
+                ),
+                UIHelper.verticalSpace(12.h),
+                Text(
+                  'Email',
+                  style: TextFontStyle.headlinePoppins50016,
+                  textAlign: TextAlign.start,
+                ),
+                UIHelper.verticalSpace(8.h),
+                CustomTextFormField(
+                  controller: confirmPasswordController,
+                  hintText: 'Confirm Password',
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  prefixIcon: SvgPicture.asset(AppIcons.passwordIcon),
+                  validator: ValidatorKit.combine([
+                    ValidatorKit.required(),
+                    ValidatorKit.confirmPassword(() {
+                      return passwordController.text;
+                    }),
+                  ]),
+                  obscureText: isConfirmPasswordObscureText,
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isConfirmPasswordObscureText =
+                            !isConfirmPasswordObscureText;
+                      });
+                    },
+                    child: Icon(
+                      isConfirmPasswordObscureText
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: AppColors.grey400,
+                    ),
+                  ),
+                ),
+                UIHelper.verticalSpace(24.h),
+                isLoading
+                    ? Center(
+                        child: SpinKitCircle(
+                          color: AppColors.buttonbgColor,
+                          size: 60.h,
+                        ),
+                      )
+                    : CustomButton(
+                        onTap: () {
+                          NavigationService.navigateTo(Routes.loginScreen);
+                          // changePasswordMethod();
+                        },
+                        title: 'Change',
+                      ),
+              ],
+            ),
           ),
         ),
       ),

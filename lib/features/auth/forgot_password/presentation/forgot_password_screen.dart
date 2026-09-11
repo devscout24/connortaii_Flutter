@@ -1,5 +1,7 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
+import 'package:connortaii_app/assets_helper/app_image.dart';
+import 'package:connortaii_app/common_widget/custom_back_button.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
@@ -79,77 +81,79 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 48.h),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              UIHelper.verticalSpace(40.h),
-              Center(
-                child: Text(
-                  'Forget Password',
-                  style: TextFontStyle.headlinePoppins60024.copyWith(
-                    color: AppColors.titleTextColor,
-                  ),
-                  textAlign: TextAlign.center,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 52.h),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                UIHelper.verticalSpace(6.h),
+                CustomBackButton(
+                  onTap: () {
+                    NavigationService.goBack;
+                  },
                 ),
-              ),
-              UIHelper.verticalSpace(8.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Center(
+                UIHelper.verticalSpace(4.h),
+                Center(child: Image.asset(AppImages.passwordImage)),
+                UIHelper.verticalSpace(40.h),
+                Center(
                   child: Text(
-                    "Please enter the email address and we'll Send you a 4 digit code to enter",
-                    style: TextFontStyle.headlinePoppins40016.copyWith(
-                      color: AppColors.textColor,
+                    'Forgot Password?',
+                    style: TextFontStyle.headlinePoppins60026,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                UIHelper.verticalSpace(8.h),
+                Center(
+                  child: Text(
+                    "Dont’t worry! it happens. Please enter the address associated with your account",
+                    style: TextFontStyle.headlinePoppins50016.copyWith(
+                      color: AppColors.grey500,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ),
-              ),
-              UIHelper.verticalSpace(20.h),
-              CustomTextFormField(
-                controller: emailController,
-                hintText: 'Email',
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                prefixIcon: SvgPicture.asset(AppIcons.emailIcon),
-                validator: ValidatorKit.combine([
-                  ValidatorKit.required(),
-                  ValidatorKit.email(),
-                ]),
-              ),
-              UIHelper.verticalSpace(24.h),
-              isLoading
-                  ? Center(
-                      child: SpinKitCircle(
-                        color: AppColors.buttonbgColor,
-                        size: 60.h,
+                UIHelper.verticalSpace(32.h),
+                Text(
+                  'Email',
+                  style: TextFontStyle.headlinePoppins50016,
+                  textAlign: TextAlign.start,
+                ),
+                UIHelper.verticalSpace(8.h),
+                CustomTextFormField(
+                  controller: emailController,
+                  hintText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: SvgPicture.asset(AppIcons.emailIcon),
+                  validator: ValidatorKit.combine([
+                    ValidatorKit.required(),
+                    ValidatorKit.email(),
+                  ]),
+                ),
+                UIHelper.verticalSpace(24.h),
+                isLoading
+                    ? Center(
+                        child: SpinKitCircle(
+                          color: AppColors.buttonbgColor,
+                          size: 60.h,
+                        ),
+                      )
+                    : CustomButton(
+                        onTap: () {
+                          NavigationService.navigateToWithArgs(
+                            Routes.forgotPasswordVerifyScreen,
+                            {'email': emailController.text},
+                          );
+                          // forgotEmailMethod();
+                        },
+                        title: 'Get OTP',
                       ),
-                    )
-                  : CustomButton(
-                      onTap: () {
-                        NavigationService.navigateToWithArgs(
-                          Routes.forgotPasswordVerifyScreen,
-                          {'email': emailController.text},
-                        );
-                        // forgotEmailMethod();
-                      },
-                      title: 'Get Code',
-                    ),
-              UIHelper.verticalSpace(8.h),
-              CustomButton(
-                onTap: () {
-                  NavigationService.goBack;
-                },
-                title: 'Cancel',
-                fillColor: Colors.transparent,
-                textColor: AppColors.secondaryButtonBg,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

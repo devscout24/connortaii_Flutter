@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen>
                   },
                   child: Icon(
                     isObscureText ? Icons.visibility_off : Icons.visibility,
-                    color: AppColors.grey300,
+                    color: AppColors.grey400,
                   ),
                 ),
               ),
