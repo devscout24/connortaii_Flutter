@@ -70,46 +70,31 @@ class _SignupScreenState extends State<SignupScreen> {
                     color: AppColors.grey500,
                   ),
                 ),
-                UIHelper.verticalSpace(24.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: UIHelper.customDivider(
-                        color: AppColors.grey200Color,
-                      ),
-                    ),
-                    UIHelper.horizontalSpace(10.w),
-                    Text(
-                      'Or sign up with',
-                      style: TextFontStyle.headlinePoppins50014,
-                    ),
-                    UIHelper.horizontalSpace(10.w),
-                    Expanded(
-                      child: UIHelper.customDivider(
-                        color: AppColors.grey200Color,
-                      ),
-                    ),
-                  ],
-                ),
-                UIHelper.verticalSpace(24.h),
+                UIHelper.verticalSpace(48.h),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomSocialLoginButtonWidget(
-                      image: AppIcons.googleLoginIcon,
-                      onTap: () {},
+                    Expanded(
+                      child: CustomSocialLoginButtonWidget(
+                        image: AppIcons.googleLoginIcon,
+                        onTap: () {},
+                        text: 'Google',
 
-                      // onTap: () {
-                      //  NavigationService.navigateTo(
-                      //   Routes.freeTrialOnboardingScreen,
-                      // );
-                      // },
+                        // onTap: () {
+                        //  NavigationService.navigateTo(
+                        //   Routes.freeTrialOnboardingScreen,
+                        // );
+                        // },
+                      ),
                     ),
                     UIHelper.horizontalSpace(12.w),
-                    CustomSocialLoginButtonWidget(
-                      image: AppIcons.appleLoginIcon,
-                      onTap: () {},
+                    Expanded(
+                      child: CustomSocialLoginButtonWidget(
+                        image: AppIcons.appleLoginIcon,
+                        onTap: () {},
+                        text: 'Apple',
+                      ),
                     ),
                     // CustomSocialLoginButtonWidget(
                     //   image: AppIcons.appleLoginIcon,
@@ -118,6 +103,24 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
                 UIHelper.verticalSpace(12.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: UIHelper.customDivider(
+                        color: AppColors.grey200Color,
+                      ),
+                    ),
+                    UIHelper.horizontalSpace(10.w),
+                    Text('Or', style: TextFontStyle.headlinePoppins50014),
+                    UIHelper.horizontalSpace(10.w),
+                    Expanded(
+                      child: UIHelper.customDivider(
+                        color: AppColors.grey200Color,
+                      ),
+                    ),
+                  ],
+                ),
+                UIHelper.verticalSpace(24.h),
                 GestureDetector(
                   onTap: pickImageFromGallery,
                   child: SignupImagePickerWidget(pickedImage: _pickedImage),

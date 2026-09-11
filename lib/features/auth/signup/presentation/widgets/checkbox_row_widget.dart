@@ -26,7 +26,7 @@ class _CheckboxRowWidgetState extends State<CheckboxRowWidget> {
           style: TextFontStyle.headlinePoppins40014grey,
           children: [
             const TextSpan(
-              text: "By starting my application, I agree to app's",
+              text: "By starting my application, I agree to app's" + ' ',
             ),
             TextSpan(
               text: 'Terms of Service',
