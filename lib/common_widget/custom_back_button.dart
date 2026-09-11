@@ -1,4 +1,3 @@
-import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,15 +15,9 @@ class CustomBackButton extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: onTap,
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.grey50,
-              borderRadius: BorderRadius.circular(52.r),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(10.sp),
-              child: SvgPicture.asset(AppIcons.backIcon),
-            ),
+          child: Padding(
+            padding: EdgeInsets.all(10.sp),
+            child: SvgPicture.asset(AppIcons.backIcon),
           ),
         ),
       ],

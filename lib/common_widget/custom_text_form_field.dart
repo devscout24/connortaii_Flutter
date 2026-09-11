@@ -56,7 +56,7 @@ class CustomTextFormField extends StatefulWidget {
     this.readOnly = false,
     this.maxline = 1,
     this.isBorder = false,
-    this.fillColor = AppColors.lightGreenish,
+    this.fillColor = AppColors.grey200Color,
     this.hintStyle,
     this.contentPadding,
     this.height,
@@ -159,7 +159,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
           // borderSide: BorderSide.none,
           borderSide: BorderSide(
-            color: widget.borderColor ?? AppColors.c000000,
+            color: widget.borderColor ?? Colors.transparent,
             width: 1.w,
           ),
         ),
@@ -167,8 +167,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
           borderSide: BorderSide(
             color: _hasText
-                ? (widget.borderColor ?? AppColors.c000000)
-                : AppColors.c000000,
+                ? (widget.borderColor ?? Colors.transparent)
+                : Colors.transparent,
             width: 1.w,
           ),
         ),
@@ -176,8 +176,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
           borderSide: BorderSide(
             color: _hasText
-                ? (widget.borderColor ?? AppColors.c000000)
-                : AppColors.c000000,
+                ? (widget.borderColor ?? Colors.transparent)
+                : Colors.transparent,
             width: 1.w,
           ),
         ),

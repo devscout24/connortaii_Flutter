@@ -2,6 +2,8 @@ import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_image.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
+import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,10 +37,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               style: TextFontStyle.headlinePoppins40014,
             ),
             UIHelper.verticalSpace(52.h),
-            CustomButton(onTap: () {}, title: 'Get Started'),
+            CustomButton(
+              onTap: () {
+                NavigationService.navigateTo(Routes.signupScreen);
+              },
+              title: 'Get Started',
+            ),
             UIHelper.verticalSpace(12.h),
             CustomButton(
-              onTap: () {},
+              onTap: () {
+                NavigationService.navigateTo(Routes.loginScreen);
+              },
               title: 'Login Account',
               fillColor: AppColors.grey200Color,
               textColor: AppColors.c000000,
