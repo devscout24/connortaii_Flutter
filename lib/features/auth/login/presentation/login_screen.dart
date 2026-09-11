@@ -81,137 +81,141 @@ class _LoginScreenState extends State<LoginScreen>
     return Scaffold(
       body: Form(
         key: formKey,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 48.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              UIHelper.verticalSpace(40.h),
-              Text('Welcome Back!', style: TextFontStyle.headlinePoppins60026),
-              UIHelper.verticalSpace(6.h),
-              Text(
-                'Sign to your account building assurance',
-                style: TextFontStyle.headlinePoppins50016.copyWith(
-                  color: AppColors.grey500,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 48.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                UIHelper.verticalSpace(40.h),
+                Text(
+                  'Welcome Back!',
+                  style: TextFontStyle.headlinePoppins60026,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              UIHelper.verticalSpace(48.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: CustomSocialLoginButtonWidget(
-                      image: AppIcons.googleLoginIcon,
-                      onTap: () {},
-                      text: 'Google',
-                    ),
+                UIHelper.verticalSpace(6.h),
+                Text(
+                  'Sign to your account building assurance',
+                  style: TextFontStyle.headlinePoppins50016.copyWith(
+                    color: AppColors.grey500,
                   ),
-                  UIHelper.horizontalSpace(12.w),
-                  Expanded(
-                    child: CustomSocialLoginButtonWidget(
-                      image: AppIcons.appleLoginIcon,
-                      onTap: () {},
-                      text: 'Apple',
-                    ),
-                  ),
-                ],
-              ),
-              UIHelper.verticalSpace(12.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: UIHelper.customDivider(
-                      color: AppColors.grey200Color,
-                    ),
-                  ),
-                  UIHelper.horizontalSpace(10.w),
-                  Text('Or', style: TextFontStyle.headlinePoppins50014),
-                  UIHelper.horizontalSpace(10.w),
-                  Expanded(
-                    child: UIHelper.customDivider(
-                      color: AppColors.grey200Color,
-                    ),
-                  ),
-                ],
-              ),
-              UIHelper.verticalSpace(24.h),
-              Text('Email', style: TextFontStyle.headlinePoppins50016),
-              UIHelper.verticalSpace(8.h),
-              CustomTextFormField(
-                controller: emailController,
-                hintText: 'Email',
-                borderColor: AppColors.primaryColor,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                prefixIcon: SvgPicture.asset(AppIcons.emailIcon),
-                validator: ValidatorKit.combine([
-                  ValidatorKit.required(),
-                  ValidatorKit.email(),
-                ]),
-              ),
-              UIHelper.verticalSpace(12.h),
-              Text('Password', style: TextFontStyle.headlinePoppins50016),
-              UIHelper.verticalSpace(8.h),
-              CustomTextFormField(
-                hintText: 'Password',
-                controller: passwordController,
-                obscureText: isObscureText,
-                textInputAction: TextInputAction.done,
-                prefixIcon: SvgPicture.asset(AppIcons.passwordIcon),
-                validator: ValidatorKit.combine([
-                  ValidatorKit.required(),
-                  ValidatorKit.password(),
-                ]),
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isObscureText = !isObscureText;
-                    });
-                  },
-                  child: Icon(
-                    isObscureText ? Icons.visibility_off : Icons.visibility,
-                    color: AppColors.grey400,
-                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              UIHelper.verticalSpace(24.h),
-              isLoading
-                  ? Center(
-                      child: SpinKitCircle(
-                        color: AppColors.textColor,
-                        size: 60.h,
+                UIHelper.verticalSpace(48.h),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: CustomSocialLoginButtonWidget(
+                        image: AppIcons.googleLoginIcon,
+                        onTap: () {},
+                        text: 'Google',
                       ),
-                    )
-                  : CustomButton(
-                      onTap: () {
-                        // loginMethod();
-                      },
-                      title: 'Sign in',
                     ),
-              UIHelper.verticalSpace(16.h),
-              GestureDetector(
-                onTap: () {
-                  NavigationService.navigateTo(Routes.forgotPasswordScreen);
-                },
-                child: Center(
-                  child: Text(
-                    'Forgot password?',
-                    style: TextFontStyle.headlinePoppins50016,
+                    UIHelper.horizontalSpace(12.w),
+                    Expanded(
+                      child: CustomSocialLoginButtonWidget(
+                        image: AppIcons.appleLoginIcon,
+                        onTap: () {},
+                        text: 'Apple',
+                      ),
+                    ),
+                  ],
+                ),
+                UIHelper.verticalSpace(12.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: UIHelper.customDivider(
+                        color: AppColors.grey200Color,
+                      ),
+                    ),
+                    UIHelper.horizontalSpace(10.w),
+                    Text('Or', style: TextFontStyle.headlinePoppins50014),
+                    UIHelper.horizontalSpace(10.w),
+                    Expanded(
+                      child: UIHelper.customDivider(
+                        color: AppColors.grey200Color,
+                      ),
+                    ),
+                  ],
+                ),
+                UIHelper.verticalSpace(24.h),
+                Text('Email', style: TextFontStyle.headlinePoppins50016),
+                UIHelper.verticalSpace(8.h),
+                CustomTextFormField(
+                  controller: emailController,
+                  hintText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: SvgPicture.asset(AppIcons.emailIcon),
+                  validator: ValidatorKit.combine([
+                    ValidatorKit.required(),
+                    ValidatorKit.email(),
+                  ]),
+                ),
+                UIHelper.verticalSpace(12.h),
+                Text('Password', style: TextFontStyle.headlinePoppins50016),
+                UIHelper.verticalSpace(8.h),
+                CustomTextFormField(
+                  hintText: 'Password',
+                  controller: passwordController,
+                  obscureText: isObscureText,
+                  textInputAction: TextInputAction.done,
+                  prefixIcon: SvgPicture.asset(AppIcons.passwordIcon),
+                  validator: ValidatorKit.combine([
+                    ValidatorKit.required(),
+                    ValidatorKit.password(),
+                  ]),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isObscureText = !isObscureText;
+                      });
+                    },
+                    child: Icon(
+                      isObscureText ? Icons.visibility_off : Icons.visibility,
+                      color: AppColors.grey400,
+                    ),
                   ),
                 ),
-              ),
+                UIHelper.verticalSpace(24.h),
+                isLoading
+                    ? Center(
+                        child: SpinKitCircle(
+                          color: AppColors.textColor,
+                          size: 60.h,
+                        ),
+                      )
+                    : CustomButton(
+                        onTap: () {
+                          // loginMethod();
+                        },
+                        title: 'Sign in',
+                      ),
+                UIHelper.verticalSpace(16.h),
+                GestureDetector(
+                  onTap: () {
+                    NavigationService.navigateTo(Routes.forgotPasswordScreen);
+                  },
+                  child: Center(
+                    child: Text(
+                      'Forgot password?',
+                      style: TextFontStyle.headlinePoppins50016,
+                    ),
+                  ),
+                ),
 
-              UIHelper.verticalSpace(24.h),
-              DontHaveAccountWidget(
-                signupOnTap: () {
-                  NavigationService.navigateTo(Routes.signupScreen);
-                },
-              ),
-              UIHelper.verticalSpace(16.h),
-            ],
+                UIHelper.verticalSpace(24.h),
+                DontHaveAccountWidget(
+                  signupOnTap: () {
+                    NavigationService.navigateTo(Routes.signupScreen);
+                  },
+                ),
+                UIHelper.verticalSpace(16.h),
+              ],
+            ),
           ),
         ),
       ),
