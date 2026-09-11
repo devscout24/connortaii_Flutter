@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
 class CustomSocialLoginButtonWidget extends StatelessWidget {
   final String image;
   final VoidCallback onTap;
@@ -14,9 +13,6 @@ class CustomSocialLoginButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: SvgPicture.asset(image),
-    );
+    return GestureDetector(onTap: onTap, child: SvgPicture.asset(image));
   }
 }

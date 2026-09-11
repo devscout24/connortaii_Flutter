@@ -1,4 +1,10 @@
 import 'dart:io';
+import 'package:connortaii_app/features/auth/forgot_password/presentation/forgot_password_screen.dart';
+import 'package:connortaii_app/features/auth/forgot_password/presentation/forgot_password_verify_screen.dart';
+import 'package:connortaii_app/features/auth/forgot_password/presentation/forgot_update_password.dart';
+import 'package:connortaii_app/features/auth/login/presentation/login_screen.dart';
+import 'package:connortaii_app/features/auth/signup/presentation/signup_screen.dart';
+import 'package:connortaii_app/features/auth/signup/presentation/signup_verify_screen.dart';
 import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:connortaii_app/navigation_screen.dart';
 import 'package:connortaii_app/loading_screen.dart';
@@ -58,66 +64,66 @@ final class RouteGenerator {
                 builder: (context) => const OnboardingScreen(),
               );
 
-      // case Routes.signupScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const SignupScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(builder: (context) => const SignupScreen());
+      case Routes.signupScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const SignupScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const SignupScreen());
 
-      // case Routes.signupVerifyScreen:
-      //   Map args = settings.arguments as Map;
+      case Routes.signupVerifyScreen:
+        Map args = settings.arguments as Map;
 
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: SignupVerifyScreen(email: args['email']),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => SignupVerifyScreen(email: args['email']),
-      //         );
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: SignupVerifyScreen(email: args['email']),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => SignupVerifyScreen(email: args['email']),
+              );
 
-      // case Routes.loginScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const LoginScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(builder: (context) => const LoginScreen());
+      case Routes.loginScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const LoginScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const LoginScreen());
 
-      // case Routes.forgotPasswordScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const ForgotPasswordScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const ForgotPasswordScreen(),
-      //         );
+      case Routes.forgotPasswordScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ForgotPasswordScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const ForgotPasswordScreen(),
+              );
 
-      // case Routes.forgotPasswordVerifyScreen:
-      //   Map args = settings.arguments as Map;
+      case Routes.forgotPasswordVerifyScreen:
+        Map args = settings.arguments as Map;
 
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: ForgotPasswordVerifyScreen(email: args['email']),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) =>
-      //               ForgotPasswordVerifyScreen(email: args['email']),
-      //         );
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: ForgotPasswordVerifyScreen(email: args['email']),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) =>
+                    ForgotPasswordVerifyScreen(email: args['email']),
+              );
 
-      // case Routes.forgotUpdatePasswordScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const ForgotUpdatePasswordScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const ForgotUpdatePasswordScreen(),
-      //         );
+      case Routes.forgotUpdatePasswordScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ForgotUpdatePasswordScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const ForgotUpdatePasswordScreen(),
+              );
 
       // //////////////.<<<<<<<<<<   Buyer   >>>>>>>>>>>>.////////////////
       // case Routes.buyerHomeScreen:

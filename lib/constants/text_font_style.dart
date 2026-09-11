@@ -21,6 +21,12 @@ class TextFontStyle {
     fontWeight: FontWeight.w600,
   );
 
+  static final headlinePoppins60026 = GoogleFonts.poppins(
+    color: AppColors.textColor,
+    fontSize: 26.sp,
+    fontWeight: FontWeight.w600,
+  );
+
   static final headlinePoppins60024white = GoogleFonts.poppins(
     color: AppColors.cFFFFFF,
     fontSize: 22.sp,

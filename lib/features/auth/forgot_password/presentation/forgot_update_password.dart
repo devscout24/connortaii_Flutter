@@ -1,0 +1,205 @@
+import 'package:connortaii_app/assets_helper/app_colors.dart';
+import 'package:connortaii_app/assets_helper/app_icons.dart';
+import 'package:connortaii_app/common_widget/custom_button.dart';
+import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
+import 'package:connortaii_app/constants/text_font_style.dart';
+import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:validator_kit/validator_kit.dart';
+
+class ForgotUpdatePasswordScreen extends StatefulWidget {
+  const ForgotUpdatePasswordScreen({super.key});
+
+  @override
+  State<ForgotUpdatePasswordScreen> createState() =>
+      _ForgotUpdatePasswordScreenState();
+}
+
+class _ForgotUpdatePasswordScreenState extends State<ForgotUpdatePasswordScreen>
+    with TickerProviderStateMixin {
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  late AnimationController _bottomSheetController;
+
+  bool isPasswordChecked = false;
+  bool isPasswordObscureText = true;
+  bool isConfirmPasswordChecked = false;
+  bool isConfirmPasswordObscureText = true;
+  bool isLoading = false;
+
+  // Future<void> changePasswordMethod() async {
+  //   if (formKey.currentState!.validate()) {
+  //     try {
+  //       setState(() {
+  //         isLoading = true;
+  //       });
+  //       final success = await forgotPasswordChangeRxOBJ.forgotPasswordChangeRx(
+  //         newPassword: passwordController.text,
+  //         confirmPassword: confirmPasswordController.text,
+  //         token: appData.read(kKeyotpVerifyToken),
+  //       );
+  //       if (success) {
+  //         setState(() {
+  //           isLoading = false;
+  //         });
+  //         NavigationService.navigateTo(
+  //           Routes.resetPasswordCongratulationsScreen,
+  //         );
+  //       } else {
+  //         setState(() {
+  //           isLoading = false;
+  //         });
+  //       }
+  //     } catch (error) {
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //       ToastUtil.showShortToast("Reset password failed: ${error.toString()}");
+  //     }
+  //   } else {
+  //     ToastUtil.showShortToast("Invalid form data");
+  //   }
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bottomSheetController = BottomSheet.createAnimationController(this);
+  }
+
+  @override
+  void dispose() {
+    _bottomSheetController.dispose();
+
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 48.h),
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              UIHelper.verticalSpace(40.h),
+              Center(
+                child: Text(
+                  'Set a Password',
+                  style: TextFontStyle.headlinePoppins60024white.copyWith(
+                    color: AppColors.titleTextColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              UIHelper.verticalSpace(8.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Center(
+                  child: Text(
+                    "Set a new password to continue the account",
+                    style: TextFontStyle.headlinePoppins40016.copyWith(
+                      color: AppColors.textColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              UIHelper.verticalSpace(20.h),
+              CustomTextFormField(
+                controller: passwordController,
+                hintText: 'Password',
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                prefixIcon: SvgPicture.asset(AppIcons.passwordIcon),
+                validator: ValidatorKit.combine([
+                  ValidatorKit.required(),
+                  ValidatorKit.password(),
+                ]),
+                obscureText: isPasswordObscureText,
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isPasswordObscureText = !isPasswordObscureText;
+                    });
+                  },
+                  child: Icon(
+                    isPasswordObscureText
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ),
+              UIHelper.verticalSpace(12.h),
+              CustomTextFormField(
+                controller: confirmPasswordController,
+                hintText: 'Confirm Password',
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.done,
+                prefixIcon: SvgPicture.asset(AppIcons.passwordIcon),
+                validator: ValidatorKit.combine([
+                  ValidatorKit.required(),
+                  ValidatorKit.confirmPassword(() {
+                    return passwordController.text;
+                  }),
+                ]),
+                obscureText: isConfirmPasswordObscureText,
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isConfirmPasswordObscureText =
+                          !isConfirmPasswordObscureText;
+                    });
+                  },
+                  child: Icon(
+                    isConfirmPasswordObscureText
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ),
+              UIHelper.verticalSpace(24.h),
+              isLoading
+                  ? Center(
+                      child: SpinKitCircle(
+                        color: AppColors.buttonbgColor,
+                        size: 60.h,
+                      ),
+                    )
+                  : CustomButton(
+                      onTap: () {
+                        NavigationService.navigateTo(Routes.loginScreen);
+                        // changePasswordMethod();
+                      },
+                      title: 'Change',
+                    ),
+              UIHelper.verticalSpace(8.h),
+              CustomButton(
+                onTap: () {
+                  NavigationService.goBack;
+                },
+                title: 'Cancel',
+                fillColor: Colors.transparent,
+                textColor: AppColors.secondaryButtonBg,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
