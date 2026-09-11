@@ -14,14 +14,14 @@ class AppColors {
   ///>>>>>>>>>>>>>>>>>>>> previous time use this color >>>>>>>>>>>>>>>>>>
   static const Color backgroundColor = Color(0xFFF4F9F4);
   static const Color primaryColor = Color(0xFF2D6A2D);
-  static const Color primaryColorlight = Color(0xFF4CAF50);
-  static const Color lightGreen = Color(0xFF41A244);
-  static const Color deepGreen = Color(0xFF1A2E1A);
+  // static const Color primaryColorlight = Color(0xFF4CAF50);
+  // static const Color lightGreen = Color(0xFF41A244);
+  // static const Color deepGreen = Color(0xFF1A2E1A);
   // static const Color lightGreen = Color(0xFF2D6A2D);
   static const Color lightGreenish = Color(0xFFEAF7EA);
   static const Color lightGreenishSecond = Color(0xFFB9DEB9);
   static const Color titleTextColor = Color(0xFF1A2E1A);
-  static const Color textColor = Color(0xFF6B8F6B);
+  static const Color textColor = Color(0xFF1B1B1B);
 
   ///////////////////////////////////////////////////////////////
   static const Color textGrey100 = Color(0xFFC1C4C9);

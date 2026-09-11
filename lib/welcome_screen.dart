@@ -24,13 +24,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Image.asset(AppIcons.splashLogo, height: 200.h),
           ],
         ),
-
-        // child: SvgPicture.asset(
-        //   AppImages.fabricLogoSplash,
-        //   fit: BoxFit.cover,
-        //   alignment: Alignment.center,
-        //   // width: double.infinity,
-        // ),
       ),
     );
   }

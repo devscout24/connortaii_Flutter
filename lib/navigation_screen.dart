@@ -130,9 +130,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           Text(
             title,
             style: TextFontStyle.headlinePoppins60012.copyWith(
-              color: isSelected
-                  ? AppColors.primaryColorlight
-                  : AppColors.textColor,
+              color: isSelected ? AppColors.grey500 : AppColors.textColor,
             ),
           ),
         ],

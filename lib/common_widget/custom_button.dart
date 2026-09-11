@@ -27,13 +27,8 @@ class CustomButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              fillColor ?? AppColors.deepGreen,
-              fillColor ?? AppColors.lightGreen,
-            ],
-          ),
-          borderRadius: borderRadius ?? BorderRadius.circular(12.r),
+          color: fillColor ?? AppColors.c000000,
+          borderRadius: borderRadius ?? BorderRadius.circular(50.r),
           border: Border.all(color: borderColor ?? Colors.transparent),
         ),
         child: Padding(

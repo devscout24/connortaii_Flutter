@@ -118,7 +118,7 @@ class UtillScreenMobile extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: CustomTheme.kToDark,
               useMaterial3: false,
-              scaffoldBackgroundColor: AppColors.backgroundColor,
+              scaffoldBackgroundColor: AppColors.cFFFFFF,
             ),
             debugShowCheckedModeBanner: false,
             translations: LocalString(),

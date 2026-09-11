@@ -30,13 +30,13 @@ class NetworkImageWidget extends StatelessWidget {
         height: imageHeight,
         fit: BoxFit.cover,
         placeholder: (context, url) => Image.asset(
-          AppImages.logo,
+          AppImages.onboardingImage,
           width: imageWidth,
           height: imageHeight,
           fit: BoxFit.cover,
         ),
         errorWidget: (context, url, error) => Image.asset(
-          AppImages.logo,
+          AppImages.onboardingImage,
           width: imageWidth,
           height: imageHeight,
           fit: BoxFit.cover,

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:connortaii_app/navigation_screen.dart';
 import 'package:connortaii_app/loading_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,11 +21,6 @@ final class Routes {
       '/ForgotPasswordVerifyScreen';
   static const String forgotUpdatePasswordScreen =
       '/ForgotUpdatePasswordScreen';
-
-  //////////////.<<<<<<<<<<   Buyer   >>>>>>>>>>>>.////////////////
-  static const String buyerHomeScreen = '/BuyerHomeScreen';
-  static const String buyerProductDetailsScreen = '/BuyerProductDetailsScreen';
-  static const String cartScreen = '/CartScreen';
 }
 
 final class RouteGenerator {
@@ -52,15 +48,15 @@ final class RouteGenerator {
                 builder: (context) => NavigationScreen(pageNum: pageNum),
               );
 
-      // case Routes.chooseRoleScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const ChooseRoleScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const ChooseRoleScreen(),
-      //         );
+      case Routes.onBoardingScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const OnboardingScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const OnboardingScreen(),
+              );
 
       // case Routes.signupScreen:
       //   return Platform.isAndroid

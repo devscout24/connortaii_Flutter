@@ -159,7 +159,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
           // borderSide: BorderSide.none,
           borderSide: BorderSide(
-            color: widget.borderColor ?? AppColors.primaryColorlight,
+            color: widget.borderColor ?? AppColors.c000000,
             width: 1.w,
           ),
         ),
@@ -167,8 +167,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
           borderSide: BorderSide(
             color: _hasText
-                ? (widget.borderColor ?? AppColors.primaryColorlight)
-                : AppColors.primaryColorlight,
+                ? (widget.borderColor ?? AppColors.c000000)
+                : AppColors.c000000,
             width: 1.w,
           ),
         ),
@@ -176,8 +176,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
           borderSide: BorderSide(
             color: _hasText
-                ? (widget.borderColor ?? AppColors.primaryColorlight)
-                : AppColors.primaryColorlight,
+                ? (widget.borderColor ?? AppColors.c000000)
+                : AppColors.c000000,
             width: 1.w,
           ),
         ),

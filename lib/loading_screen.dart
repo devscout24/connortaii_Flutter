@@ -1,3 +1,4 @@
+import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'constants/app_constants.dart';
 import 'helpers/di.dart';
@@ -47,7 +48,7 @@ class _LoadingState extends State<Loading> {
     if (_isLoading) {
       return const WelcomeScreen();
     } else {
-      return const WelcomeScreen();
+      return const OnboardingScreen();
       // return appData.read(kKeyIsLoggedIn) || appData.read(kKeyIsExploring)
       //     ? const NavigationScreen()
       //     : const NavigationScreen();
