@@ -21,9 +21,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 52.h),
         child: Column(
           children: [
-            UIHelper.verticalSpace(60.h),
+            Spacer(),
             Image.asset(AppImages.onboardingImage),
-            UIHelper.verticalSpace(40.h),
+            Spacer(),
+
             Text(
               'Welcome to Property Inspection',
               style: TextFontStyle.headlinePoppins60024,
@@ -33,7 +34,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               'Professional property inspections at your fingertip',
               style: TextFontStyle.headlinePoppins40014,
             ),
-            UIHelper.verticalSpace(36.h),
+            UIHelper.verticalSpace(52.h),
             CustomButton(onTap: () {}, title: 'Get Started'),
             UIHelper.verticalSpace(12.h),
             CustomButton(
