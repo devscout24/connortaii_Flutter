@@ -80,12 +80,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         image: AppIcons.googleLoginIcon,
                         onTap: () {},
                         text: 'Google',
-
-                        // onTap: () {
-                        //  NavigationService.navigateTo(
-                        //   Routes.freeTrialOnboardingScreen,
-                        // );
-                        // },
                       ),
                     ),
                     UIHelper.horizontalSpace(12.w),
@@ -96,10 +90,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         text: 'Apple',
                       ),
                     ),
-                    // CustomSocialLoginButtonWidget(
-                    //   image: AppIcons.appleLoginIcon,
-                    //   onTap: () {},
-                    // ),
                   ],
                 ),
                 UIHelper.verticalSpace(12.h),
@@ -126,6 +116,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: SignupImagePickerWidget(pickedImage: _pickedImage),
                 ),
                 UIHelper.verticalSpace(12.h),
+                Text('First Name', style: TextFontStyle.headlinePoppins50016),
+                UIHelper.verticalSpace(8.h),
                 CustomTextFormField(
                   controller: firstNameController,
                   hintText: 'First Name',
@@ -138,6 +130,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   ]),
                 ),
                 UIHelper.verticalSpace(12.h),
+                Text('Last Name', style: TextFontStyle.headlinePoppins50016),
+                UIHelper.verticalSpace(8.h),
                 CustomTextFormField(
                   controller: lastNameController,
                   hintText: 'Last Name',
@@ -150,6 +144,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   ]),
                 ),
                 UIHelper.verticalSpace(12.h),
+                Text('Email', style: TextFontStyle.headlinePoppins50016),
+                UIHelper.verticalSpace(8.h),
                 CustomTextFormField(
                   controller: emailController,
                   hintText: 'Email',
@@ -162,6 +158,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   ]),
                 ),
                 UIHelper.verticalSpace(12.h),
+                Text('Password', style: TextFontStyle.headlinePoppins50016),
+                UIHelper.verticalSpace(8.h),
                 CustomTextFormField(
                   controller: passwordController,
                   hintText: 'Password',
@@ -186,6 +184,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 UIHelper.verticalSpace(12.h),
+                Text(
+                  'Confirm Password',
+                  style: TextFontStyle.headlinePoppins50016,
+                ),
+                UIHelper.verticalSpace(8.h),
                 CustomTextFormField(
                   controller: confirmPasswordController,
                   hintText: 'Confirm Password',
