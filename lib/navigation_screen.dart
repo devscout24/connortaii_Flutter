@@ -22,8 +22,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   late final List<Widget> _screens = const [
     HomeScreen(),
-    _PlaceholderScreen(title: 'History'),
-    _PlaceholderScreen(title: 'Settings'),
+    HomeScreen(),
+    HomeScreen(),
   ];
 
   @override
@@ -146,25 +146,4 @@ class _NavItemData {
     required this.selectedIcon,
     required this.unselectedIcon,
   });
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  final String title;
-
-  const _PlaceholderScreen({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      body: Center(
-        child: Text(
-          title,
-          style: TextFontStyle.headlinePoppins60012.copyWith(
-            color: AppColors.textColor,
-          ),
-        ),
-      ),
-    );
-  }
 }
