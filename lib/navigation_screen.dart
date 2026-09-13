@@ -1,6 +1,7 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
+import 'package:connortaii_app/features/home/presentation/home_screen.dart';
 import 'package:connortaii_app/helpers/helper_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,11 +20,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    // const BuyerHomeScreen(),
-    // const BuyerHomeScreen(),
-    // const BuyerHomeScreen(),
-    // const BuyerHomeScreen(),
-    // const BuyerHomeScreen(),
+    const HomeScreen(),
+    const HomeScreen(),
+    const HomeScreen(),
   ];
 
   @override
@@ -67,8 +66,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   child: _buildNavItem(
                     0,
                     _currentIndex == 0
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
+                        ? AppIcons.homeSelectedIcon
+                        : AppIcons.homeUnselectedIcon,
                     'Home',
                   ),
                 ),
@@ -76,36 +75,18 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   child: _buildNavItem(
                     1,
                     _currentIndex == 1
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Saved',
+                        ? AppIcons.historySelectedIcon
+                        : AppIcons.historyUnselectedIcon,
+                    'History',
                   ),
                 ),
                 Expanded(
                   child: _buildNavItem(
                     2,
                     _currentIndex == 2
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Cart',
-                  ),
-                ),
-                Expanded(
-                  child: _buildNavItem(
-                    3,
-                    _currentIndex == 3
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Messages',
-                  ),
-                ),
-                Expanded(
-                  child: _buildNavItem(
-                    4,
-                    _currentIndex == 4
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Profile',
+                        ? AppIcons.settingSelectedIcon
+                        : AppIcons.settingUnselectedIcon,
+                    'Settings',
                   ),
                 ),
               ],

@@ -190,6 +190,8 @@ class _LoginScreenState extends State<LoginScreen>
                       )
                     : CustomButton(
                         onTap: () {
+                          NavigationService.navigateTo(Routes.navigationScreen);
+
                           // loginMethod();
                         },
                         title: 'Sign in',
