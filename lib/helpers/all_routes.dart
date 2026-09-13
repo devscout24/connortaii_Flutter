@@ -5,6 +5,7 @@ import 'package:connortaii_app/features/auth/forgot_password/presentation/forgot
 import 'package:connortaii_app/features/auth/login/presentation/login_screen.dart';
 import 'package:connortaii_app/features/auth/signup/presentation/signup_screen.dart';
 import 'package:connortaii_app/features/auth/signup/presentation/signup_verify_screen.dart';
+import 'package:connortaii_app/features/home/presentation/home_screen.dart';
 import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:connortaii_app/navigation_screen.dart';
 import 'package:connortaii_app/loading_screen.dart';
@@ -17,7 +18,7 @@ final class Routes {
 
   static const String loadingScreen = '/Loading';
   static const String onBoardingScreen = '/OnBoardingScreen';
-  static const String buyerNavigationScreen = '/BuyerNavigationScreen';
+  static const String navigationScreen = '/NavigationScreen';
   static const String chooseRoleScreen = '/ChooseRoleScreen';
   static const String signupScreen = '/SignupScreen';
   static const String signupVerifyScreen = '/SignupVerifyScreen';
@@ -27,6 +28,7 @@ final class Routes {
       '/ForgotPasswordVerifyScreen';
   static const String forgotUpdatePasswordScreen =
       '/ForgotUpdatePasswordScreen';
+  static const String homeScreen = '/HomeScreen';
 }
 
 final class RouteGenerator {
@@ -41,7 +43,7 @@ final class RouteGenerator {
             ? _FadedTransitionRoute(widget: const Loading(), settings: settings)
             : CupertinoPageRoute(builder: (context) => const Loading());
 
-      case Routes.buyerNavigationScreen:
+      case Routes.navigationScreen:
         final args = settings.arguments as Map<String, dynamic>?;
 
         final pageNum = args?['pageNum'] as int? ?? 0;
@@ -125,32 +127,13 @@ final class RouteGenerator {
                 builder: (context) => const ForgotUpdatePasswordScreen(),
               );
 
-      // //////////////.<<<<<<<<<<   Buyer   >>>>>>>>>>>>.////////////////
-      // case Routes.buyerHomeScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const BuyerHomeScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(builder: (context) => const BuyerHomeScreen());
-
-      // case Routes.buyerProductDetailsScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const BuyerProductDetailsScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const BuyerProductDetailsScreen(),
-      //         );
-
-      // case Routes.cartScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const CartScreen(),
-      //           settings: settings,
-      //         )
-      //       : CupertinoPageRoute(builder: (context) => const CartScreen());
+      case Routes.homeScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const HomeScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const HomeScreen());
 
       default:
         return null;

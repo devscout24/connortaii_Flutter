@@ -1,7 +1,9 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
+import 'package:connortaii_app/features/home/presentation/home_screen.dart';
 import 'package:connortaii_app/helpers/helper_methods.dart';
+import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,18 +14,16 @@ class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key, this.pageNum});
 
   @override
-  _NavigationScreenState createState() => _NavigationScreenState();
+  State<NavigationScreen> createState() => _NavigationScreenState();
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    // const BuyerHomeScreen(),
-    // const BuyerHomeScreen(),
-    // const BuyerHomeScreen(),
-    // const BuyerHomeScreen(),
-    // const BuyerHomeScreen(),
+  late final List<Widget> _screens = const [
+    HomeScreen(),
+    HomeScreen(),
+    HomeScreen(),
   ];
 
   @override
@@ -39,102 +39,111 @@ class _NavigationScreenState extends State<NavigationScreen> {
       onPopInvoked: (bool didPop) async {
         showMaterialDialog(context);
       },
-      child: SafeArea(
-        top: false,
-        bottom: true,
-        child: Scaffold(
-          body: _screens[_currentIndex],
-          extendBody: true,
-          bottomNavigationBar: Container(
-            height: 80.h,
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              // borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: AppColors.grey200Color),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primaryColor.withAlpha(100),
-                  blurRadius: 5.r,
-                  offset: const Offset(0, 0),
-                ),
-              ],
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        body: IndexedStack(index: _currentIndex, children: _screens),
+        bottomNavigationBar: _buildBottomNavigationBar(),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    final navItems = [
+      _NavItemData(
+        title: 'Home',
+        selectedIcon: AppIcons.homeSelectedIcon,
+        unselectedIcon: AppIcons.homeUnselectedIcon,
+      ),
+      _NavItemData(
+        title: 'History',
+        selectedIcon: AppIcons.historySelectedIcon,
+        unselectedIcon: AppIcons.historyUnselectedIcon,
+      ),
+      _NavItemData(
+        title: 'Settings',
+        selectedIcon: AppIcons.settingSelectedIcon,
+        unselectedIcon: AppIcons.settingUnselectedIcon,
+      ),
+    ];
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.h),
+      child: Container(
+        height: 78.h,
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: AppColors.c000000,
+          borderRadius: BorderRadius.circular(40.r),
+          border: Border.all(color: AppColors.grey200Color),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.c000000.withAlpha(100),
+              blurRadius: 12.r,
+              offset: const Offset(0, 4),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: _buildNavItem(
-                    0,
-                    _currentIndex == 0
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Home',
-                  ),
-                ),
-                Expanded(
-                  child: _buildNavItem(
-                    1,
-                    _currentIndex == 1
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Saved',
-                  ),
-                ),
-                Expanded(
-                  child: _buildNavItem(
-                    2,
-                    _currentIndex == 2
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Cart',
-                  ),
-                ),
-                Expanded(
-                  child: _buildNavItem(
-                    3,
-                    _currentIndex == 3
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Messages',
-                  ),
-                ),
-                Expanded(
-                  child: _buildNavItem(
-                    4,
-                    _currentIndex == 4
-                        ? AppIcons.splashLogo
-                        : AppIcons.splashLogo,
-                    'Profile',
-                  ),
-                ),
-              ],
-            ),
-          ),
+          ],
+        ),
+        child: Row(
+          children: List.generate(navItems.length, (index) {
+            return Expanded(child: _buildNavItem(index, navItems[index]));
+          }),
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(int index, String iconPath, String title) {
-    final isSelected = _currentIndex == index;
+  Widget _buildNavItem(int index, _NavItemData item) {
+    final bool isSelected = _currentIndex == index;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => setState(() => _currentIndex = index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SvgPicture.asset(iconPath),
-          Text(
-            title,
-            style: TextFontStyle.headlinePoppins60012.copyWith(
-              color: isSelected ? AppColors.grey500 : AppColors.textColor,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeInOut,
+        alignment: Alignment.center,
+        margin: EdgeInsets.symmetric(horizontal: 4.w),
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.cFFFFFF : Colors.transparent,
+          borderRadius: BorderRadius.circular(100.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              isSelected ? item.selectedIcon : item.unselectedIcon,
+              width: 20.w,
+              height: 20.h,
+              colorFilter: ColorFilter.mode(
+                isSelected ? AppColors.c000000 : AppColors.cFFFFFF,
+                BlendMode.srcIn,
+              ),
             ),
-          ),
-        ],
+            if (isSelected) ...[
+              UIHelper.horizontalSpace(6.w),
+              Text(
+                item.title,
+                style: TextFontStyle.headlinePoppins60012.copyWith(
+                  color: AppColors.c000000,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
+}
+
+class _NavItemData {
+  final String title;
+  final String selectedIcon;
+  final String unselectedIcon;
+
+  const _NavItemData({
+    required this.title,
+    required this.selectedIcon,
+    required this.unselectedIcon,
+  });
 }

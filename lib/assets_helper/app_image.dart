@@ -4,4 +4,6 @@ class AppImages {
 
   static const String onboardingImage = '$_basePath/onboardingImage.png';
   static const String passwordImage = '$_basePath/passwordImage.png';
+  static const String startInspectionIcon =
+      '$_basePath/startInspectionIcon.png';
 }

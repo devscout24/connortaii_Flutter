@@ -196,19 +196,19 @@ class TextFontStyle {
   );
 
   static final headlinePoppins50014 = GoogleFonts.poppins(
-    color: AppColors.grey400,
+    color: AppColors.textColor,
     fontSize: 14.sp,
     fontWeight: FontWeight.w500,
   );
 
   static final headlinePoppins50012 = GoogleFonts.poppins(
-    color: AppColors.fontGreyColor,
+    color: AppColors.textColor,
     fontSize: 12.sp,
     fontWeight: FontWeight.w500,
   );
 
   static final headlinePoppins50010 = GoogleFonts.poppins(
-    color: AppColors.fontGreyColor,
+    color: AppColors.textColor,
     fontSize: 10.sp,
     fontWeight: FontWeight.w500,
   );
