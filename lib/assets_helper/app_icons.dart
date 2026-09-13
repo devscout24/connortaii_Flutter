@@ -25,4 +25,6 @@ class AppIcons {
       '$iconsRoute/settingSelectedIcon.svg';
   static const String settingUnselectedIcon =
       '$iconsRoute/settingUnselectedIcon.svg';
+  static const String plusIcon = '$iconsRoute/plusIcon.svg';
+  static const String inspectionIcon = '$iconsRoute/inspectionIcon.svg';
 }
