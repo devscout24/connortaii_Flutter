@@ -1,8 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connortaii_app/assets_helper/app_colors.dart';
-import 'package:connortaii_app/assets_helper/app_icons.dart';
-import 'package:connortaii_app/assets_helper/app_image.dart';
-import 'package:connortaii_app/common_widget/custom_icon_button.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/home/presentation/widgets/no_inspection_widget.dart';
 import 'package:connortaii_app/features/home/presentation/widgets/recent_inspection_widget.dart';
@@ -11,7 +6,6 @@ import 'package:connortaii_app/features/home/presentation/widgets/top_user_info_
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
