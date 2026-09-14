@@ -33,6 +33,7 @@ class RecentInspectionWidget extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(12.sp),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(

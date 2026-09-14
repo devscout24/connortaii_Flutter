@@ -65,30 +65,19 @@ class _HistoryScreenState extends State<HistoryScreen>
               ),
             ),
 
-            SizedBox(height: 16.h),
+            UIHelper.verticalSpace(16.h),
 
             Expanded(
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  ListView.builder(
-                    itemCount: 5,
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 12.h),
-                        child: RecentInspectionWidget(
-                          title: '12 Queen Street',
-                          status: 'In Progress',
-                          address: 'Auckland CBD',
-                          date: '29 Aug 2026',
-                          sectionCompleteValue: '1',
-                          onTap: () {},
-                        ),
-                      );
-                    },
+                  RecentInspectionWidget(
+                    title: '12 Queen Street',
+                    status: 'In Progress',
+                    address: 'Auckland CBD',
+                    date: '29 Aug 2026',
+                    sectionCompleteValue: '1',
+                    onTap: () {},
                   ),
 
                   ListView.builder(
