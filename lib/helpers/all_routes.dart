@@ -5,8 +5,10 @@ import 'package:connortaii_app/features/auth/forgot_password/presentation/forgot
 import 'package:connortaii_app/features/auth/login/presentation/login_screen.dart';
 import 'package:connortaii_app/features/auth/signup/presentation/signup_screen.dart';
 import 'package:connortaii_app/features/auth/signup/presentation/signup_verify_screen.dart';
+import 'package:connortaii_app/features/history/presentation/history_screen.dart';
 import 'package:connortaii_app/features/home/presentation/home_screen.dart';
 import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
+import 'package:connortaii_app/features/settings/presentation/settings_screen.dart';
 import 'package:connortaii_app/navigation_screen.dart';
 import 'package:connortaii_app/loading_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +31,8 @@ final class Routes {
   static const String forgotUpdatePasswordScreen =
       '/ForgotUpdatePasswordScreen';
   static const String homeScreen = '/HomeScreen';
+  static const String historyScreen = '/HistoryScreen';
+  static const String settingsScreen = '/SettingsScreen';
 }
 
 final class RouteGenerator {
@@ -134,6 +138,22 @@ final class RouteGenerator {
                 settings: settings,
               )
             : CupertinoPageRoute(builder: (context) => const HomeScreen());
+
+      case Routes.historyScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const HistoryScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const HistoryScreen());
+
+      case Routes.settingsScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const SettingsScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const SettingsScreen());
 
       default:
         return null;

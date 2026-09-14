@@ -125,7 +125,7 @@ class _ForgotUpdatePasswordScreenState extends State<ForgotUpdatePasswordScreen>
                 ),
                 UIHelper.verticalSpace(20.h),
                 Text(
-                  'Email',
+                  'Password',
                   style: TextFontStyle.headlinePoppins50016,
                   textAlign: TextAlign.start,
                 ),
@@ -157,7 +157,7 @@ class _ForgotUpdatePasswordScreenState extends State<ForgotUpdatePasswordScreen>
                 ),
                 UIHelper.verticalSpace(12.h),
                 Text(
-                  'Email',
+                  'Confirm Password',
                   style: TextFontStyle.headlinePoppins50016,
                   textAlign: TextAlign.start,
                 ),

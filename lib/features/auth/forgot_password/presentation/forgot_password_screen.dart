@@ -127,7 +127,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                   controller: emailController,
                   hintText: 'Email',
                   keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   prefixIcon: SvgPicture.asset(AppIcons.emailIcon),
                   validator: ValidatorKit.combine([
                     ValidatorKit.required(),
