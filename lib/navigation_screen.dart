@@ -1,6 +1,7 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
+import 'package:connortaii_app/features/history/presentation/history_screen.dart';
 import 'package:connortaii_app/features/home/presentation/home_screen.dart';
 import 'package:connortaii_app/helpers/helper_methods.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
@@ -22,7 +23,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   late final List<Widget> _screens = const [
     HomeScreen(),
-    HomeScreen(),
+    HistoryScreen(),
     HomeScreen(),
   ];
 
@@ -40,7 +41,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         showMaterialDialog(context);
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: AppColors.cFFFFFF,
         body: IndexedStack(index: _currentIndex, children: _screens),
         bottomNavigationBar: _buildBottomNavigationBar(),
       ),

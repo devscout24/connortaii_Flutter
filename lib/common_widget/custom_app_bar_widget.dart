@@ -1,6 +1,7 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
+import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,39 +25,44 @@ class CustomAppBarWidget extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      shadowColor: AppColors.backgroundColor,
-      leadingWidth: 55.w,
-      backgroundColor: AppColors.cFFFFFF,
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      centerTitle: true,
-      leading: showLeadingIcon
-          ? GestureDetector(
-              onTap: leadingOnTap,
-              child: Padding(
-                padding: EdgeInsets.all(6.sp),
-                child: SvgPicture.asset(AppIcons.arrowBackIcon),
-              ),
-            )
-          : const SizedBox.shrink(),
-      title: Text(title ?? '', style: TextFontStyle.headlinePoppins60024),
-      actions: [
-        if (actionWidget != null)
-          GestureDetector(
-            onTap: actionOnTap,
-            child: Padding(
-              padding: EdgeInsets.all(5.sp),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(100.r),
+    return Column(
+      children: [
+        AppBar(
+          shadowColor: AppColors.backgroundColor,
+          leadingWidth: 55.w,
+          backgroundColor: AppColors.cFFFFFF,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          leading: showLeadingIcon
+              ? GestureDetector(
+                  onTap: leadingOnTap,
+                  child: Padding(
+                    padding: EdgeInsets.all(6.sp),
+                    child: SvgPicture.asset(AppIcons.arrowBackIcon),
+                  ),
+                )
+              : const SizedBox.shrink(),
+          title: Text(title ?? '', style: TextFontStyle.headlinePoppins60024),
+          actions: [
+            if (actionWidget != null)
+              GestureDetector(
+                onTap: actionOnTap,
+                child: Padding(
+                  padding: EdgeInsets.all(5.sp),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(100.r),
+                    ),
+                    padding: EdgeInsets.all(10.sp),
+                    child: actionWidget,
+                  ),
                 ),
-                padding: EdgeInsets.all(10.sp),
-                child: actionWidget,
               ),
-            ),
-          ),
+          ],
+        ),
+        UIHelper.customDivider(color: AppColors.grey300),
       ],
     );
   }
