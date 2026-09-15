@@ -29,4 +29,5 @@ class AppIcons {
   static const String inspectionIcon = '$iconsRoute/inspectionIcon.svg';
   static const String shareIcon = '$iconsRoute/shareIcon.svg';
   static const String downloadIcon = '$iconsRoute/downloadIcon.svg';
+  static const String arrowLeftIcon = '$iconsRoute/arrowLeftIcon.svg';
 }
