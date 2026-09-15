@@ -140,7 +140,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         prefixIcon: widget.prefixIcon != null
             ? Padding(padding: EdgeInsets.all(14.sp), child: widget.prefixIcon)
             : null,
-        suffixIcon: widget.suffixIcon,
+        suffixIcon: Padding(
+          padding: EdgeInsets.all(12.sp),
+          child: widget.suffixIcon,
+        ),
         // suffixIcon: widget.suffixIcon != null
         // ? GestureDetector(
         // onTap: widget.onSuffixIconTap,
