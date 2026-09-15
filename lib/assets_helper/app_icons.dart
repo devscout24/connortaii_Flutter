@@ -9,7 +9,7 @@ class AppIcons {
   static const String imagePickerIcon = '$iconsRoute/imagePickerIcon.png';
 
   static const String backIcon = '$iconsRoute/backIcon.svg';
-  static const String arrowBackIcon = '$iconsRoute/arrowBackIcon.svg';
+  static const String arrowBackIcon = '$iconsRoute/arrowBackIcons.svg';
   static const String emailIcon = '$iconsRoute/emailIcon.svg';
   static const String passwordIcon = '$iconsRoute/passwordIcon.svg';
   static const String personIcon = '$iconsRoute/personIcon.svg';

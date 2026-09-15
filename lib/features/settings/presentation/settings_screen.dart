@@ -5,6 +5,8 @@ import 'package:connortaii_app/common_widget/custom_icon_button.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/settings/presentation/widgets/profile_details_row_widget.dart';
 import 'package:connortaii_app/features/settings/presentation/widgets/setting_items_row_widgets.dart';
+import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,7 +52,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SettingItemsRowWidget(
                     icon: AppIcons.profileIcon,
                     title: 'Profile',
-                    onTap: () {},
+                    onTap: () {
+                      NavigationService.navigateTo(Routes.editProfileScreen);
+                    },
                   ),
                   SettingItemsRowWidget(
                     icon: AppIcons.changePasswordIcon,

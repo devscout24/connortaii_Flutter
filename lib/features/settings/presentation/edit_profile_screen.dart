@@ -1,3 +1,5 @@
+import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
+import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -10,6 +12,14 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: CustomAppBarWidget(
+        title: 'Profile',
+        showLeadingIcon: true,
+        leadingOnTap: () {
+          NavigationService.goBack;
+        },
+      ),
+    );
   }
 }
