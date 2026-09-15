@@ -3,6 +3,7 @@ import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/common_widget/custom_icon_button.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
+import 'package:connortaii_app/features/settings/presentation/widgets/custom_logout_dialog.dart';
 import 'package:connortaii_app/features/settings/presentation/widgets/profile_details_row_widget.dart';
 import 'package:connortaii_app/features/settings/presentation/widgets/setting_items_row_widgets.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
@@ -94,7 +95,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             UIHelper.verticalSpace(24.h),
             CustomIconButton(
-              onTap: () {},
+              onTap: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return CustomLogoutDialogWidget(
+                      title: 'Logging Out?',
+                      subTitle: 'Are you sure you want to log out?',
+                      cancelOnTap: () {
+                        NavigationService.goBack;
+                      },
+                      confirmOnTap: () {
+                        NavigationService.goBack;
+                      },
+                    );
+                  },
+                );
+              },
               title: 'Log Out',
               image: AppIcons.logoutIcon,
               fillColor: AppColors.grey300,
