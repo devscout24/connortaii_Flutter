@@ -30,4 +30,11 @@ class AppIcons {
   static const String shareIcon = '$iconsRoute/shareIcon.svg';
   static const String downloadIcon = '$iconsRoute/downloadIcon.svg';
   static const String arrowLeftIcon = '$iconsRoute/arrowLeftIcon.svg';
+  static const String securityIcon = '$iconsRoute/securityIcon.svg';
+  static const String changePasswordIcon = '$iconsRoute/changePasswordIcon.svg';
+  static const String deleteAccountIcon = '$iconsRoute/deleteAccountIcon.svg';
+  static const String logoutIcon = '$iconsRoute/logoutIcon.svg';
+  static const String privacyPolicyIcon = '$iconsRoute/privacyPolicyIcon.svg';
+  static const String profileIcon = '$iconsRoute/profileIcon.svg';
+  static const String termsConditionIcon = '$iconsRoute/termsConditionIcon.svg';
 }
