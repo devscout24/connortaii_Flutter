@@ -37,4 +37,6 @@ class AppIcons {
   static const String privacyPolicyIcon = '$iconsRoute/privacyPolicyIcon.svg';
   static const String profileIcon = '$iconsRoute/profileIcon.svg';
   static const String termsConditionIcon = '$iconsRoute/termsConditionIcon.svg';
+  static const String editPhotoIcon = '$iconsRoute/editPhotoIcon.svg';
+  static const String editNameIcon = '$iconsRoute/editNameIcon.svg';
 }
