@@ -22,11 +22,10 @@ class ForgotPasswordVerifyScreen extends StatefulWidget {
       _ForgotPasswordVerifyScreenState();
 }
 
-class _ForgotPasswordVerifyScreenState extends State<ForgotPasswordVerifyScreen>
-    with TickerProviderStateMixin {
+class _ForgotPasswordVerifyScreenState
+    extends State<ForgotPasswordVerifyScreen> {
   TextEditingController otpController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  late AnimationController _bottomSheetController;
 
   late int startTime;
   Timer? timer;
@@ -36,7 +35,6 @@ class _ForgotPasswordVerifyScreenState extends State<ForgotPasswordVerifyScreen>
     super.initState();
     startTime = 30;
     startTimer();
-    _bottomSheetController = BottomSheet.createAnimationController(this);
   }
 
   void startTimer() {
@@ -55,7 +53,6 @@ class _ForgotPasswordVerifyScreenState extends State<ForgotPasswordVerifyScreen>
   void dispose() {
     timer?.cancel();
 
-    _bottomSheetController.dispose();
     otpController.dispose();
 
     super.dispose();

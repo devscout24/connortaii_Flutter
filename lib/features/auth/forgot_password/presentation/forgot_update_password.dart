@@ -22,12 +22,11 @@ class ForgotUpdatePasswordScreen extends StatefulWidget {
       _ForgotUpdatePasswordScreenState();
 }
 
-class _ForgotUpdatePasswordScreenState extends State<ForgotUpdatePasswordScreen>
-    with TickerProviderStateMixin {
+class _ForgotUpdatePasswordScreenState
+    extends State<ForgotUpdatePasswordScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  late AnimationController _bottomSheetController;
 
   bool isPasswordChecked = false;
   bool isPasswordObscureText = true;
@@ -69,17 +68,15 @@ class _ForgotUpdatePasswordScreenState extends State<ForgotUpdatePasswordScreen>
   //   }
   // }
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    _bottomSheetController = BottomSheet.createAnimationController(this);
-  }
+  //   _bottomSheetController = BottomSheet.createAnimationController(this);
+  // }
 
   @override
   void dispose() {
-    _bottomSheetController.dispose();
-
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
