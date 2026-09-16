@@ -10,8 +10,10 @@ import 'package:connortaii_app/features/home/presentation/home_screen.dart';
 import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/change_password_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/edit_profile_screen.dart';
+import 'package:connortaii_app/features/settings/presentation/privacy_policy_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/security_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/settings_screen.dart';
+import 'package:connortaii_app/features/settings/presentation/terms_condition_screen.dart';
 import 'package:connortaii_app/navigation_screen.dart';
 import 'package:connortaii_app/loading_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,6 +41,8 @@ final class Routes {
   static const String editProfileScreen = '/EditProfileScreen';
   static const String changePasswordScreen = '/ChangePasswordScreen';
   static const String securityScreen = '/SecurityScreen';
+  static const String privacyPolicyScreen = '/PrivacyPolicyScreen';
+  static const String termsConditionScreen = '/TermsConditionScreen';
 }
 
 final class RouteGenerator {
@@ -188,6 +192,26 @@ final class RouteGenerator {
                 settings: settings,
               )
             : CupertinoPageRoute(builder: (context) => const SecurityScreen());
+
+      case Routes.privacyPolicyScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const PrivacyPolicyScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const PrivacyPolicyScreen(),
+              );
+
+      case Routes.termsConditionScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const TermsConditionScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const TermsConditionScreen(),
+              );
 
       default:
         return null;
