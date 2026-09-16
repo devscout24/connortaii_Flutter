@@ -27,40 +27,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   bool isLoading = false;
 
-  // Future<void> forgotEmailMethod() async {
-  //   try {
-  //     if (formKey.currentState!.validate()) {
-  //       setState(() {
-  //         isLoading = true;
-  //       });
-  //       await forgotPasswordRxOBJ
-  //           .forgotPasswordRx(email: emailController.text)
-  //           .then((value) {
-  //             if (value) {
-  //               setState(() {
-  //                 isLoading = false;
-  //               });
-  //               log("Forgot password response value: $value");
-
-  //               NavigationService.navigateToWithArgs(
-  //                 Routes.forgotPasswordVerifyScreen,
-  //                 {'email': emailController.text},
-  //               );
-  //             } else {
-  //               setState(() {
-  //                 isLoading = false;
-  //               });
-  //             }
-  //           });
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     ToastUtil.showShortToast(e.toString());
-  //   }
-  // }
-
   @override
   void dispose() {
     emailController.dispose();

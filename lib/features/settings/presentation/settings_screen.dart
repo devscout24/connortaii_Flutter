@@ -57,17 +57,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       NavigationService.navigateTo(Routes.editProfileScreen);
                     },
                   ),
-                  SettingItemsRowWidget(
-                    icon: AppIcons.changePasswordIcon,
-                    title: 'Change Password',
-                    onTap: () {
-                      NavigationService.navigateTo(Routes.changePasswordScreen);
-                    },
-                  ),
+                  // SettingItemsRowWidget(
+                  //   icon: AppIcons.changePasswordIcon,
+                  //   title: 'Change Password',
+                  //   onTap: () {
+                  //     NavigationService.navigateTo(Routes.changePasswordScreen);
+                  //   },
+                  // ),
                   SettingItemsRowWidget(
                     icon: AppIcons.securityIcon,
                     title: 'Security',
-                    onTap: () {},
+                    onTap: () {
+                      NavigationService.navigateTo(Routes.securityScreen);
+                    },
                   ),
                 ],
               ),
