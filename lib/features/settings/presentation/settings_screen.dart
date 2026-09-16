@@ -87,12 +87,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SettingItemsRowWidget(
                     icon: AppIcons.privacyPolicyIcon,
                     title: 'Privacy Policy',
-                    onTap: () {},
+                    onTap: () {
+                      NavigationService.navigateTo(Routes.privacyPolicyScreen);
+                    },
                   ),
                   SettingItemsRowWidget(
                     icon: AppIcons.termsConditionIcon,
                     title: 'Terms & Conditions',
-                    onTap: () {},
+                    onTap: () {
+                      NavigationService.navigateTo(Routes.termsConditionScreen);
+                    },
                   ),
                 ],
               ),
