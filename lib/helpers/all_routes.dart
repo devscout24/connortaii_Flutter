@@ -10,6 +10,7 @@ import 'package:connortaii_app/features/home/presentation/home_screen.dart';
 import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/change_password_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/edit_profile_screen.dart';
+import 'package:connortaii_app/features/settings/presentation/security_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/settings_screen.dart';
 import 'package:connortaii_app/navigation_screen.dart';
 import 'package:connortaii_app/loading_screen.dart';
@@ -37,6 +38,7 @@ final class Routes {
   static const String settingsScreen = '/SettingsScreen';
   static const String editProfileScreen = '/EditProfileScreen';
   static const String changePasswordScreen = '/ChangePasswordScreen';
+  static const String securityScreen = '/SecurityScreen';
 }
 
 final class RouteGenerator {
@@ -178,6 +180,14 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => const ChangePasswordScreen(),
               );
+
+      case Routes.securityScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const SecurityScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => const SecurityScreen());
 
       default:
         return null;
