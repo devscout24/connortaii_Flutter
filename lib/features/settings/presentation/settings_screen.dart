@@ -60,7 +60,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SettingItemsRowWidget(
                     icon: AppIcons.changePasswordIcon,
                     title: 'Change Password',
-                    onTap: () {},
+                    onTap: () {
+                      NavigationService.navigateTo(Routes.changePasswordScreen);
+                    },
                   ),
                   SettingItemsRowWidget(
                     icon: AppIcons.securityIcon,
@@ -107,7 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         NavigationService.goBack;
                       },
                       confirmOnTap: () {
-                        NavigationService.goBack;
+                        NavigationService.navigateTo(Routes.loginScreen);
                       },
                     );
                   },

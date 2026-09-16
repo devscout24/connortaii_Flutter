@@ -21,11 +21,9 @@ class ForgotPasswordScreen extends StatefulWidget {
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
-    with TickerProviderStateMixin {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController emailController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  late AnimationController _bottomSheetController;
 
   bool isLoading = false;
 
@@ -64,16 +62,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   // }
 
   @override
-  void initState() {
-    super.initState();
-
-    _bottomSheetController = BottomSheet.createAnimationController(this);
-  }
-
-  @override
   void dispose() {
-    _bottomSheetController.dispose();
-
     emailController.dispose();
     super.dispose();
   }
