@@ -343,13 +343,13 @@ void showMaterialDialog(BuildContext context) {
           onCallBack: () {
             Navigator.of(context).pop(false);
           },
-          height: 30.sp,
+          height: 50.sp,
           minWidth: .3.sw,
           borderRadius: 30.r,
-          color: AppColors.c000000,
+          color: AppColors.grey300,
           textStyle: GoogleFonts.montserrat(
             fontSize: 17.sp,
-            color: AppColors.cFFFFFF,
+            color: AppColors.c000000,
             fontWeight: FontWeight.w700,
           ),
           context: context,
@@ -363,10 +363,10 @@ void showMaterialDialog(BuildContext context) {
               exit(0);
             }
           },
-          height: 30.sp,
+          height: 50.sp,
           minWidth: .3.sw,
           borderRadius: 30.r,
-          color: AppColors.buttonbgColor,
+          color: AppColors.c000000,
           textStyle: GoogleFonts.montserrat(
             fontSize: 17.sp,
             color: Colors.white,

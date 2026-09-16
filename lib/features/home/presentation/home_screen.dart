@@ -3,6 +3,8 @@ import 'package:connortaii_app/features/home/presentation/widgets/no_inspection_
 import 'package:connortaii_app/features/home/presentation/widgets/recent_inspection_widget.dart';
 import 'package:connortaii_app/features/home/presentation/widgets/starts_inspection_container_widget.dart';
 import 'package:connortaii_app/features/home/presentation/widgets/top_user_info_widget.dart';
+import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,7 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
               name: 'John Carry',
             ),
             UIHelper.verticalSpace(22.h),
-            StartInspectionContainerWidget(onTap: () {}),
+            StartInspectionContainerWidget(
+              onTap: () {
+                NavigationService.navigateTo(Routes.newInspectionScreen);
+              },
+            ),
             UIHelper.verticalSpace(22.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

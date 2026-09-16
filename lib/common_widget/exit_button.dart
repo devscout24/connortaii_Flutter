@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,7 +20,7 @@ Widget ExitButton({
     height: height,
     minWidth: minWidth,
     shape: RoundedRectangleBorder(
-      side: BorderSide(color: borderColor ?? Colors.blue, width: 1.5.sp),
+      side: BorderSide(color: borderColor ?? AppColors.c000000, width: 1.5.sp),
       borderRadius: BorderRadius.circular(borderRadius),
     ),
     color: color,
