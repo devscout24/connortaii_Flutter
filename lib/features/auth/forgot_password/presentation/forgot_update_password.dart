@@ -34,47 +34,6 @@ class _ForgotUpdatePasswordScreenState
   bool isConfirmPasswordObscureText = true;
   bool isLoading = false;
 
-  // Future<void> changePasswordMethod() async {
-  //   if (formKey.currentState!.validate()) {
-  //     try {
-  //       setState(() {
-  //         isLoading = true;
-  //       });
-  //       final success = await forgotPasswordChangeRxOBJ.forgotPasswordChangeRx(
-  //         newPassword: passwordController.text,
-  //         confirmPassword: confirmPasswordController.text,
-  //         token: appData.read(kKeyotpVerifyToken),
-  //       );
-  //       if (success) {
-  //         setState(() {
-  //           isLoading = false;
-  //         });
-  //         NavigationService.navigateTo(
-  //           Routes.resetPasswordCongratulationsScreen,
-  //         );
-  //       } else {
-  //         setState(() {
-  //           isLoading = false;
-  //         });
-  //       }
-  //     } catch (error) {
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //       ToastUtil.showShortToast("Reset password failed: ${error.toString()}");
-  //     }
-  //   } else {
-  //     ToastUtil.showShortToast("Invalid form data");
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   _bottomSheetController = BottomSheet.createAnimationController(this);
-  // }
-
   @override
   void dispose() {
     passwordController.dispose();
