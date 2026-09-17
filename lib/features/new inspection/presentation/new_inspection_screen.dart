@@ -1,6 +1,9 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
+import 'package:connortaii_app/common_widget/custom_button.dart';
+import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/active_step_widget.dart';
+import 'package:connortaii_app/features/new%20inspection/presentation/widget/step_one_widget.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -16,47 +19,61 @@ class NewInspectionScreen extends StatefulWidget {
 class _NewInspectionScreenState extends State<NewInspectionScreen> {
   int _activeStep = 0;
 
-  final TextEditingController _inspectionNameController =
+  //step 1
+  final TextEditingController inspectorNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController propertyNameController = TextEditingController();
+  final TextEditingController inspectionDateController =
       TextEditingController();
-  final TextEditingController _inspectorNameController =
+  final TextEditingController propertyOwnerNameController =
       TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _notesController = TextEditingController();
-  final TextEditingController _checklistController = TextEditingController();
+  final TextEditingController propertyOwnerPresenceController =
+      TextEditingController();
+  final TextEditingController otherPeoplePresenceController =
+      TextEditingController();
+  final TextEditingController houseOccupiedController = TextEditingController();
+  final TextEditingController wasPropertyFurnishedController =
+      TextEditingController();
+  final TextEditingController buildingTypeController = TextEditingController();
+  final TextEditingController statusOfUtilitiesController =
+      TextEditingController();
+  final TextEditingController weatherDuringInspectionController =
+      TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
-  final List<String> _inspectionTypes = [
-    'Residential',
-    'Commercial',
-    'Industrial',
-  ];
-
-  String _selectedInspectionType = 'Residential';
+  //step 2
+  bool isIdentifiableChecked = false;
+  bool isPhoneTabletChecked = false;
+  bool isToolsChecked = false;
+  bool isPPEChecked = false;
+  bool isPropertyOccupantsChecked = false;
+  bool isHeightChecked = false;
+  bool isElectricityChecked = false;
+  bool isSlipTripFallsChecked = false;
+  bool isChemicalsChecked = false;
 
   @override
   void dispose() {
-    _inspectionNameController.dispose();
-    _inspectorNameController.dispose();
-    _addressController.dispose();
-    _notesController.dispose();
-    _checklistController.dispose();
     super.dispose();
   }
 
   void _nextStep() {
-    if (_activeStep == 0 && _inspectionNameController.text.trim().isEmpty) {
-      _showMessage('Please enter an inspection name');
-      return;
-    }
+    // if (_activeStep == 0 && inspectorNameController.text.trim().isEmpty) {
+    //   _showMessage('Please enter an inspection name');
+    //   return;
+    // }
 
-    if (_activeStep == 1 && _addressController.text.trim().isEmpty) {
-      _showMessage('Please enter the property address');
-      return;
-    }
+    // if (_activeStep == 1 && addressController.text.trim().isEmpty) {
+    //   _showMessage('Please enter the property address');
+    //   return;
+    // }
 
-    if (_activeStep == 2 && _checklistController.text.trim().isEmpty) {
-      _showMessage('Please add the inspection checklist');
-      return;
-    }
+    // if (_activeStep == 2 && propertyNameController.text.trim().isEmpty) {
+    //   _showMessage('Please enter the property name');
+    //   return;
+    // }
 
     if (_activeStep < 2) {
       setState(() => _activeStep++);
@@ -74,12 +91,11 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
 
   void _submitInspection() {
     final payload = {
-      'inspectionName': _inspectionNameController.text.trim(),
-      'inspectorName': _inspectorNameController.text.trim(),
-      'inspectionType': _selectedInspectionType,
-      'address': _addressController.text.trim(),
-      'notes': _notesController.text.trim(),
-      'checklist': _checklistController.text.trim(),
+      'inspectionName': inspectorNameController.text.trim(),
+      'inspectorEmail': emailController.text.trim(),
+      'address': addressController.text.trim(),
+      'mobileNumber': mobileController.text.trim(),
+      'propertyName': propertyNameController.text.trim(),
     };
 
     debugPrint('Inspection payload: $payload');
@@ -92,125 +108,635 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    String? hintText,
-    int maxLines = 1,
-  }) {
-    return TextFormField(
-      controller: controller,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hintText,
-        filled: true,
-        fillColor: AppColors.grey50,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: AppColors.primaryColor, width: 1.2),
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-      ),
-    );
-  }
-
-  Widget _buildStepOne() {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: AppColors.cFFFFFF,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.grey300),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Inspection Details',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          UIHelper.verticalSpace(16.h),
-          _buildTextField(
-            controller: _inspectionNameController,
-            label: 'Inspection Name',
-            hintText: 'Enter inspection name',
-          ),
-          UIHelper.verticalSpace(16.h),
-          _buildTextField(
-            controller: _inspectorNameController,
-            label: 'Inspector Name',
-            hintText: 'Enter inspector name',
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildStepTwo() {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      width: double.infinity,
+      padding: EdgeInsets.all(16.sp),
       decoration: BoxDecoration(
-        color: AppColors.cFFFFFF,
+        color: AppColors.grey200Color,
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.grey300),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Property Information',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          Center(
+            child: Text(
+              'Health & Safety Check',
+              style: TextFontStyle.headlinePoppins60018,
+            ),
           ),
-          UIHelper.verticalSpace(16.h),
-          DropdownButtonFormField<String>(
-            initialValue: _inspectionTypes.contains(_selectedInspectionType)
-                ? _selectedInspectionType
-                : _inspectionTypes.first,
-            decoration: InputDecoration(
-              labelText: 'Inspection Type',
-              filled: true,
-              fillColor: AppColors.grey50,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
+          Center(
+            child: Text(
+              'Confirm each safety condition before starting.',
+              style: TextFontStyle.headlinePoppins40012.copyWith(
+                color: AppColors.grey500,
               ),
             ),
-            items: _inspectionTypes
-                .map((type) => DropdownMenuItem(value: type, child: Text(type)))
-                .toList(),
-            onChanged: (value) {
-              if (value != null) {
-                setState(() => _selectedInspectionType = value);
-              }
-            },
           ),
           UIHelper.verticalSpace(16.h),
-          _buildTextField(
-            controller: _addressController,
-            label: 'Address',
-            hintText: 'Enter property address',
-            maxLines: 3,
+          UIHelper.customDivider(color: AppColors.grey300),
+          UIHelper.verticalSpace(16.h),
+          Text(
+            '1 of 9 checks completed',
+            style: TextFontStyle.headlinePoppins50014,
+          ),
+          UIHelper.verticalSpace(8.h),
+          LinearProgressIndicator(
+            minHeight: 6.h,
+            backgroundColor: AppColors.cFFFFFF,
+            color: AppColors.c000000,
+            borderRadius: BorderRadius.circular(16.r),
+            value: 1 / 9,
+          ),
+          UIHelper.verticalSpace(16.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isIdentifiableChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isIdentifiableChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Identifiable',
+                        style: TextFontStyle.headlinePoppins60014,
+                      ),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'I have my uniform and name badge on.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: AppColors.grey400,
+                            decoration: TextDecoration.underline,
+                            decorationColor: AppColors.grey500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          UIHelper.verticalSpace(12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isPhoneTabletChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isPhoneTabletChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Phone / Tablet',
+                        style: TextFontStyle.headlinePoppins60014,
+                      ),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'My iPad and phone are working and charged.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: Colors.orange,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          UIHelper.verticalSpace(12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isToolsChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isToolsChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Tools', style: TextFontStyle.headlinePoppins60014),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'My tools are available and in working condition.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: Colors.orange,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          UIHelper.verticalSpace(12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isPPEChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isPPEChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('PPE', style: TextFontStyle.headlinePoppins60014),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'Required PPE is available and ready to use.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: Colors.orange,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          UIHelper.verticalSpace(12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isPropertyOccupantsChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isPropertyOccupantsChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Property Occupants',
+                        style: TextFontStyle.headlinePoppins60014,
+                      ),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'I am aware of the occupants and have considered their presence.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: Colors.orange,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          UIHelper.verticalSpace(12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isHeightChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isHeightChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Height',
+                            style: TextFontStyle.headlinePoppins60014,
+                          ),
+                          UIHelper.horizontalSpace(10.w),
+                          Text(
+                            'Red Hazard',
+                            style: TextFontStyle.headlinePoppins40010.copyWith(
+                              color: AppColors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'Required ladder or elevated access can be used safely.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: Colors.orange,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          UIHelper.verticalSpace(12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isElectricityChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isElectricityChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Electricity',
+                        style: TextFontStyle.headlinePoppins60014,
+                      ),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'Potential electrical hazards have been considered.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: Colors.orange,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          UIHelper.verticalSpace(12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isSlipTripFallsChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isSlipTripFallsChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Slips, Trips & Falls',
+                        style: TextFontStyle.headlinePoppins60014,
+                      ),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'Potential slip, trip or fall hazards have been considered.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: Colors.orange,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          UIHelper.verticalSpace(12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28.w,
+                  height: 28.h,
+                  child: Checkbox(
+                    value: isChemicalsChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChemicalsChecked = value ?? false;
+                      });
+                    },
+                    activeColor: AppColors.acceptedTextColor,
+                    checkColor: AppColors.cFFFFFF,
+                    side: BorderSide(color: AppColors.grey300, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+                UIHelper.horizontalSpace(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Chemicals / Hazardous Substances',
+                        style: TextFontStyle.headlinePoppins60014,
+                      ),
+                      UIHelper.verticalSpace(4.h),
+                      Text(
+                        'Potential chemical or hazardous substance risks have been considered.',
+                        style: TextFontStyle.headlinePoppins40012.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      UIHelper.verticalSpace(8.h),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Report Concern',
+                          style: TextFontStyle.headlinePoppins50014.copyWith(
+                            color: Colors.orange,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -225,22 +751,8 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(color: AppColors.grey300),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Inspection Checklist',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          UIHelper.verticalSpace(16.h),
-          _buildTextField(
-            controller: _checklistController,
-            label: 'Checklist / Observations',
-            hintText: 'Write inspection findings here',
-            maxLines: 6,
-          ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    
         ],
       ),
     );
@@ -249,13 +761,43 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
   Widget _buildCurrentStep() {
     switch (_activeStep) {
       case 0:
-        return _buildStepOne();
+        return StepOneWidget(
+          inspectorNameController: inspectorNameController,
+          emailController: emailController,
+          mobileController: mobileController,
+          addressController: addressController,
+          propertyNameController: propertyNameController,
+          inspectionDateController: inspectionDateController,
+          propertyOwnerNameController: propertyOwnerNameController,
+          propertyOwnerPresenceController: propertyOwnerPresenceController,
+          otherPeoplePresenceController: otherPeoplePresenceController,
+          houseOccupiedController: houseOccupiedController,
+          wasPropertyFurnishedController: wasPropertyFurnishedController,
+          buildingTypeController: buildingTypeController,
+          statusOfUtilitiesController: statusOfUtilitiesController,
+          weatherDuringInspectionController: weatherDuringInspectionController,
+        );
       case 1:
         return _buildStepTwo();
       case 2:
         return _buildStepThree();
       default:
-        return _buildStepOne();
+        return StepOneWidget(
+          inspectorNameController: inspectorNameController,
+          emailController: emailController,
+          mobileController: mobileController,
+          addressController: addressController,
+          propertyNameController: propertyNameController,
+          inspectionDateController: inspectionDateController,
+          propertyOwnerNameController: propertyOwnerNameController,
+          propertyOwnerPresenceController: propertyOwnerPresenceController,
+          otherPeoplePresenceController: otherPeoplePresenceController,
+          houseOccupiedController: houseOccupiedController,
+          wasPropertyFurnishedController: wasPropertyFurnishedController,
+          buildingTypeController: buildingTypeController,
+          statusOfUtilitiesController: statusOfUtilitiesController,
+          weatherDuringInspectionController: weatherDuringInspectionController,
+        );
     }
   }
 
@@ -265,7 +807,13 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
       backgroundColor: AppColors.cFFFFFF,
       appBar: CustomAppBarWidget(
         title: 'New Inspection',
-        leadingOnTap: () => NavigationService.goBack,
+        leadingOnTap: () {
+          if (_activeStep > 0) {
+            _previousStep();
+          } else {
+            NavigationService.goBack;
+          }
+        },
         showLeadingIcon: true,
       ),
       body: SafeArea(
@@ -274,46 +822,18 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: ActiveStepWidget(activeStep: _activeStep)),
+              ActiveStepWidget(activeStep: _activeStep),
               UIHelper.verticalSpace(28.h),
               _buildCurrentStep(),
               UIHelper.verticalSpace(24.h),
               Row(
                 children: [
-                  if (_activeStep > 0)
-                    Expanded(
-                      child: SizedBox(
-                        height: 50.h,
-                        child: ElevatedButton(
-                          onPressed: _previousStep,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.grey300,
-                            foregroundColor: AppColors.c000000,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                          ),
-                          child: const Text('Back'),
-                        ),
-                      ),
-                    ),
-                  if (_activeStep > 0) UIHelper.horizontalSpace(12.w),
                   Expanded(
-                    child: SizedBox(
-                      height: 50.h,
-                      child: ElevatedButton(
-                        onPressed: _nextStep,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          foregroundColor: AppColors.cFFFFFF,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                        ),
-                        child: Text(_activeStep == 2 ? 'Submit' : 'Continue'),
-                      ),
+                    child: CustomButton(
+                      onTap: () {
+                        _nextStep();
+                      },
+                      title: _activeStep == 2 ? 'Submit' : 'Continue',
                     ),
                   ),
                 ],
