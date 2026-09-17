@@ -39,4 +39,6 @@ class AppIcons {
   static const String termsConditionIcon = '$iconsRoute/termsConditionIcon.svg';
   static const String editPhotoIcon = '$iconsRoute/editPhotoIcon.svg';
   static const String editNameIcon = '$iconsRoute/editNameIcon.svg';
+  static const String activeStepIcon = '$iconsRoute/activeStepIcon.svg';
+  static const String inactiveStepIcon = '$iconsRoute/inactiveStepIcon.svg';
 }
