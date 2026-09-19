@@ -3,7 +3,10 @@ import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/active_step_widget.dart';
+import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_height_safety_card_widget.dart';
+import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_safety_check_card_widget.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/step_one_widget.dart';
+import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -54,27 +57,39 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
   bool isSlipTripFallsChecked = false;
   bool isChemicalsChecked = false;
 
+  //for height red hazard
+  bool isHeightConcernExpanded = false;
+  bool isHeightConcernSaved = false;
+  bool isHeightRestrictionAccepted = false;
+
+  final TextEditingController heightConcernController = TextEditingController();
+
+  /// Concern states
+  final Map<String, bool> concernExpanded = {};
+  final Map<String, bool> concernSaved = {};
+
+  final Map<String, TextEditingController> concernControllers = {};
+
+  TextEditingController _getConcernController(String key) {
+    if (!concernControllers.containsKey(key)) {
+      concernControllers[key] = TextEditingController();
+    }
+
+    return concernControllers[key]!;
+  }
+
   @override
   void dispose() {
+    heightConcernController.dispose();
+
+    for (final controller in concernControllers.values) {
+      controller.dispose();
+    }
+
     super.dispose();
   }
 
   void _nextStep() {
-    // if (_activeStep == 0 && inspectorNameController.text.trim().isEmpty) {
-    //   _showMessage('Please enter an inspection name');
-    //   return;
-    // }
-
-    // if (_activeStep == 1 && addressController.text.trim().isEmpty) {
-    //   _showMessage('Please enter the property address');
-    //   return;
-    // }
-
-    // if (_activeStep == 2 && propertyNameController.text.trim().isEmpty) {
-    //   _showMessage('Please enter the property name');
-    //   return;
-    // }
-
     if (_activeStep < 2) {
       setState(() => _activeStep++);
       return;
@@ -106,641 +121,6 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  Widget _buildStepTwo() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16.sp),
-      decoration: BoxDecoration(
-        color: AppColors.grey200Color,
-        borderRadius: BorderRadius.circular(18.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Text(
-              'Health & Safety Check',
-              style: TextFontStyle.headlinePoppins60018,
-            ),
-          ),
-          Center(
-            child: Text(
-              'Confirm each safety condition before starting.',
-              style: TextFontStyle.headlinePoppins40012.copyWith(
-                color: AppColors.grey500,
-              ),
-            ),
-          ),
-          UIHelper.verticalSpace(16.h),
-          UIHelper.customDivider(color: AppColors.grey300),
-          UIHelper.verticalSpace(16.h),
-          Text(
-            '1 of 9 checks completed',
-            style: TextFontStyle.headlinePoppins50014,
-          ),
-          UIHelper.verticalSpace(8.h),
-          LinearProgressIndicator(
-            minHeight: 6.h,
-            backgroundColor: AppColors.cFFFFFF,
-            color: AppColors.c000000,
-            borderRadius: BorderRadius.circular(16.r),
-            value: 1 / 9,
-          ),
-          UIHelper.verticalSpace(16.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isIdentifiableChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isIdentifiableChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Identifiable',
-                        style: TextFontStyle.headlinePoppins60014,
-                      ),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'I have my uniform and name badge on.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: AppColors.grey400,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.grey500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          UIHelper.verticalSpace(12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isPhoneTabletChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isPhoneTabletChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Phone / Tablet',
-                        style: TextFontStyle.headlinePoppins60014,
-                      ),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'My iPad and phone are working and charged.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          UIHelper.verticalSpace(12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isToolsChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isToolsChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Tools', style: TextFontStyle.headlinePoppins60014),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'My tools are available and in working condition.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          UIHelper.verticalSpace(12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isPPEChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isPPEChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('PPE', style: TextFontStyle.headlinePoppins60014),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'Required PPE is available and ready to use.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          UIHelper.verticalSpace(12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isPropertyOccupantsChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isPropertyOccupantsChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Property Occupants',
-                        style: TextFontStyle.headlinePoppins60014,
-                      ),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'I am aware of the occupants and have considered their presence.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          UIHelper.verticalSpace(12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isHeightChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isHeightChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Height',
-                            style: TextFontStyle.headlinePoppins60014,
-                          ),
-                          UIHelper.horizontalSpace(10.w),
-                          Text(
-                            'Red Hazard',
-                            style: TextFontStyle.headlinePoppins40010.copyWith(
-                              color: AppColors.red,
-                            ),
-                          ),
-                        ],
-                      ),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'Required ladder or elevated access can be used safely.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          UIHelper.verticalSpace(12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isElectricityChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isElectricityChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Electricity',
-                        style: TextFontStyle.headlinePoppins60014,
-                      ),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'Potential electrical hazards have been considered.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          UIHelper.verticalSpace(12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isSlipTripFallsChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isSlipTripFallsChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Slips, Trips & Falls',
-                        style: TextFontStyle.headlinePoppins60014,
-                      ),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'Potential slip, trip or fall hazards have been considered.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          UIHelper.verticalSpace(12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28.w,
-                  height: 28.h,
-                  child: Checkbox(
-                    value: isChemicalsChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isChemicalsChecked = value ?? false;
-                      });
-                    },
-                    activeColor: AppColors.acceptedTextColor,
-                    checkColor: AppColors.cFFFFFF,
-                    side: BorderSide(color: AppColors.grey300, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                UIHelper.horizontalSpace(10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Chemicals / Hazardous Substances',
-                        style: TextFontStyle.headlinePoppins60014,
-                      ),
-                      UIHelper.verticalSpace(4.h),
-                      Text(
-                        'Potential chemical or hazardous substance risks have been considered.',
-                        style: TextFontStyle.headlinePoppins40012.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                      ),
-                      UIHelper.verticalSpace(8.h),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Report Concern',
-                          style: TextFontStyle.headlinePoppins50014.copyWith(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.orange,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildStepThree() {
@@ -778,7 +158,479 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           weatherDuringInspectionController: weatherDuringInspectionController,
         );
       case 1:
-        return _buildStepTwo();
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(16.sp),
+          decoration: BoxDecoration(
+            color: AppColors.grey200Color,
+            borderRadius: BorderRadius.circular(18.r),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Health & Safety Check',
+                  style: TextFontStyle.headlinePoppins60018,
+                ),
+              ),
+              UIHelper.verticalSpace(4.h),
+              Center(
+                child: Text(
+                  'Confirm each safety condition before starting.',
+                  style: TextFontStyle.headlinePoppins40012.copyWith(
+                    color: AppColors.grey500,
+                  ),
+                ),
+              ),
+              UIHelper.verticalSpace(16.h),
+              UIHelper.customDivider(color: AppColors.grey300),
+              UIHelper.verticalSpace(16.h),
+              Text(
+                '1 of 9 checks completed',
+                style: TextFontStyle.headlinePoppins50014,
+              ),
+              UIHelper.verticalSpace(8.h),
+              LinearProgressIndicator(
+                minHeight: 6.h,
+                backgroundColor: AppColors.cFFFFFF,
+                color: AppColors.c000000,
+                borderRadius: BorderRadius.circular(16.r),
+                value: 1 / 9,
+              ),
+              UIHelper.verticalSpace(16.h),
+              // 1
+              BuildSafetyCheckCardWidget(
+                key: const ValueKey('identifiable'),
+                title: 'Identifiable',
+                description: 'I have my uniform and name badge on.',
+                isChecked: isIdentifiableChecked,
+                isExpanded: concernExpanded['identifiable'] ?? false,
+                isSaved: concernSaved['identifiable'] ?? false,
+                controller: _getConcernController('identifiable'),
+                onCheckChanged: (value) {
+                  setState(() {
+                    isIdentifiableChecked = value ?? false;
+                  });
+                },
+                onToggleExpanded: () {
+                  setState(() {
+                    concernExpanded['identifiable'] = true;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    concernExpanded['identifiable'] = false;
+                  });
+                },
+                onSave: () {
+                  setState(() {
+                    concernSaved['identifiable'] = true;
+                    concernExpanded['identifiable'] = false;
+                  });
+                },
+                onEdit: () {
+                  setState(() {
+                    concernSaved['identifiable'] = false;
+                    concernExpanded['identifiable'] = true;
+                  });
+                },
+                onClear: () {
+                  setState(() {
+                    concernSaved['identifiable'] = false;
+                    concernExpanded['identifiable'] = false;
+                    _getConcernController('identifiable').clear();
+                  });
+                },
+              ),
+              UIHelper.verticalSpace(12.h),
+              // 2
+              BuildSafetyCheckCardWidget(
+                key: const ValueKey('phone_tablet'),
+                title: 'Phone / Tablet',
+                description: 'My iPad and phone are working and charged.',
+                isChecked: isPhoneTabletChecked,
+                isExpanded: concernExpanded['phone_tablet'] ?? false,
+                isSaved: concernSaved['phone_tablet'] ?? false,
+                controller: _getConcernController('phone_tablet'),
+                onCheckChanged: (value) {
+                  setState(() {
+                    isPhoneTabletChecked = value ?? false;
+                  });
+                },
+                onToggleExpanded: () {
+                  setState(() {
+                    concernExpanded['phone_tablet'] = true;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    concernExpanded['phone_tablet'] = false;
+                  });
+                },
+                onSave: () {
+                  setState(() {
+                    concernSaved['phone_tablet'] = true;
+                    concernExpanded['phone_tablet'] = false;
+                  });
+                },
+                onEdit: () {
+                  setState(() {
+                    concernSaved['phone_tablet'] = false;
+                    concernExpanded['phone_tablet'] = true;
+                  });
+                },
+                onClear: () {
+                  setState(() {
+                    concernSaved['phone_tablet'] = false;
+                    concernExpanded['phone_tablet'] = false;
+                    _getConcernController('phone_tablet').clear();
+                  });
+                },
+              ),
+              UIHelper.verticalSpace(12.h),
+              // 3
+              BuildSafetyCheckCardWidget(
+                key: const ValueKey('tools'),
+                title: 'Tools',
+                description: 'My tools are available and in working condition.',
+                isChecked: isToolsChecked,
+                isExpanded: concernExpanded['tools'] ?? false,
+                isSaved: concernSaved['tools'] ?? false,
+                controller: _getConcernController('tools'),
+                onCheckChanged: (value) {
+                  setState(() {
+                    isToolsChecked = value ?? false;
+                  });
+                },
+                onToggleExpanded: () {
+                  setState(() {
+                    concernExpanded['tools'] = true;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    concernExpanded['tools'] = false;
+                  });
+                },
+                onSave: () {
+                  setState(() {
+                    concernSaved['tools'] = true;
+                    concernExpanded['tools'] = false;
+                  });
+                },
+                onEdit: () {
+                  setState(() {
+                    concernSaved['tools'] = false;
+                    concernExpanded['tools'] = true;
+                  });
+                },
+                onClear: () {
+                  setState(() {
+                    concernSaved['tools'] = false;
+                    concernExpanded['tools'] = false;
+                    _getConcernController('tools').clear();
+                  });
+                },
+              ),
+              UIHelper.verticalSpace(12.h),
+              // 4
+              BuildSafetyCheckCardWidget(
+                key: const ValueKey('ppe'),
+                title: 'PPE',
+                description: 'Required PPE is available and ready to use.',
+                isChecked: isPPEChecked,
+                isExpanded: concernExpanded['ppe'] ?? false,
+                isSaved: concernSaved['ppe'] ?? false,
+                controller: _getConcernController('ppe'),
+                onCheckChanged: (value) {
+                  setState(() {
+                    isPPEChecked = value ?? false;
+                  });
+                },
+                onToggleExpanded: () {
+                  setState(() {
+                    concernExpanded['ppe'] = true;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    concernExpanded['ppe'] = false;
+                  });
+                },
+                onSave: () {
+                  setState(() {
+                    concernSaved['ppe'] = true;
+                    concernExpanded['ppe'] = false;
+                  });
+                },
+                onEdit: () {
+                  setState(() {
+                    concernSaved['ppe'] = false;
+                    concernExpanded['ppe'] = true;
+                  });
+                },
+                onClear: () {
+                  setState(() {
+                    concernSaved['ppe'] = false;
+                    concernExpanded['ppe'] = false;
+                    _getConcernController('ppe').clear();
+                  });
+                },
+              ),
+
+              UIHelper.verticalSpace(12.h),
+
+              // 5
+              BuildSafetyCheckCardWidget(
+                key: const ValueKey('property_occupants'),
+                title: 'Property Occupants',
+                description:
+                    'I am aware of the occupants and have considered their presence.',
+                isChecked: isPropertyOccupantsChecked,
+                isExpanded: concernExpanded['property_occupants'] ?? false,
+                isSaved: concernSaved['property_occupants'] ?? false,
+                controller: _getConcernController('property_occupants'),
+                onCheckChanged: (value) {
+                  setState(() {
+                    isPropertyOccupantsChecked = value ?? false;
+                  });
+                },
+                onToggleExpanded: () {
+                  setState(() {
+                    concernExpanded['property_occupants'] = true;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    concernExpanded['property_occupants'] = false;
+                  });
+                },
+                onSave: () {
+                  setState(() {
+                    concernSaved['property_occupants'] = true;
+                    concernExpanded['property_occupants'] = false;
+                  });
+                },
+                onEdit: () {
+                  setState(() {
+                    concernSaved['property_occupants'] = false;
+                    concernExpanded['property_occupants'] = true;
+                  });
+                },
+                onClear: () {
+                  setState(() {
+                    concernSaved['property_occupants'] = false;
+                    concernExpanded['property_occupants'] = false;
+                    _getConcernController('property_occupants').clear();
+                  });
+                },
+              ),
+
+              UIHelper.verticalSpace(12.h),
+
+              // 6
+              BuildHeightSafetyCardWidget(
+                isChecked: isHeightChecked,
+                isExpanded: isHeightConcernExpanded,
+                isSaved: isHeightConcernSaved,
+                isRestrictionAccepted: isHeightRestrictionAccepted,
+                controller: heightConcernController,
+                onCheckChanged: (value) {
+                  setState(() {
+                    isHeightChecked = value ?? false;
+                  });
+                },
+                onReportConcern: () {
+                  setState(() {
+                    isHeightConcernExpanded = true;
+                  });
+                },
+                onCancelConcern: () {
+                  setState(() {
+                    isHeightConcernExpanded = false;
+                  });
+                },
+                onSaveConcern: () {
+                  setState(() {
+                    isHeightConcernSaved = true;
+                    isHeightConcernExpanded = false;
+                  });
+                },
+                onEditConcern: () {
+                  setState(() {
+                    isHeightConcernSaved = false;
+                    isHeightConcernExpanded = true;
+                  });
+                },
+                onClearConcern: () {
+                  setState(() {
+                    isHeightConcernSaved = false;
+                    isHeightConcernExpanded = false;
+                    isHeightRestrictionAccepted = false;
+                    heightConcernController.clear();
+                  });
+                },
+                onStopInspection: () {
+                  NavigationService.navigateTo(Routes.navigationScreen);
+                },
+                onContinueRestriction: () {
+                  setState(() {
+                    isHeightRestrictionAccepted = true;
+                  });
+                },
+                onChangeRestriction: () {
+                  setState(() {
+                    isHeightRestrictionAccepted = false;
+                  });
+                },
+              ),
+              UIHelper.verticalSpace(12.h),
+
+              // 7
+              BuildSafetyCheckCardWidget(
+                key: const ValueKey('electricity'),
+                title: 'Electricity',
+                description:
+                    'Potential electrical hazards have been considered.',
+                isChecked: isElectricityChecked,
+                isExpanded: concernExpanded['electricity'] ?? false,
+                isSaved: concernSaved['electricity'] ?? false,
+                controller: _getConcernController('electricity'),
+                onCheckChanged: (value) {
+                  setState(() {
+                    isElectricityChecked = value ?? false;
+                  });
+                },
+                onToggleExpanded: () {
+                  setState(() {
+                    concernExpanded['electricity'] = true;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    concernExpanded['electricity'] = false;
+                  });
+                },
+                onSave: () {
+                  setState(() {
+                    concernSaved['electricity'] = true;
+                    concernExpanded['electricity'] = false;
+                  });
+                },
+                onEdit: () {
+                  setState(() {
+                    concernSaved['electricity'] = false;
+                    concernExpanded['electricity'] = true;
+                  });
+                },
+                onClear: () {
+                  setState(() {
+                    concernSaved['electricity'] = false;
+                    concernExpanded['electricity'] = false;
+                    _getConcernController('electricity').clear();
+                  });
+                },
+              ),
+
+              UIHelper.verticalSpace(12.h),
+
+              // 8
+              BuildSafetyCheckCardWidget(
+                key: const ValueKey('slips_trips_falls'),
+                title: 'Slips, Trips & Falls',
+                description:
+                    'Potential slip, trip or fall hazards have been considered.',
+                isChecked: isSlipTripFallsChecked,
+                isExpanded: concernExpanded['slips_trips_falls'] ?? false,
+                isSaved: concernSaved['slips_trips_falls'] ?? false,
+                controller: _getConcernController('slips_trips_falls'),
+                onCheckChanged: (value) {
+                  setState(() {
+                    isSlipTripFallsChecked = value ?? false;
+                  });
+                },
+                onToggleExpanded: () {
+                  setState(() {
+                    concernExpanded['slips_trips_falls'] = true;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    concernExpanded['slips_trips_falls'] = false;
+                  });
+                },
+                onSave: () {
+                  setState(() {
+                    concernSaved['slips_trips_falls'] = true;
+                    concernExpanded['slips_trips_falls'] = false;
+                  });
+                },
+                onEdit: () {
+                  setState(() {
+                    concernSaved['slips_trips_falls'] = false;
+                    concernExpanded['slips_trips_falls'] = true;
+                  });
+                },
+                onClear: () {
+                  setState(() {
+                    concernSaved['slips_trips_falls'] = false;
+                    concernExpanded['slips_trips_falls'] = false;
+                    _getConcernController('slips_trips_falls').clear();
+                  });
+                },
+              ),
+
+              UIHelper.verticalSpace(12.h),
+
+              // 9
+              BuildSafetyCheckCardWidget(
+                key: const ValueKey('chemicals'),
+                title: 'Chemicals / Hazardous Substances',
+                description:
+                    'Potential chemical or hazardous substance risks have been considered.',
+                isChecked: isChemicalsChecked,
+                isExpanded: concernExpanded['chemicals'] ?? false,
+                isSaved: concernSaved['chemicals'] ?? false,
+                controller: _getConcernController('chemicals'),
+                onCheckChanged: (value) {
+                  setState(() {
+                    isChemicalsChecked = value ?? false;
+                  });
+                },
+                onToggleExpanded: () {
+                  setState(() {
+                    concernExpanded['chemicals'] = true;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    concernExpanded['chemicals'] = false;
+                  });
+                },
+                onSave: () {
+                  setState(() {
+                    concernSaved['chemicals'] = true;
+                    concernExpanded['chemicals'] = false;
+                  });
+                },
+                onEdit: () {
+                  setState(() {
+                    concernSaved['chemicals'] = false;
+                    concernExpanded['chemicals'] = true;
+                  });
+                },
+                onClear: () {
+                  setState(() {
+                    concernSaved['chemicals'] = false;
+                    concernExpanded['chemicals'] = false;
+                    _getConcernController('chemicals').clear();
+                  });
+                },
+              ),
+            ],
+          ),
+        );
       case 2:
         return _buildStepThree();
       default:
@@ -845,3 +697,486 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+  // Widget _buildStepTwo() {
+  //   return Container(
+  //     width: double.infinity,
+  //     padding: EdgeInsets.all(16.sp),
+  //     decoration: BoxDecoration(
+  //       color: AppColors.grey200Color,
+  //       borderRadius: BorderRadius.circular(18.r),
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Center(
+  //           child: Text(
+  //             'Health & Safety Check',
+  //             style: TextFontStyle.headlinePoppins60018,
+  //           ),
+  //         ),
+  //         UIHelper.verticalSpace(4.h),
+  //         Center(
+  //           child: Text(
+  //             'Confirm each safety condition before starting.',
+  //             style: TextFontStyle.headlinePoppins40012.copyWith(
+  //               color: AppColors.grey500,
+  //             ),
+  //           ),
+  //         ),
+  //         UIHelper.verticalSpace(16.h),
+  //         UIHelper.customDivider(color: AppColors.grey300),
+  //         UIHelper.verticalSpace(16.h),
+  //         Text(
+  //           '1 of 9 checks completed',
+  //           style: TextFontStyle.headlinePoppins50014,
+  //         ),
+  //         UIHelper.verticalSpace(8.h),
+  //         LinearProgressIndicator(
+  //           minHeight: 6.h,
+  //           backgroundColor: AppColors.cFFFFFF,
+  //           color: AppColors.c000000,
+  //           borderRadius: BorderRadius.circular(16.r),
+  //           value: 1 / 9,
+  //         ),
+  //         UIHelper.verticalSpace(16.h),
+  //         // 1
+  //         BuildSafetyCheckCardWidget(
+  //           key: const ValueKey('identifiable'),
+  //           title: 'Identifiable',
+  //           description: 'I have my uniform and name badge on.',
+  //           isChecked: isIdentifiableChecked,
+  //           isExpanded: concernExpanded['identifiable'] ?? false,
+  //           isSaved: concernSaved['identifiable'] ?? false,
+  //           controller: _getConcernController('identifiable'),
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isIdentifiableChecked = value ?? false;
+  //             });
+  //           },
+  //           onToggleExpanded: () {
+  //             setState(() {
+  //               concernExpanded['identifiable'] = true;
+  //             });
+  //           },
+  //           onCancel: () {
+  //             setState(() {
+  //               concernExpanded['identifiable'] = false;
+  //             });
+  //           },
+  //           onSave: () {
+  //             setState(() {
+  //               concernSaved['identifiable'] = true;
+  //               concernExpanded['identifiable'] = false;
+  //             });
+  //           },
+  //           onEdit: () {
+  //             setState(() {
+  //               concernSaved['identifiable'] = false;
+  //               concernExpanded['identifiable'] = true;
+  //             });
+  //           },
+  //           onClear: () {
+  //             setState(() {
+  //               concernSaved['identifiable'] = false;
+  //               concernExpanded['identifiable'] = false;
+  //               _getConcernController('identifiable').clear();
+  //             });
+  //           },
+  //         ),
+  //         UIHelper.verticalSpace(12.h),
+  //         // 2
+  //         BuildSafetyCheckCardWidget(
+  //           key: const ValueKey('phone_tablet'),
+  //           title: 'Phone / Tablet',
+  //           description: 'My iPad and phone are working and charged.',
+  //           isChecked: isPhoneTabletChecked,
+  //           isExpanded: concernExpanded['phone_tablet'] ?? false,
+  //           isSaved: concernSaved['phone_tablet'] ?? false,
+  //           controller: _getConcernController('phone_tablet'),
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isPhoneTabletChecked = value ?? false;
+  //             });
+  //           },
+  //           onToggleExpanded: () {
+  //             setState(() {
+  //               concernExpanded['phone_tablet'] = true;
+  //             });
+  //           },
+  //           onCancel: () {
+  //             setState(() {
+  //               concernExpanded['phone_tablet'] = false;
+  //             });
+  //           },
+  //           onSave: () {
+  //             setState(() {
+  //               concernSaved['phone_tablet'] = true;
+  //               concernExpanded['phone_tablet'] = false;
+  //             });
+  //           },
+  //           onEdit: () {
+  //             setState(() {
+  //               concernSaved['phone_tablet'] = false;
+  //               concernExpanded['phone_tablet'] = true;
+  //             });
+  //           },
+  //           onClear: () {
+  //             setState(() {
+  //               concernSaved['phone_tablet'] = false;
+  //               concernExpanded['phone_tablet'] = false;
+  //               _getConcernController('phone_tablet').clear();
+  //             });
+  //           },
+  //         ),
+  //         UIHelper.verticalSpace(12.h),
+  //         // 3
+  //         BuildSafetyCheckCardWidget(
+  //           key: const ValueKey('tools'),
+  //           title: 'Tools',
+  //           description: 'My tools are available and in working condition.',
+  //           isChecked: isToolsChecked,
+  //           isExpanded: concernExpanded['tools'] ?? false,
+  //           isSaved: concernSaved['tools'] ?? false,
+  //           controller: _getConcernController('tools'),
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isToolsChecked = value ?? false;
+  //             });
+  //           },
+  //           onToggleExpanded: () {
+  //             setState(() {
+  //               concernExpanded['tools'] = true;
+  //             });
+  //           },
+  //           onCancel: () {
+  //             setState(() {
+  //               concernExpanded['tools'] = false;
+  //             });
+  //           },
+  //           onSave: () {
+  //             setState(() {
+  //               concernSaved['tools'] = true;
+  //               concernExpanded['tools'] = false;
+  //             });
+  //           },
+  //           onEdit: () {
+  //             setState(() {
+  //               concernSaved['tools'] = false;
+  //               concernExpanded['tools'] = true;
+  //             });
+  //           },
+  //           onClear: () {
+  //             setState(() {
+  //               concernSaved['tools'] = false;
+  //               concernExpanded['tools'] = false;
+  //               _getConcernController('tools').clear();
+  //             });
+  //           },
+  //         ),
+  //         UIHelper.verticalSpace(12.h),
+  //         // 4
+  //         BuildSafetyCheckCardWidget(
+  //           key: const ValueKey('ppe'),
+  //           title: 'PPE',
+  //           description: 'Required PPE is available and ready to use.',
+  //           isChecked: isPPEChecked,
+  //           isExpanded: concernExpanded['ppe'] ?? false,
+  //           isSaved: concernSaved['ppe'] ?? false,
+  //           controller: _getConcernController('ppe'),
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isPPEChecked = value ?? false;
+  //             });
+  //           },
+  //           onToggleExpanded: () {
+  //             setState(() {
+  //               concernExpanded['ppe'] = true;
+  //             });
+  //           },
+  //           onCancel: () {
+  //             setState(() {
+  //               concernExpanded['ppe'] = false;
+  //             });
+  //           },
+  //           onSave: () {
+  //             setState(() {
+  //               concernSaved['ppe'] = true;
+  //               concernExpanded['ppe'] = false;
+  //             });
+  //           },
+  //           onEdit: () {
+  //             setState(() {
+  //               concernSaved['ppe'] = false;
+  //               concernExpanded['ppe'] = true;
+  //             });
+  //           },
+  //           onClear: () {
+  //             setState(() {
+  //               concernSaved['ppe'] = false;
+  //               concernExpanded['ppe'] = false;
+  //               _getConcernController('ppe').clear();
+  //             });
+  //           },
+  //         ),
+
+  //         UIHelper.verticalSpace(12.h),
+
+  //         // 5
+  //         BuildSafetyCheckCardWidget(
+  //           key: const ValueKey('property_occupants'),
+  //           title: 'Property Occupants',
+  //           description:
+  //               'I am aware of the occupants and have considered their presence.',
+  //           isChecked: isPropertyOccupantsChecked,
+  //           isExpanded: concernExpanded['property_occupants'] ?? false,
+  //           isSaved: concernSaved['property_occupants'] ?? false,
+  //           controller: _getConcernController('property_occupants'),
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isPropertyOccupantsChecked = value ?? false;
+  //             });
+  //           },
+  //           onToggleExpanded: () {
+  //             setState(() {
+  //               concernExpanded['property_occupants'] = true;
+  //             });
+  //           },
+  //           onCancel: () {
+  //             setState(() {
+  //               concernExpanded['property_occupants'] = false;
+  //             });
+  //           },
+  //           onSave: () {
+  //             setState(() {
+  //               concernSaved['property_occupants'] = true;
+  //               concernExpanded['property_occupants'] = false;
+  //             });
+  //           },
+  //           onEdit: () {
+  //             setState(() {
+  //               concernSaved['property_occupants'] = false;
+  //               concernExpanded['property_occupants'] = true;
+  //             });
+  //           },
+  //           onClear: () {
+  //             setState(() {
+  //               concernSaved['property_occupants'] = false;
+  //               concernExpanded['property_occupants'] = false;
+  //               _getConcernController('property_occupants').clear();
+  //             });
+  //           },
+  //         ),
+
+  //         UIHelper.verticalSpace(12.h),
+
+  //         // 6
+  //         BuildHeightSafetyCardWidget(
+  //           isChecked: isHeightChecked,
+  //           isExpanded: isHeightConcernExpanded,
+  //           isSaved: isHeightConcernSaved,
+  //           isRestrictionAccepted: isHeightRestrictionAccepted,
+  //           controller: heightConcernController,
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isHeightChecked = value ?? false;
+  //             });
+  //           },
+  //           onReportConcern: () {
+  //             setState(() {
+  //               isHeightConcernExpanded = true;
+  //             });
+  //           },
+  //           onCancelConcern: () {
+  //             setState(() {
+  //               isHeightConcernExpanded = false;
+  //             });
+  //           },
+  //           onSaveConcern: () {
+  //             setState(() {
+  //               isHeightConcernSaved = true;
+  //               isHeightConcernExpanded = false;
+  //             });
+  //           },
+  //           onEditConcern: () {
+  //             setState(() {
+  //               isHeightConcernSaved = false;
+  //               isHeightConcernExpanded = true;
+  //             });
+  //           },
+  //           onClearConcern: () {
+  //             setState(() {
+  //               isHeightConcernSaved = false;
+  //               isHeightConcernExpanded = false;
+  //               isHeightRestrictionAccepted = false;
+  //               heightConcernController.clear();
+  //             });
+  //           },
+  //           onStopInspection: () {},
+  //           onContinueRestriction: () {
+  //             setState(() {
+  //               isHeightRestrictionAccepted = true;
+  //             });
+  //           },
+  //           onChangeRestriction: () {
+  //             setState(() {
+  //               isHeightRestrictionAccepted = false;
+  //             });
+  //           },
+  //         ),
+  //         UIHelper.verticalSpace(12.h),
+
+  //         // 7
+  //         BuildSafetyCheckCardWidget(
+  //           key: const ValueKey('electricity'),
+  //           title: 'Electricity',
+  //           description: 'Potential electrical hazards have been considered.',
+  //           isChecked: isElectricityChecked,
+  //           isExpanded: concernExpanded['electricity'] ?? false,
+  //           isSaved: concernSaved['electricity'] ?? false,
+  //           controller: _getConcernController('electricity'),
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isElectricityChecked = value ?? false;
+  //             });
+  //           },
+  //           onToggleExpanded: () {
+  //             setState(() {
+  //               concernExpanded['electricity'] = true;
+  //             });
+  //           },
+  //           onCancel: () {
+  //             setState(() {
+  //               concernExpanded['electricity'] = false;
+  //             });
+  //           },
+  //           onSave: () {
+  //             setState(() {
+  //               concernSaved['electricity'] = true;
+  //               concernExpanded['electricity'] = false;
+  //             });
+  //           },
+  //           onEdit: () {
+  //             setState(() {
+  //               concernSaved['electricity'] = false;
+  //               concernExpanded['electricity'] = true;
+  //             });
+  //           },
+  //           onClear: () {
+  //             setState(() {
+  //               concernSaved['electricity'] = false;
+  //               concernExpanded['electricity'] = false;
+  //               _getConcernController('electricity').clear();
+  //             });
+  //           },
+  //         ),
+
+  //         UIHelper.verticalSpace(12.h),
+
+  //         // 8
+  //         BuildSafetyCheckCardWidget(
+  //           key: const ValueKey('slips_trips_falls'),
+  //           title: 'Slips, Trips & Falls',
+  //           description:
+  //               'Potential slip, trip or fall hazards have been considered.',
+  //           isChecked: isSlipTripFallsChecked,
+  //           isExpanded: concernExpanded['slips_trips_falls'] ?? false,
+  //           isSaved: concernSaved['slips_trips_falls'] ?? false,
+  //           controller: _getConcernController('slips_trips_falls'),
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isSlipTripFallsChecked = value ?? false;
+  //             });
+  //           },
+  //           onToggleExpanded: () {
+  //             setState(() {
+  //               concernExpanded['slips_trips_falls'] = true;
+  //             });
+  //           },
+  //           onCancel: () {
+  //             setState(() {
+  //               concernExpanded['slips_trips_falls'] = false;
+  //             });
+  //           },
+  //           onSave: () {
+  //             setState(() {
+  //               concernSaved['slips_trips_falls'] = true;
+  //               concernExpanded['slips_trips_falls'] = false;
+  //             });
+  //           },
+  //           onEdit: () {
+  //             setState(() {
+  //               concernSaved['slips_trips_falls'] = false;
+  //               concernExpanded['slips_trips_falls'] = true;
+  //             });
+  //           },
+  //           onClear: () {
+  //             setState(() {
+  //               concernSaved['slips_trips_falls'] = false;
+  //               concernExpanded['slips_trips_falls'] = false;
+  //               _getConcernController('slips_trips_falls').clear();
+  //             });
+  //           },
+  //         ),
+
+  //         UIHelper.verticalSpace(12.h),
+
+  //         // 9
+  //         BuildSafetyCheckCardWidget(
+  //           key: const ValueKey('chemicals'),
+  //           title: 'Chemicals / Hazardous Substances',
+  //           description:
+  //               'Potential chemical or hazardous substance risks have been considered.',
+  //           isChecked: isChemicalsChecked,
+  //           isExpanded: concernExpanded['chemicals'] ?? false,
+  //           isSaved: concernSaved['chemicals'] ?? false,
+  //           controller: _getConcernController('chemicals'),
+  //           onCheckChanged: (value) {
+  //             setState(() {
+  //               isChemicalsChecked = value ?? false;
+  //             });
+  //           },
+  //           onToggleExpanded: () {
+  //             setState(() {
+  //               concernExpanded['chemicals'] = true;
+  //             });
+  //           },
+  //           onCancel: () {
+  //             setState(() {
+  //               concernExpanded['chemicals'] = false;
+  //             });
+  //           },
+  //           onSave: () {
+  //             setState(() {
+  //               concernSaved['chemicals'] = true;
+  //               concernExpanded['chemicals'] = false;
+  //             });
+  //           },
+  //           onEdit: () {
+  //             setState(() {
+  //               concernSaved['chemicals'] = false;
+  //               concernExpanded['chemicals'] = true;
+  //             });
+  //           },
+  //           onClear: () {
+  //             setState(() {
+  //               concernSaved['chemicals'] = false;
+  //               concernExpanded['chemicals'] = false;
+  //               _getConcernController('chemicals').clear();
+  //             });
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
