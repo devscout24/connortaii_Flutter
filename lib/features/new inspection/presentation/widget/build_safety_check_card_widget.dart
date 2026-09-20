@@ -1,4 +1,5 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
+import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +91,7 @@ class BuildSafetyCheckCardWidget extends StatelessWidget {
                           size: 14.sp,
                           color: Colors.orange,
                         ),
-                        UIHelper.horizontalSpace(5.w),
+                        UIHelper.horizontalSpace(4.w),
                         Text(
                           'Concern Reported',
                           style: TextFontStyle.headlinePoppins50010.copyWith(
@@ -106,7 +107,7 @@ class BuildSafetyCheckCardWidget extends StatelessWidget {
                     children: [
                       Text(
                         'Details:',
-                        style: TextFontStyle.headlinePoppins50012.copyWith(
+                        style: TextFontStyle.headlinePoppins50014.copyWith(
                           color: AppColors.grey400,
                         ),
                       ),
@@ -116,9 +117,9 @@ class BuildSafetyCheckCardWidget extends StatelessWidget {
                           controller.text.isEmpty
                               ? 'No details provided'
                               : controller.text,
-                          maxLines: 2,
+                          maxLines: 10,
                           overflow: TextOverflow.ellipsis,
-                          style: TextFontStyle.headlinePoppins40012.copyWith(
+                          style: TextFontStyle.headlinePoppins50012.copyWith(
                             color: AppColors.grey700,
                           ),
                         ),
@@ -128,12 +129,16 @@ class BuildSafetyCheckCardWidget extends StatelessWidget {
                   UIHelper.verticalSpace(10.h),
                   Row(
                     children: [
-                      Expanded(
+                      Flexible(
+                        flex: 1,
                         child: GestureDetector(
                           onTap: onEdit,
                           child: Container(
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.h,
+                              horizontal: 18.w,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.cFFFFFF,
                               borderRadius: BorderRadius.circular(8.r),
@@ -146,20 +151,23 @@ class BuildSafetyCheckCardWidget extends StatelessWidget {
                         ),
                       ),
                       UIHelper.horizontalSpace(10.w),
-                      GestureDetector(
-                        onTap: onClear,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 18.w,
-                            vertical: 10.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.cFFFFFF,
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Text(
-                            'Clear',
-                            style: TextFontStyle.headlinePoppins50012,
+                      Flexible(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: onClear,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 18.w,
+                              vertical: 10.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.cFFFFFF,
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Text(
+                              'Clear',
+                              style: TextFontStyle.headlinePoppins50012,
+                            ),
                           ),
                         ),
                       ),
@@ -179,7 +187,7 @@ class BuildSafetyCheckCardWidget extends StatelessWidget {
                       onChanged: onCheckChanged,
                       activeColor: AppColors.acceptedTextColor,
                       checkColor: AppColors.cFFFFFF,
-                      side: BorderSide(color: AppColors.grey300, width: 2),
+                      side: BorderSide(color: AppColors.grey300, width: 2.w),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6.r),
                       ),
@@ -258,40 +266,19 @@ class BuildSafetyCheckCardWidget extends StatelessWidget {
                                   style: TextFontStyle.headlinePoppins50012,
                                 ),
                                 UIHelper.verticalSpace(6.h),
-                                TextField(
+                                CustomTextFormField(
                                   controller: controller,
-                                  maxLines: 4,
-                                  textInputAction: TextInputAction.newline,
-                                  style: TextFontStyle.headlinePoppins40012,
-                                  decoration: InputDecoration(
-                                    hintText: 'Describe the concern...',
-                                    hintStyle: TextFontStyle
-                                        .headlinePoppins40012
-                                        .copyWith(color: AppColors.grey400),
-                                    filled: true,
-                                    fillColor: AppColors.cFFFFFF,
-                                    contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 12.w,
-                                      vertical: 12.h,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(9.r),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(9.r),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(9.r),
-                                      borderSide: BorderSide(
-                                        color: isRedHazard
-                                            ? AppColors.red
-                                            : Colors.orange,
-                                        width: 1,
-                                      ),
-                                    ),
+                                  hintText: 'Describe the concern...',
+                                  hintStyle: TextFontStyle.headlinePoppins40014
+                                      .copyWith(color: AppColors.grey400),
+                                  fillColor: AppColors.cFFFFFF,
+                                  maxline: 4,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 12.w,
+                                    vertical: 12.h,
                                   ),
+                                  borderColor: AppColors.red.withAlpha(80),
+                                  borderRadius: 12.r,
                                 ),
                                 UIHelper.verticalSpace(10.h),
                                 Row(
