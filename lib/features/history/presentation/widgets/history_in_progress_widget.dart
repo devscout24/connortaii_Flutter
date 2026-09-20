@@ -60,11 +60,11 @@ class HistoryInProgressWidget extends StatelessWidget {
                 ],
               ),
               UIHelper.verticalSpace(16.h),
-              UIHelper.customDivider(),
+              UIHelper.customDivider(color: AppColors.grey300),
               UIHelper.verticalSpace(16.h),
               Text(
                 "$sectionCompleteValue / 10 Sections Complete",
-                style: TextFontStyle.headlinePoppins50016,
+                style: TextFontStyle.headlinePoppins50014,
               ),
               UIHelper.verticalSpace(6.h),
               LinearProgressIndicator(

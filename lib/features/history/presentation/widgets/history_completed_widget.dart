@@ -84,7 +84,7 @@ class HistoryCompletedWidget extends StatelessWidget {
                               Text(
                                 'Download',
                                 style: TextFontStyle.headlinePoppins50014
-                                    .copyWith(color: AppColors.grey800),
+                                    .copyWith(color: AppColors.c000000),
                               ),
                             ],
                           ),
@@ -117,7 +117,7 @@ class HistoryCompletedWidget extends StatelessWidget {
                               Text(
                                 'Share',
                                 style: TextFontStyle.headlinePoppins50014
-                                    .copyWith(color: AppColors.grey800),
+                                    .copyWith(color: AppColors.c000000),
                               ),
                             ],
                           ),
