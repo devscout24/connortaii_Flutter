@@ -1,4 +1,5 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
+import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                       onChanged: onCheckChanged,
                       activeColor: AppColors.acceptedTextColor,
                       checkColor: AppColors.cFFFFFF,
-                      side: BorderSide(color: AppColors.grey300, width: 2),
+                      side: BorderSide(color: AppColors.grey300, width: 2.w),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6.r),
                       ),
@@ -93,7 +94,7 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                                 style: TextFontStyle.headlinePoppins60014,
                               ),
                             ),
-                            UIHelper.horizontalSpace(8.w),
+                            UIHelper.horizontalSpace(6.w),
                             Text(
                               'Red Hazard',
                               style: TextFontStyle.headlinePoppins40010
@@ -114,9 +115,9 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                           child: Text(
                             'Report Concern',
                             style: TextFontStyle.headlinePoppins50014.copyWith(
-                              color: Colors.orange,
+                              color: AppColors.reportConcernColor,
                               decoration: TextDecoration.underline,
-                              decorationColor: Colors.orange,
+                              decorationColor: AppColors.reportConcernColor,
                             ),
                           ),
                         ),
@@ -141,7 +142,7 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                                 style: TextFontStyle.headlinePoppins60014,
                               ),
                             ),
-                            UIHelper.horizontalSpace(8.w),
+                            UIHelper.horizontalSpace(6.w),
                             Text(
                               'Red Hazard',
                               style: TextFontStyle.headlinePoppins40010
@@ -179,36 +180,22 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                     ],
                   ),
                   UIHelper.verticalSpace(12.h),
-                  Text('Details', style: TextFontStyle.headlinePoppins50012),
-                  UIHelper.verticalSpace(6.h),
-                  TextField(
+                  Text('Details', style: TextFontStyle.headlinePoppins50014),
+                  UIHelper.verticalSpace(8.h),
+                  CustomTextFormField(
                     controller: controller,
-                    maxLines: 4,
-                    style: TextFontStyle.headlinePoppins40012,
-                    decoration: InputDecoration(
-                      hintText: 'Describe the concern...',
-                      hintStyle: TextFontStyle.headlinePoppins40012.copyWith(
-                        color: AppColors.grey400,
-                      ),
-                      filled: true,
-                      fillColor: AppColors.cFFFFFF,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 12.h,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(9.r),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(9.r),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(9.r),
-                        borderSide: BorderSide(color: AppColors.red, width: 1),
-                      ),
+                    hintText: 'Describe the concern...',
+                    hintStyle: TextFontStyle.headlinePoppins40014.copyWith(
+                      color: AppColors.grey400,
                     ),
+                    fillColor: AppColors.cFFFFFF,
+                    maxline: 4,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 12.h,
+                    ),
+                    borderColor: AppColors.red.withAlpha(80),
+                    borderRadius: 12.r,
                   ),
                   UIHelper.verticalSpace(10.h),
                   Row(
@@ -266,7 +253,7 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                           style: TextFontStyle.headlinePoppins60014,
                         ),
                       ),
-                      UIHelper.horizontalSpace(8.w),
+                      UIHelper.horizontalSpace(6.w),
                       Text(
                         'Red Hazard',
                         style: TextFontStyle.headlinePoppins40010.copyWith(
@@ -306,7 +293,7 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                       Text(
                         'Details:',
                         style: TextFontStyle.headlinePoppins50012.copyWith(
-                          color: AppColors.grey400,
+                          color: AppColors.grey500,
                         ),
                       ),
                       UIHelper.horizontalSpace(8.w),
@@ -315,9 +302,9 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                           controller.text.isEmpty
                               ? 'No details provided'
                               : controller.text,
-                          maxLines: 2,
+                          maxLines: 10,
                           overflow: TextOverflow.ellipsis,
-                          style: TextFontStyle.headlinePoppins40012.copyWith(
+                          style: TextFontStyle.headlinePoppins50012.copyWith(
                             color: AppColors.grey700,
                           ),
                         ),
@@ -370,7 +357,7 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                     padding: EdgeInsets.all(14.sp),
                     decoration: BoxDecoration(
                       color: AppColors.cFFFFFF,
-                      borderRadius: BorderRadius.circular(10.r),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,13 +385,13 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                               color: AppColors.grey500,
                             ),
                           ),
-                          UIHelper.verticalSpace(14.h),
+                          UIHelper.verticalSpace(12.h),
                           GestureDetector(
                             onTap: onStopInspection,
                             child: Container(
                               width: double.infinity,
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(vertical: 11.h),
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
                               decoration: BoxDecoration(
                                 color: Colors.red,
                                 borderRadius: BorderRadius.circular(8.r),
@@ -422,7 +409,7 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                             child: Container(
                               width: double.infinity,
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(vertical: 11.h),
+                              padding: EdgeInsets.symmetric(vertical: 10.h),
                               decoration: BoxDecoration(
                                 color: AppColors.grey200Color,
                                 borderRadius: BorderRadius.circular(8.r),
@@ -434,34 +421,46 @@ class BuildHeightSafetyCardWidget extends StatelessWidget {
                             ),
                           ),
                         ] else
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 10.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.grey200Color,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Continuing with safety restriction',
-                                    style: TextFontStyle.headlinePoppins40012
-                                        .copyWith(color: AppColors.grey500),
-                                  ),
+                          Column(
+                            children: [
+                              Text(
+                                'This condition may prevent the inspection from being completed safely.',
+                                style: TextFontStyle.headlinePoppins40012
+                                    .copyWith(color: AppColors.grey500),
+                              ),
+                              UIHelper.verticalSpace(12.h),
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12.w,
+                                  vertical: 10.h,
                                 ),
-                                GestureDetector(
-                                  onTap: onChangeRestriction,
-                                  child: Text(
-                                    'Change',
-                                    style: TextFontStyle.headlinePoppins50012,
-                                  ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.grey200Color,
+                                  borderRadius: BorderRadius.circular(8.r),
                                 ),
-                              ],
-                            ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'Continuing with safety restriction',
+                                        style: TextFontStyle
+                                            .headlinePoppins40012
+                                            .copyWith(color: AppColors.grey500),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: onChangeRestriction,
+                                      child: Text(
+                                        'Change',
+                                        style:
+                                            TextFontStyle.headlinePoppins50012,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                       ],
                     ),
