@@ -127,12 +127,44 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.cFFFFFF,
+        color: AppColors.grey200Color,
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(color: AppColors.grey300),
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Text(
+              'Health & Safety Check',
+              style: TextFontStyle.headlinePoppins60018,
+            ),
+          ),
+          UIHelper.verticalSpace(4.h),
+          Center(
+            child: Text(
+              'Confirm each safety condition before starting.',
+              style: TextFontStyle.headlinePoppins40012.copyWith(
+                color: AppColors.grey500,
+              ),
+            ),
+          ),
+          UIHelper.verticalSpace(16.h),
+          UIHelper.customDivider(color: AppColors.grey300),
+          UIHelper.verticalSpace(16.h),
+          Text(
+            '1 of 10 checks completed',
+            style: TextFontStyle.headlinePoppins50014,
+          ),
+          UIHelper.verticalSpace(8.h),
+          LinearProgressIndicator(
+            minHeight: 6.h,
+            backgroundColor: AppColors.cFFFFFF,
+            color: AppColors.c000000,
+            borderRadius: BorderRadius.circular(16.r),
+            value: 1 / 10,
+          ),
+          UIHelper.verticalSpace(16.h),
         ],
       ),
     );
