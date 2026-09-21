@@ -7,6 +7,7 @@ import 'package:connortaii_app/features/auth/signup/presentation/signup_screen.d
 import 'package:connortaii_app/features/auth/signup/presentation/signup_verify_screen.dart';
 import 'package:connortaii_app/features/history/presentation/history_screen.dart';
 import 'package:connortaii_app/features/home/presentation/home_screen.dart';
+import 'package:connortaii_app/features/new%20inspection/presentation/inspection_started_screen.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/new_inspection_screen.dart';
 import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/change_password_screen.dart';
@@ -45,6 +46,7 @@ final class Routes {
   static const String privacyPolicyScreen = '/PrivacyPolicyScreen';
   static const String termsConditionScreen = '/TermsConditionScreen';
   static const String newInspectionScreen = '/NewInspectionScreen';
+  static const String inspectionStartedScreen = '/InspectionStartedScreen';
 }
 
 final class RouteGenerator {
@@ -223,6 +225,19 @@ final class RouteGenerator {
               )
             : CupertinoPageRoute(
                 builder: (context) => const NewInspectionScreen(),
+              );
+
+      case Routes.inspectionStartedScreen:
+        Map args = settings.arguments as Map;
+
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: InspectionStartedScreen(title: args['title']),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) =>
+                    InspectionStartedScreen(title: args['title']),
               );
 
       default:
