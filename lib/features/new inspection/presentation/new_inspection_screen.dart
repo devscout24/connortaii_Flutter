@@ -1,4 +1,5 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
+import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
@@ -11,6 +12,7 @@ import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class NewInspectionScreen extends StatefulWidget {
   const NewInspectionScreen({super.key});
@@ -136,14 +138,14 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
         children: [
           Center(
             child: Text(
-              'Health & Safety Check',
+              'Inspection Overview',
               style: TextFontStyle.headlinePoppins60018,
             ),
           ),
           UIHelper.verticalSpace(4.h),
           Center(
             child: Text(
-              'Confirm each safety condition before starting.',
+              'A clear summary of key findings across the property.',
               style: TextFontStyle.headlinePoppins40012.copyWith(
                 color: AppColors.grey500,
               ),
@@ -165,6 +167,75 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
             value: 1 / 10,
           ),
           UIHelper.verticalSpace(16.h),
+          OverviewItemListRowWidget(
+            index: '1',
+            title: 'Exterior Roof',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '2',
+            title: 'Roof Space',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '3',
+            title: 'External Wall Cladding',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '4',
+            title: 'Foundation & Subfloor',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '5',
+            title: 'Plumbing System',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '6',
+            title: 'Electrical System',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '7',
+            title: 'Weather Tightness',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '8',
+            title: 'Site Improvements',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '9',
+            title: 'Pest & Potential Hazards',
+            status: 'Not Started',
+            onTap: () {},
+          ),
+          UIHelper.verticalSpace(12.h),
+          OverviewItemListRowWidget(
+            index: '10',
+            title: 'Interior Elements',
+            status: 'Not Started',
+            onTap: () {},
+          ),
         ],
       ),
     );
@@ -717,9 +788,84 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                       onTap: () {
                         _nextStep();
                       },
-                      title: _activeStep == 2 ? 'Submit' : 'Continue',
+                      title: _activeStep == 2
+                          ? 'Review Inspection'
+                          : 'Continue',
                     ),
                   ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OverviewItemListRowWidget extends StatelessWidget {
+  final String index;
+  final String title;
+  final String status;
+  final VoidCallback onTap;
+  const OverviewItemListRowWidget({
+    super.key,
+    required this.title,
+    required this.status,
+    required this.onTap,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.grey200Color,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        index,
+                        style: TextFontStyle.headlinePoppins50012,
+                      ),
+                    ),
+                  ),
+                  UIHelper.horizontalSpace(8.w),
+                  Text(title, style: TextFontStyle.headlinePoppins60014),
+                ],
+              ),
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.grey200Color,
+                      borderRadius: BorderRadius.circular(40.r),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        status,
+                        style: TextFontStyle.headlinePoppins50012,
+                      ),
+                    ),
+                  ),
+                  UIHelper.horizontalSpace(8.w),
+                  SvgPicture.asset(AppIcons.arrowLeftIcon),
                 ],
               ),
             ],
