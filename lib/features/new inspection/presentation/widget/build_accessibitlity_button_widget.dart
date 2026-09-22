@@ -30,7 +30,7 @@ class BuildAccessibilityButton extends StatelessWidget {
           height: 54.h,
           decoration: BoxDecoration(
             color: isSelected
-                ? (isRestrictedButton ? AppColors.red : AppColors.cFFFFFF)
+                ? (isRestrictedButton ? AppColors.red : AppColors.green500)
                 : AppColors.cFFFFFF,
             borderRadius: BorderRadius.circular(52.r),
             border: Border.all(
