@@ -117,7 +117,9 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                         ],
                       ),
                       if (isRestricted) ...[
-                        UIHelper.verticalSpace(18.h),
+                        UIHelper.verticalSpace(16.h),
+                        UIHelper.customDivider(color: AppColors.grey300),
+                        UIHelper.verticalSpace(16.h),
                         Row(
                           children: [
                             Icon(
@@ -158,7 +160,7 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                         UIHelper.customDivider(color: AppColors.grey300),
                         UIHelper.verticalSpace(16.h),
                         Text(
-                          'Restriction Reason',
+                          'Describe',
                           style: TextFontStyle.headlinePoppins50016,
                         ),
                         UIHelper.verticalSpace(8.h),
