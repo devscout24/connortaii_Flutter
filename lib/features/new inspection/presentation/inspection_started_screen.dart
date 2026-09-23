@@ -23,7 +23,7 @@ class InspectionStartedScreen extends StatefulWidget {
 }
 
 class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
-  bool isRestricted = false;
+  bool? isRestricted;
   String selectedRestrictionReason = '';
   final TextEditingController restrictionController = TextEditingController();
   final TextEditingController roofTypeController = TextEditingController();
@@ -44,7 +44,7 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
   final TextEditingController flashingsObservationController =
       TextEditingController();
 
-  String levelOfConcern = 'Green';
+  String levelOfConcern = '';
   bool sectionOneExpanded = false;
   bool sectionTwoExpanded = false;
   bool sectionThreeExpanded = false;
@@ -132,7 +132,7 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                         children: [
                           BuildAccessibilityButton(
                             title: 'Yes, Accessible',
-                            isSelected: !isRestricted,
+                            isSelected: isRestricted == false,
                             isRestrictedButton: false,
                             onTap: () {
                               setState(() {
@@ -143,7 +143,7 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                           UIHelper.horizontalSpace(8.w),
                           BuildAccessibilityButton(
                             title: 'No, Restricted',
-                            isSelected: isRestricted,
+                            isSelected: isRestricted == true,
                             isRestrictedButton: true,
                             onTap: () {
                               setState(() {
@@ -153,7 +153,7 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                           ),
                         ],
                       ),
-                      if (isRestricted) ...[
+                      if (isRestricted == true) ...[
                         UIHelper.verticalSpace(16.h),
                         UIHelper.customDivider(color: AppColors.grey300),
                         UIHelper.verticalSpace(16.h),
@@ -212,8 +212,28 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                           isBorder: true,
                           borderRadius: 12.r,
                         ),
+                        UIHelper.verticalSpace(18.h),
+                        SizedBox(
+                          width: double.infinity,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              decoration: BoxDecoration(
+                                color: AppColors.c000000,
+                                borderRadius: BorderRadius.circular(40.r),
+                              ),
+                              child: Text(
+                                'Save Section',
+                                style: TextFontStyle.headlinePoppins60024
+                                    .copyWith(color: AppColors.cFFFFFF),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
-                      if (!isRestricted) ...[
+                      if (isRestricted == false) ...[
                         UIHelper.verticalSpace(16.h),
                         BuildSectionCard(
                           number: 1,
@@ -392,29 +412,28 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                             onImageButtonPressed();
                           },
                         ),
+                        UIHelper.verticalSpace(18.h),
+                        SizedBox(
+                          width: double.infinity,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              decoration: BoxDecoration(
+                                color: AppColors.c000000,
+                                borderRadius: BorderRadius.circular(40.r),
+                              ),
+                              child: Text(
+                                'Save Section',
+                                style: TextFontStyle.headlinePoppins60024
+                                    .copyWith(color: AppColors.cFFFFFF),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ],
-                  ),
-                ),
-              ),
-              UIHelper.verticalSpace(18.h),
-              SizedBox(
-                width: double.infinity,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.c000000,
-                      borderRadius: BorderRadius.circular(40.r),
-                    ),
-                    child: Text(
-                      'Save Section',
-                      style: TextFontStyle.headlinePoppins60024.copyWith(
-                        color: AppColors.cFFFFFF,
-                      ),
-                    ),
                   ),
                 ),
               ),
