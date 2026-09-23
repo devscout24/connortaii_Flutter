@@ -238,7 +238,7 @@ class StepOneWidget extends StatelessWidget {
             controller: weatherDuringInspectionController,
             hintText: 'e.g “Sunny, Cloudy, Rainy or Windy”',
             keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.done,
             fillColor: AppColors.cFFFFFF,
           ),
           UIHelper.verticalSpace(12.h),

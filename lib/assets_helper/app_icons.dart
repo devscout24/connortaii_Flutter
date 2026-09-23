@@ -45,4 +45,12 @@ class AppIcons {
   static const String greenSelectedIcon = '$iconsRoute/greenSelectedIcon.svg';
   static const String greenUnselectedIcon =
       '$iconsRoute/greenUnselectedIcon.svg';
+  static const String redUnselectedIcon = '$iconsRoute/redUnselectedIcon.svg';
+  static const String redSelectedIcon = '$iconsRoute/redSelectedIcon.svg';
+  static const String orangeUnselectedIcon =
+      '$iconsRoute/orangeUnselectedIcon.svg';
+  static const String orangeSelectedIcon = '$iconsRoute/orangeSelectedIcon.svg';
+  static const String nAUnSelectedIcon = '$iconsRoute/NAUnSelectedIcon.svg';
+  static const String nASelectedIcon = '$iconsRoute/NASelectedIcon.svg';
+  static const String uploadPhotoCamIcon = '$iconsRoute/uploadPhotoCamIcon.svg';
 }
