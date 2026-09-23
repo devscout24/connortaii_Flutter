@@ -553,7 +553,6 @@ class BuildSectionCard extends StatelessWidget {
   final String title;
   final bool expanded;
   final VoidCallback onToggle;
-
   final TextEditingController typeController;
   final String levelOfConcern;
   final TextEditingController observationController;
