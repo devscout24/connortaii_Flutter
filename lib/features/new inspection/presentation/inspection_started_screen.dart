@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
@@ -44,12 +43,18 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
   final TextEditingController flashingsObservationController =
       TextEditingController();
 
-  String levelOfConcern = '';
+  String roofTypeLevelOfConcern = '';
+  String overallConditionLevelOfConcern = '';
+  String roofCoveringLevelOfConcern = '';
+  String gluttersLevelOfConcern = '';
+  String flashingsLevelOfConcern = '';
+
   bool sectionOneExpanded = false;
   bool sectionTwoExpanded = false;
   bool sectionThreeExpanded = false;
   bool sectionFourExpanded = false;
   bool sectionFiveExpanded = false;
+
   final List<String> restrictionReasons = [
     'Limited Access',
     'Obstruction',
@@ -243,27 +248,27 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                             () => sectionOneExpanded = !sectionOneExpanded,
                           ),
                           typeController: roofTypeController,
-                          levelOfConcern: levelOfConcern,
+                          levelOfConcern: roofTypeLevelOfConcern,
                           observationController: roofObservationController,
                           imageFileList: _imageFileList,
                           grenOntap: () {
                             setState(() {
-                              levelOfConcern = 'Green';
+                              roofTypeLevelOfConcern = 'Green';
                             });
                           },
                           orangentap: () {
                             setState(() {
-                              levelOfConcern = 'Orange';
+                              roofTypeLevelOfConcern = 'Orange';
                             });
                           },
                           redOntap: () {
                             setState(() {
-                              levelOfConcern = 'Red';
+                              roofTypeLevelOfConcern = 'Red';
                             });
                           },
                           nAOntap: () {
                             setState(() {
-                              levelOfConcern = 'N/A';
+                              roofTypeLevelOfConcern = 'N/A';
                             });
                           },
                           imagePickerOntap: () {
@@ -278,28 +283,28 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                             () => sectionTwoExpanded = !sectionTwoExpanded,
                           ),
                           typeController: overallConditionTypeController,
-                          levelOfConcern: levelOfConcern,
+                          levelOfConcern: overallConditionLevelOfConcern,
                           observationController:
                               overallConditionObservationController,
                           imageFileList: _imageFileList,
                           grenOntap: () {
                             setState(() {
-                              levelOfConcern = 'Green';
+                              overallConditionLevelOfConcern = 'Green';
                             });
                           },
                           orangentap: () {
                             setState(() {
-                              levelOfConcern = 'Orange';
+                              overallConditionLevelOfConcern = 'Orange';
                             });
                           },
                           redOntap: () {
                             setState(() {
-                              levelOfConcern = 'Red';
+                              overallConditionLevelOfConcern = 'Red';
                             });
                           },
                           nAOntap: () {
                             setState(() {
-                              levelOfConcern = 'N/A';
+                              overallConditionLevelOfConcern = 'N/A';
                             });
                           },
                           imagePickerOntap: () {
@@ -314,28 +319,28 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                             () => sectionThreeExpanded = !sectionThreeExpanded,
                           ),
                           typeController: roofCoveringTypeController,
-                          levelOfConcern: levelOfConcern,
+                          levelOfConcern: roofCoveringLevelOfConcern,
                           observationController:
                               roofCoveringObservationController,
                           imageFileList: _imageFileList,
                           grenOntap: () {
                             setState(() {
-                              levelOfConcern = 'Green';
+                              roofCoveringLevelOfConcern = 'Green';
                             });
                           },
                           orangentap: () {
                             setState(() {
-                              levelOfConcern = 'Orange';
+                              roofCoveringLevelOfConcern = 'Orange';
                             });
                           },
                           redOntap: () {
                             setState(() {
-                              levelOfConcern = 'Red';
+                              roofCoveringLevelOfConcern = 'Red';
                             });
                           },
                           nAOntap: () {
                             setState(() {
-                              levelOfConcern = 'N/A';
+                              roofCoveringLevelOfConcern = 'N/A';
                             });
                           },
                           imagePickerOntap: () {
@@ -350,27 +355,27 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                             () => sectionFourExpanded = !sectionFourExpanded,
                           ),
                           typeController: gluttersTypeController,
-                          levelOfConcern: levelOfConcern,
+                          levelOfConcern: gluttersLevelOfConcern,
                           observationController: gluttersObservationController,
                           imageFileList: _imageFileList,
                           grenOntap: () {
                             setState(() {
-                              levelOfConcern = 'Green';
+                              gluttersLevelOfConcern = 'Green';
                             });
                           },
                           orangentap: () {
                             setState(() {
-                              levelOfConcern = 'Orange';
+                              gluttersLevelOfConcern = 'Orange';
                             });
                           },
                           redOntap: () {
                             setState(() {
-                              levelOfConcern = 'Red';
+                              gluttersLevelOfConcern = 'Red';
                             });
                           },
                           nAOntap: () {
                             setState(() {
-                              levelOfConcern = 'N/A';
+                              gluttersLevelOfConcern = 'N/A';
                             });
                           },
                           imagePickerOntap: () {
@@ -385,27 +390,27 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                             () => sectionFiveExpanded = !sectionFiveExpanded,
                           ),
                           typeController: flashingsTypeController,
-                          levelOfConcern: levelOfConcern,
+                          levelOfConcern: flashingsLevelOfConcern,
                           observationController: flashingsObservationController,
                           imageFileList: _imageFileList,
                           grenOntap: () {
                             setState(() {
-                              levelOfConcern = 'Green';
+                              flashingsLevelOfConcern = 'Green';
                             });
                           },
                           orangentap: () {
                             setState(() {
-                              levelOfConcern = 'Orange';
+                              flashingsLevelOfConcern = 'Orange';
                             });
                           },
                           redOntap: () {
                             setState(() {
-                              levelOfConcern = 'Red';
+                              flashingsLevelOfConcern = 'Red';
                             });
                           },
                           nAOntap: () {
                             setState(() {
-                              levelOfConcern = 'N/A';
+                              flashingsLevelOfConcern = 'N/A';
                             });
                           },
                           imagePickerOntap: () {
