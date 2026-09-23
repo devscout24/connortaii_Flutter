@@ -41,7 +41,7 @@ class BuildAccessibilityButton extends StatelessWidget {
           ),
           child: Text(
             title,
-            style: isSelected && isRestrictedButton
+            style: isSelected
                 ? TextFontStyle.headlinePoppins60016.copyWith(
                     color: AppColors.cFFFFFF,
                   )
