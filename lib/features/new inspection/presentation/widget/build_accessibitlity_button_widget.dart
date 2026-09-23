@@ -45,7 +45,9 @@ class BuildAccessibilityButton extends StatelessWidget {
                 ? TextFontStyle.headlinePoppins60016.copyWith(
                     color: AppColors.cFFFFFF,
                   )
-                : TextFontStyle.headlinePoppins40014,
+                : TextFontStyle.headlinePoppins40014.copyWith(
+                    color: AppColors.c000000,
+                  ),
             textAlign: TextAlign.center,
           ),
         ),
