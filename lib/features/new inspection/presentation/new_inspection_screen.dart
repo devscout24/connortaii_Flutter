@@ -116,6 +116,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
 
     debugPrint('Inspection payload: $payload');
     _showMessage('Inspection saved successfully');
+    NavigationService.navigateTo(Routes.reportGeneratedScreen);
   }
 
   void _showMessage(String message) {
@@ -182,63 +183,108 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
             index: '2',
             title: 'Roof Space',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'Roof Space'},
+              );
+            },
           ),
           UIHelper.verticalSpace(12.h),
           OverviewItemListRowWidget(
             index: '3',
             title: 'External Wall Cladding',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'External Wall Cladding'},
+              );
+            },
           ),
           UIHelper.verticalSpace(12.h),
           OverviewItemListRowWidget(
             index: '4',
             title: 'Foundation & Subfloor',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'Foundation & Subfloor'},
+              );
+            },
           ),
           UIHelper.verticalSpace(12.h),
           OverviewItemListRowWidget(
             index: '5',
             title: 'Plumbing System',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'Plumbing System'},
+              );
+            },
           ),
           UIHelper.verticalSpace(12.h),
           OverviewItemListRowWidget(
             index: '6',
             title: 'Electrical System',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'Electrical System'},
+              );
+            },
           ),
           UIHelper.verticalSpace(12.h),
           OverviewItemListRowWidget(
             index: '7',
             title: 'Weather Tightness',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'Weather Tightness'},
+              );
+            },
           ),
           UIHelper.verticalSpace(12.h),
           OverviewItemListRowWidget(
             index: '8',
             title: 'Site Improvements',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'Site Improvements'},
+              );
+            },
           ),
           UIHelper.verticalSpace(12.h),
           OverviewItemListRowWidget(
             index: '9',
             title: 'Pest & Potential Hazards',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'Pest & Potential Hazards'},
+              );
+            },
           ),
           UIHelper.verticalSpace(12.h),
           OverviewItemListRowWidget(
             index: '10',
             title: 'Interior Elements',
             status: 'Not Started',
-            onTap: () {},
+            onTap: () {
+              NavigationService.navigateToWithArgs(
+                Routes.inspectionStartedScreen,
+                {'title': 'Interior Elements'},
+              );
+            },
           ),
         ],
       ),
