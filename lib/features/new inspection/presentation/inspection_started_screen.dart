@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
@@ -9,6 +11,7 @@ import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 class InspectionStartedScreen extends StatefulWidget {
   final String title;
@@ -23,6 +26,8 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
   bool isRestricted = false;
   String selectedRestrictionReason = '';
   final TextEditingController restrictionController = TextEditingController();
+  final TextEditingController typeController = TextEditingController();
+  final TextEditingController observationController = TextEditingController();
 
   String levelOfConcern = 'Green';
   bool sectionOneExpanded = true;
@@ -37,50 +42,29 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
     'Other',
   ];
 
+  List<XFile> _imageFileList = [];
+  final ImagePicker _picker = ImagePicker();
+
   @override
   void dispose() {
     restrictionController.dispose();
+    typeController.dispose();
+    observationController.dispose();
     super.dispose();
   }
 
-  // Widget _buildSmallSection(int number, String title) {
-  //   return Container(
-  //     width: double.infinity,
-  //     decoration: BoxDecoration(
-  //       color: AppColors.cFFFFFF,
-  //       borderRadius: BorderRadius.circular(12.r),
-  //     ),
-  //     child: Padding(
-  //       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
-  //       child: Row(
-  //         children: [
-  //           Container(
-  //             width: 32.w,
-  //             height: 32.w,
-  //             decoration: BoxDecoration(
-  //               color: AppColors.grey80,
-  //               borderRadius: BorderRadius.circular(12.r),
-  //             ),
-  //             alignment: Alignment.center,
-  //             child: Text(
-  //               number.toString(),
-  //               style: TextFontStyle.headlinePoppins50014,
-  //             ),
-  //           ),
-  //           UIHelper.horizontalSpace(12.w),
-  //           Expanded(
-  //             child: Text(title, style: TextFontStyle.headlinePoppins50016),
-  //           ),
-  //           Icon(
-  //             Icons.arrow_forward_ios,
-  //             size: 16.sp,
-  //             color: AppColors.grey500,
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  Future<void> onImageButtonPressed() async {
+    try {
+      final pickedFiles = await _picker.pickMultiImage(imageQuality: 80);
+      if (pickedFiles.isNotEmpty) {
+        setState(() {
+          _imageFileList = [..._imageFileList, ...pickedFiles];
+        });
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +185,6 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                       ],
                       if (!isRestricted) ...[
                         UIHelper.verticalSpace(16.h),
-                        // Accessible design: show form-like accordion sections
                         BuildSectionCard(
                           number: 1,
                           title: 'Roof Type / Material',
@@ -212,13 +195,15 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              UIHelper.verticalSpace(8.h),
+                              UIHelper.customDivider(color: AppColors.grey300),
+                              UIHelper.verticalSpace(16.h),
                               Text(
                                 'Type',
                                 style: TextFontStyle.headlinePoppins50016,
                               ),
                               UIHelper.verticalSpace(8.h),
                               CustomTextFormField(
+                                controller: typeController,
                                 hintText: 'Type...',
                                 maxline: 1,
                               ),
@@ -230,66 +215,71 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                               UIHelper.verticalSpace(8.h),
                               Row(
                                 children: [
-                                  LevelButtonWidget(
-                                    label: 'Green',
-                                    iconSelected: AppIcons.greenSelectedIcon,
-                                    iconUnselected:
-                                        AppIcons.greenUnselectedIcon,
-                                    color: AppColors.green500.withAlpha(55),
-                                    selected: levelOfConcern == 'Green',
-                                    onTap: () {
-                                      setState(() {
-                                        levelOfConcern = 'Green';
-                                      });
-                                    },
-                                    textColor: AppColors.green500,
-                                  ),
-                                  UIHelper.horizontalSpace(8.w),
-                                  LevelButtonWidget(
-                                    label: 'Orange',
-                                    iconSelected: AppIcons.greenSelectedIcon,
-                                    iconUnselected:
-                                        AppIcons.greenUnselectedIcon,
-                                    color: AppColors.onboardingTwoBg.withAlpha(
-                                      55,
+                                  Expanded(
+                                    child: LevelButtonWidget(
+                                      label: 'Green',
+                                      iconSelected:
+                                          AppIcons.greenUnselectedIcon,
+                                      iconUnselected:
+                                          AppIcons.greenSelectedIcon,
+                                      color: AppColors.green500.withAlpha(35),
+                                      selected: levelOfConcern == 'Green',
+                                      onTap: () {
+                                        setState(() {
+                                          levelOfConcern = 'Green';
+                                        });
+                                      },
+                                      textColor: AppColors.green500,
                                     ),
-                                    selected: levelOfConcern == 'Orange',
-                                    onTap: () {
-                                      setState(() {
-                                        levelOfConcern = 'Orange';
-                                      });
-                                    },
-                                    textColor: AppColors.onboardingTwoBg,
                                   ),
                                   UIHelper.horizontalSpace(8.w),
-                                  LevelButtonWidget(
-                                    label: 'Red',
-                                    iconSelected: AppIcons.greenSelectedIcon,
-                                    iconUnselected:
-                                        AppIcons.greenUnselectedIcon,
-                                    color: AppColors.red.withAlpha(55),
-                                    selected: levelOfConcern == 'Red',
-                                    onTap: () {
-                                      setState(() {
-                                        levelOfConcern = 'Red';
-                                      });
-                                    },
-                                    textColor: AppColors.red,
+                                  Expanded(
+                                    child: LevelButtonWidget(
+                                      label: 'Orange',
+                                      iconSelected:
+                                          AppIcons.orangeUnselectedIcon,
+                                      iconUnselected:
+                                          AppIcons.orangeSelectedIcon,
+                                      color: AppColors.onboardingTwoBg
+                                          .withAlpha(35),
+                                      selected: levelOfConcern == 'Orange',
+                                      onTap: () {
+                                        setState(() {
+                                          levelOfConcern = 'Orange';
+                                        });
+                                      },
+                                      textColor: AppColors.onboardingTwoBg,
+                                    ),
+                                  ),
+                                  UIHelper.horizontalSpace(8.w),
+                                  Expanded(
+                                    child: LevelButtonWidget(
+                                      label: 'Red',
+                                      iconSelected: AppIcons.redUnselectedIcon,
+                                      iconUnselected: AppIcons.redSelectedIcon,
+                                      color: AppColors.red.withAlpha(35),
+                                      selected: levelOfConcern == 'Red',
+                                      onTap: () {
+                                        setState(() {
+                                          levelOfConcern = 'Red';
+                                        });
+                                      },
+                                      textColor: AppColors.red,
+                                    ),
                                   ),
                                   UIHelper.horizontalSpace(8.w),
                                   LevelButtonWidget(
                                     label: 'N/A',
-                                    iconSelected: AppIcons.greenSelectedIcon,
-                                    iconUnselected:
-                                        AppIcons.greenUnselectedIcon,
-                                    color: AppColors.red.withAlpha(55),
+                                    iconSelected: AppIcons.nAUnSelectedIcon,
+                                    iconUnselected: AppIcons.nASelectedIcon,
+                                    color: AppColors.c000000.withAlpha(35),
                                     selected: levelOfConcern == 'N/A',
                                     onTap: () {
                                       setState(() {
                                         levelOfConcern = 'N/A';
                                       });
                                     },
-                                    textColor: AppColors.red,
+                                    textColor: AppColors.c000000,
                                   ),
                                 ],
                               ),
@@ -300,9 +290,9 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                               ),
                               UIHelper.verticalSpace(8.h),
                               CustomTextFormField(
+                                controller: observationController,
                                 hintText: 'Describe the observations...',
                                 maxline: 4,
-                                fillColor: AppColors.cFFFFFF,
                                 isBorder: true,
                                 borderColor: AppColors.grey300,
                                 borderRadius: 12.r,
@@ -313,44 +303,85 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                                 style: TextFontStyle.headlinePoppins50016,
                               ),
                               UIHelper.verticalSpace(8.h),
-                              Container(
-                                width: 78.w,
-                                height: 78.h,
-                                decoration: BoxDecoration(
-                                  color: AppColors.cFFFFFF,
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  border: Border.all(color: AppColors.grey300),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: AppColors.grey400,
-                                      size: 20.sp,
+                              GestureDetector(
+                                onTap: () {
+                                  onImageButtonPressed();
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(12.sp),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.cFFFFFF,
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                      color: AppColors.grey300,
                                     ),
-                                    UIHelper.verticalSpace(6.h),
-                                    Text(
-                                      'Add',
-                                      style: TextFontStyle.headlinePoppins40014
-                                          .copyWith(color: AppColors.grey400),
+                                  ),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        if (_imageFileList.isNotEmpty) ...[
+                                          for (final image in _imageFileList)
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                right: 8.w,
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                child: SizedBox(
+                                                  width: 78.w,
+                                                  height: 78.h,
+                                                  child: Image.file(
+                                                    File(image.path),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                        Container(
+                                          width: 78.w,
+                                          height: 78.h,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.cFFFFFF,
+                                            borderRadius: BorderRadius.circular(
+                                              12.r,
+                                            ),
+                                            border: Border.all(
+                                              color: AppColors.grey300,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                AppIcons.uploadPhotoCamIcon,
+                                              ),
+                                              UIHelper.verticalSpace(6.h),
+                                              Text(
+                                                'Add',
+                                                style: TextFontStyle
+                                                    .headlinePoppins40014
+                                                    .copyWith(
+                                                      color: AppColors.grey400,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        UIHelper.verticalSpace(16.h),
-                        // Other collapsed sections
-                        // _buildSmallSection(2, 'Overall Condition'),
-                        // UIHelper.verticalSpace(12.h),
-                        // _buildSmallSection(3, 'Roof Covering'),
-                        // UIHelper.verticalSpace(12.h),
-                        // _buildSmallSection(4, 'Gutters & Downpipes'),
-                        UIHelper.verticalSpace(16.h),
-                        UIHelper.customDivider(color: AppColors.grey300),
-                        UIHelper.verticalSpace(16.h),
                       ],
                     ],
                   ),
@@ -415,7 +446,10 @@ class LevelButtonWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? color : AppColors.cFFFFFF,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: selected ? color : AppColors.grey300),
+          border: Border.all(
+            color: selected ? color : AppColors.grey300,
+            width: 2.w,
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
