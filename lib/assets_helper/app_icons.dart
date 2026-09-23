@@ -53,4 +53,7 @@ class AppIcons {
   static const String nAUnSelectedIcon = '$iconsRoute/NAUnSelectedIcon.svg';
   static const String nASelectedIcon = '$iconsRoute/NASelectedIcon.svg';
   static const String uploadPhotoCamIcon = '$iconsRoute/uploadPhotoCamIcon.svg';
+  static const String reportGenerateIcon = '$iconsRoute/reportGenerateIcon.png';
+  static const String pdfIcon = '$iconsRoute/pdfIcon.svg';
+  static const String downloadPdfIcon = '$iconsRoute/downloadPdfIcon.svg';
 }
