@@ -26,12 +26,30 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
   bool isRestricted = false;
   String selectedRestrictionReason = '';
   final TextEditingController restrictionController = TextEditingController();
-  final TextEditingController typeController = TextEditingController();
-  final TextEditingController observationController = TextEditingController();
+  final TextEditingController roofTypeController = TextEditingController();
+  final TextEditingController roofObservationController =
+      TextEditingController();
+  final TextEditingController overallConditionTypeController =
+      TextEditingController();
+  final TextEditingController overallConditionObservationController =
+      TextEditingController();
+  final TextEditingController roofCoveringTypeController =
+      TextEditingController();
+  final TextEditingController roofCoveringObservationController =
+      TextEditingController();
+  final TextEditingController gluttersTypeController = TextEditingController();
+  final TextEditingController gluttersObservationController =
+      TextEditingController();
+  final TextEditingController flashingsTypeController = TextEditingController();
+  final TextEditingController flashingsObservationController =
+      TextEditingController();
 
   String levelOfConcern = 'Green';
-  bool sectionOneExpanded = true;
-
+  bool sectionOneExpanded = false;
+  bool sectionTwoExpanded = false;
+  bool sectionThreeExpanded = false;
+  bool sectionFourExpanded = false;
+  bool sectionFiveExpanded = false;
   final List<String> restrictionReasons = [
     'Limited Access',
     'Obstruction',
@@ -48,8 +66,16 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
   @override
   void dispose() {
     restrictionController.dispose();
-    typeController.dispose();
-    observationController.dispose();
+    roofTypeController.dispose();
+    roofObservationController.dispose();
+    overallConditionTypeController.dispose();
+    overallConditionObservationController.dispose();
+    roofCoveringTypeController.dispose();
+    roofCoveringObservationController.dispose();
+    gluttersTypeController.dispose();
+    gluttersObservationController.dispose();
+    flashingsTypeController.dispose();
+    flashingsObservationController.dispose();
     super.dispose();
   }
 
@@ -109,7 +135,9 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                             isSelected: !isRestricted,
                             isRestrictedButton: false,
                             onTap: () {
-                              setState(() => isRestricted = false);
+                              setState(() {
+                                isRestricted = false;
+                              });
                             },
                           ),
                           UIHelper.horizontalSpace(8.w),
@@ -118,7 +146,9 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                             isSelected: isRestricted,
                             isRestrictedButton: true,
                             onTap: () {
-                              setState(() => isRestricted = true);
+                              setState(() {
+                                isRestricted = true;
+                              });
                             },
                           ),
                         ],
@@ -192,195 +222,175 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                           onToggle: () => setState(
                             () => sectionOneExpanded = !sectionOneExpanded,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              UIHelper.customDivider(color: AppColors.grey300),
-                              UIHelper.verticalSpace(16.h),
-                              Text(
-                                'Type',
-                                style: TextFontStyle.headlinePoppins50016,
-                              ),
-                              UIHelper.verticalSpace(8.h),
-                              CustomTextFormField(
-                                controller: typeController,
-                                hintText: 'Type...',
-                                maxline: 1,
-                              ),
-                              UIHelper.verticalSpace(12.h),
-                              Text(
-                                'Level of Concern',
-                                style: TextFontStyle.headlinePoppins50016,
-                              ),
-                              UIHelper.verticalSpace(8.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: LevelButtonWidget(
-                                      label: 'Green',
-                                      iconSelected:
-                                          AppIcons.greenUnselectedIcon,
-                                      iconUnselected:
-                                          AppIcons.greenSelectedIcon,
-                                      color: AppColors.green500.withAlpha(35),
-                                      selected: levelOfConcern == 'Green',
-                                      onTap: () {
-                                        setState(() {
-                                          levelOfConcern = 'Green';
-                                        });
-                                      },
-                                      textColor: AppColors.green500,
-                                    ),
-                                  ),
-                                  UIHelper.horizontalSpace(8.w),
-                                  Expanded(
-                                    child: LevelButtonWidget(
-                                      label: 'Orange',
-                                      iconSelected:
-                                          AppIcons.orangeUnselectedIcon,
-                                      iconUnselected:
-                                          AppIcons.orangeSelectedIcon,
-                                      color: AppColors.onboardingTwoBg
-                                          .withAlpha(35),
-                                      selected: levelOfConcern == 'Orange',
-                                      onTap: () {
-                                        setState(() {
-                                          levelOfConcern = 'Orange';
-                                        });
-                                      },
-                                      textColor: AppColors.onboardingTwoBg,
-                                    ),
-                                  ),
-                                  UIHelper.horizontalSpace(8.w),
-                                  Expanded(
-                                    child: LevelButtonWidget(
-                                      label: 'Red',
-                                      iconSelected: AppIcons.redUnselectedIcon,
-                                      iconUnselected: AppIcons.redSelectedIcon,
-                                      color: AppColors.red.withAlpha(35),
-                                      selected: levelOfConcern == 'Red',
-                                      onTap: () {
-                                        setState(() {
-                                          levelOfConcern = 'Red';
-                                        });
-                                      },
-                                      textColor: AppColors.red,
-                                    ),
-                                  ),
-                                  UIHelper.horizontalSpace(8.w),
-                                  LevelButtonWidget(
-                                    label: 'N/A',
-                                    iconSelected: AppIcons.nAUnSelectedIcon,
-                                    iconUnselected: AppIcons.nASelectedIcon,
-                                    color: AppColors.c000000.withAlpha(35),
-                                    selected: levelOfConcern == 'N/A',
-                                    onTap: () {
-                                      setState(() {
-                                        levelOfConcern = 'N/A';
-                                      });
-                                    },
-                                    textColor: AppColors.c000000,
-                                  ),
-                                ],
-                              ),
-                              UIHelper.verticalSpace(12.h),
-                              Text(
-                                'Observations',
-                                style: TextFontStyle.headlinePoppins50016,
-                              ),
-                              UIHelper.verticalSpace(8.h),
-                              CustomTextFormField(
-                                controller: observationController,
-                                hintText: 'Describe the observations...',
-                                maxline: 4,
-                                isBorder: true,
-                                borderColor: AppColors.grey300,
-                                borderRadius: 12.r,
-                              ),
-                              UIHelper.verticalSpace(12.h),
-                              Text(
-                                'Upload Photo',
-                                style: TextFontStyle.headlinePoppins50016,
-                              ),
-                              UIHelper.verticalSpace(8.h),
-                              GestureDetector(
-                                onTap: () {
-                                  onImageButtonPressed();
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.all(12.sp),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.cFFFFFF,
-                                    borderRadius: BorderRadius.circular(12.r),
-                                    border: Border.all(
-                                      color: AppColors.grey300,
-                                    ),
-                                  ),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        if (_imageFileList.isNotEmpty) ...[
-                                          for (final image in _imageFileList)
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                right: 8.w,
-                                              ),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(12.r),
-                                                child: SizedBox(
-                                                  width: 78.w,
-                                                  height: 78.h,
-                                                  child: Image.file(
-                                                    File(image.path),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                        Container(
-                                          width: 78.w,
-                                          height: 78.h,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.cFFFFFF,
-                                            borderRadius: BorderRadius.circular(
-                                              12.r,
-                                            ),
-                                            border: Border.all(
-                                              color: AppColors.grey300,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SvgPicture.asset(
-                                                AppIcons.uploadPhotoCamIcon,
-                                              ),
-                                              UIHelper.verticalSpace(6.h),
-                                              Text(
-                                                'Add',
-                                                style: TextFontStyle
-                                                    .headlinePoppins40014
-                                                    .copyWith(
-                                                      color: AppColors.grey400,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          typeController: roofTypeController,
+                          levelOfConcern: levelOfConcern,
+                          observationController: roofObservationController,
+                          imageFileList: _imageFileList,
+                          grenOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Green';
+                            });
+                          },
+                          orangentap: () {
+                            setState(() {
+                              levelOfConcern = 'Orange';
+                            });
+                          },
+                          redOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Red';
+                            });
+                          },
+                          nAOntap: () {
+                            setState(() {
+                              levelOfConcern = 'N/A';
+                            });
+                          },
+                          imagePickerOntap: () {
+                            onImageButtonPressed();
+                          },
+                        ),
+                        BuildSectionCard(
+                          number: 2,
+                          title: 'Overall Condition',
+                          expanded: sectionTwoExpanded,
+                          onToggle: () => setState(
+                            () => sectionTwoExpanded = !sectionTwoExpanded,
                           ),
+                          typeController: overallConditionTypeController,
+                          levelOfConcern: levelOfConcern,
+                          observationController:
+                              overallConditionObservationController,
+                          imageFileList: _imageFileList,
+                          grenOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Green';
+                            });
+                          },
+                          orangentap: () {
+                            setState(() {
+                              levelOfConcern = 'Orange';
+                            });
+                          },
+                          redOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Red';
+                            });
+                          },
+                          nAOntap: () {
+                            setState(() {
+                              levelOfConcern = 'N/A';
+                            });
+                          },
+                          imagePickerOntap: () {
+                            onImageButtonPressed();
+                          },
+                        ),
+                        BuildSectionCard(
+                          number: 3,
+                          title: 'Roof Covering',
+                          expanded: sectionThreeExpanded,
+                          onToggle: () => setState(
+                            () => sectionThreeExpanded = !sectionThreeExpanded,
+                          ),
+                          typeController: roofCoveringTypeController,
+                          levelOfConcern: levelOfConcern,
+                          observationController:
+                              roofCoveringObservationController,
+                          imageFileList: _imageFileList,
+                          grenOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Green';
+                            });
+                          },
+                          orangentap: () {
+                            setState(() {
+                              levelOfConcern = 'Orange';
+                            });
+                          },
+                          redOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Red';
+                            });
+                          },
+                          nAOntap: () {
+                            setState(() {
+                              levelOfConcern = 'N/A';
+                            });
+                          },
+                          imagePickerOntap: () {
+                            onImageButtonPressed();
+                          },
+                        ),
+                        BuildSectionCard(
+                          number: 4,
+                          title: 'Gutters & Downpipes',
+                          expanded: sectionFourExpanded,
+                          onToggle: () => setState(
+                            () => sectionFourExpanded = !sectionFourExpanded,
+                          ),
+                          typeController: gluttersTypeController,
+                          levelOfConcern: levelOfConcern,
+                          observationController: gluttersObservationController,
+                          imageFileList: _imageFileList,
+                          grenOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Green';
+                            });
+                          },
+                          orangentap: () {
+                            setState(() {
+                              levelOfConcern = 'Orange';
+                            });
+                          },
+                          redOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Red';
+                            });
+                          },
+                          nAOntap: () {
+                            setState(() {
+                              levelOfConcern = 'N/A';
+                            });
+                          },
+                          imagePickerOntap: () {
+                            onImageButtonPressed();
+                          },
+                        ),
+                        BuildSectionCard(
+                          number: 5,
+                          title: 'Flashings & Penetrations',
+                          expanded: sectionFiveExpanded,
+                          onToggle: () => setState(
+                            () => sectionFiveExpanded = !sectionFiveExpanded,
+                          ),
+                          typeController: flashingsTypeController,
+                          levelOfConcern: levelOfConcern,
+                          observationController: flashingsObservationController,
+                          imageFileList: _imageFileList,
+                          grenOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Green';
+                            });
+                          },
+                          orangentap: () {
+                            setState(() {
+                              levelOfConcern = 'Orange';
+                            });
+                          },
+                          redOntap: () {
+                            setState(() {
+                              levelOfConcern = 'Red';
+                            });
+                          },
+                          nAOntap: () {
+                            setState(() {
+                              levelOfConcern = 'N/A';
+                            });
+                          },
+                          imagePickerOntap: () {
+                            onImageButtonPressed();
+                          },
                         ),
                       ],
                     ],
@@ -412,6 +422,184 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SectionAccessibilityDetailsWidget extends StatelessWidget {
+  const SectionAccessibilityDetailsWidget({
+    super.key,
+    required this.typeController,
+    required this.levelOfConcern,
+    required this.observationController,
+    required this._imageFileList,
+    required this.grenOntap,
+    required this.orangentap,
+    required this.redOntap,
+    required this.nAOntap,
+    required this.imagePickerOntap,
+  });
+
+  final TextEditingController typeController;
+  final String levelOfConcern;
+  final TextEditingController observationController;
+  final List<XFile> _imageFileList;
+  final VoidCallback grenOntap;
+  final VoidCallback orangentap;
+  final VoidCallback redOntap;
+  final VoidCallback nAOntap;
+  final VoidCallback imagePickerOntap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        UIHelper.customDivider(color: AppColors.grey300),
+        UIHelper.verticalSpace(16.h),
+        Text('Type', style: TextFontStyle.headlinePoppins50016),
+        UIHelper.verticalSpace(8.h),
+        CustomTextFormField(
+          controller: typeController,
+          hintText: 'Type...',
+          maxline: 1,
+        ),
+        UIHelper.verticalSpace(12.h),
+        Text('Level of Concern', style: TextFontStyle.headlinePoppins50016),
+        UIHelper.verticalSpace(8.h),
+        Row(
+          children: [
+            Expanded(
+              child: LevelButtonWidget(
+                label: 'Green',
+                iconSelected: AppIcons.greenUnselectedIcon,
+                iconUnselected: AppIcons.greenSelectedIcon,
+                color: AppColors.green500.withAlpha(35),
+                selected: levelOfConcern == 'Green',
+                onTap: () {
+                  grenOntap();
+                },
+                textColor: AppColors.green500,
+              ),
+            ),
+            UIHelper.horizontalSpace(8.w),
+            Expanded(
+              child: LevelButtonWidget(
+                label: 'Orange',
+                iconSelected: AppIcons.orangeUnselectedIcon,
+                iconUnselected: AppIcons.orangeSelectedIcon,
+                color: AppColors.onboardingTwoBg.withAlpha(35),
+                selected: levelOfConcern == 'Orange',
+                onTap: () {
+                  orangentap();
+                },
+                textColor: AppColors.onboardingTwoBg,
+              ),
+            ),
+            UIHelper.horizontalSpace(8.w),
+            Expanded(
+              child: LevelButtonWidget(
+                label: 'Red',
+                iconSelected: AppIcons.redUnselectedIcon,
+                iconUnselected: AppIcons.redSelectedIcon,
+                color: AppColors.red.withAlpha(35),
+                selected: levelOfConcern == 'Red',
+                onTap: () {
+                  redOntap();
+                },
+                textColor: AppColors.red,
+              ),
+            ),
+            UIHelper.horizontalSpace(8.w),
+            LevelButtonWidget(
+              label: 'N/A',
+              iconSelected: AppIcons.nAUnSelectedIcon,
+              iconUnselected: AppIcons.nASelectedIcon,
+              color: AppColors.c000000.withAlpha(35),
+              selected: levelOfConcern == 'N/A',
+              onTap: () {
+                nAOntap();
+              },
+              textColor: AppColors.c000000,
+            ),
+          ],
+        ),
+        UIHelper.verticalSpace(12.h),
+        Text('Observations', style: TextFontStyle.headlinePoppins50016),
+        UIHelper.verticalSpace(8.h),
+        CustomTextFormField(
+          controller: observationController,
+          hintText: 'Describe the observations...',
+          maxline: 4,
+          isBorder: true,
+          borderColor: AppColors.grey300,
+          borderRadius: 12.r,
+        ),
+        UIHelper.verticalSpace(12.h),
+        Text('Upload Photo', style: TextFontStyle.headlinePoppins50016),
+        UIHelper.verticalSpace(8.h),
+        GestureDetector(
+          onTap: () {
+            imagePickerOntap();
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12.sp),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: AppColors.grey300),
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (_imageFileList.isNotEmpty) ...[
+                    for (final image in _imageFileList)
+                      Padding(
+                        padding: EdgeInsets.only(right: 8.w),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: SizedBox(
+                            width: 78.w,
+                            height: 78.h,
+                            child: Image.file(
+                              File(image.path),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                  Container(
+                    width: 78.w,
+                    height: 78.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.cFFFFFF,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: AppColors.grey300),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(AppIcons.uploadPhotoCamIcon),
+                        UIHelper.verticalSpace(6.h),
+                        Text(
+                          'Add',
+                          style: TextFontStyle.headlinePoppins40014.copyWith(
+                            color: AppColors.grey400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -514,66 +702,245 @@ class BuildSectionCard extends StatelessWidget {
   final String title;
   final bool expanded;
   final VoidCallback onToggle;
-  final Widget child;
+
+  final TextEditingController typeController;
+  final String levelOfConcern;
+  final TextEditingController observationController;
+  final List<XFile> _imageFileList;
+  final VoidCallback grenOntap;
+  final VoidCallback orangentap;
+  final VoidCallback redOntap;
+  final VoidCallback nAOntap;
+  final VoidCallback imagePickerOntap;
+
   const BuildSectionCard({
     super.key,
     required this.number,
     required this.title,
     required this.expanded,
     required this.onToggle,
-    required this.child,
+    required this.typeController,
+    required this.levelOfConcern,
+    required this.observationController,
+    required this._imageFileList,
+    required this.grenOntap,
+    required this.orangentap,
+    required this.redOntap,
+    required this.nAOntap,
+    required this.imagePickerOntap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.cFFFFFF,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: onToggle,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-              child: Row(
-                children: [
-                  Container(
-                    width: 32.w,
-                    height: 32.w,
-                    decoration: BoxDecoration(
-                      color: AppColors.grey80,
-                      borderRadius: BorderRadius.circular(12.r),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.cFFFFFF,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Column(
+          children: [
+            InkWell(
+              onTap: onToggle,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32.w,
+                      height: 32.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.grey80,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        number.toString(),
+                        style: TextFontStyle.headlinePoppins50014,
+                      ),
                     ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      number.toString(),
-                      style: TextFontStyle.headlinePoppins50014,
+                    UIHelper.horizontalSpace(12.w),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextFontStyle.headlinePoppins50016,
+                      ),
                     ),
-                  ),
-                  UIHelper.horizontalSpace(12.w),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: TextFontStyle.headlinePoppins50016,
+                    Icon(
+                      expanded ? Icons.expand_less : Icons.expand_more,
+                      color: AppColors.grey700,
                     ),
-                  ),
-                  Icon(
-                    expanded ? Icons.expand_less : Icons.expand_more,
-                    color: AppColors.grey700,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          if (expanded)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-              child: child,
-            ),
-        ],
+            if (expanded)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    UIHelper.customDivider(color: AppColors.grey300),
+                    UIHelper.verticalSpace(16.h),
+                    Text('Type', style: TextFontStyle.headlinePoppins50016),
+                    UIHelper.verticalSpace(8.h),
+                    CustomTextFormField(
+                      controller: typeController,
+                      hintText: 'Type...',
+                      maxline: 1,
+                    ),
+                    UIHelper.verticalSpace(12.h),
+                    Text(
+                      'Level of Concern',
+                      style: TextFontStyle.headlinePoppins50016,
+                    ),
+                    UIHelper.verticalSpace(8.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: LevelButtonWidget(
+                            label: 'Green',
+                            iconSelected: AppIcons.greenUnselectedIcon,
+                            iconUnselected: AppIcons.greenSelectedIcon,
+                            color: AppColors.green500.withAlpha(35),
+                            selected: levelOfConcern == 'Green',
+                            onTap: () {
+                              grenOntap();
+                            },
+                            textColor: AppColors.green500,
+                          ),
+                        ),
+                        UIHelper.horizontalSpace(8.w),
+                        Expanded(
+                          child: LevelButtonWidget(
+                            label: 'Orange',
+                            iconSelected: AppIcons.orangeUnselectedIcon,
+                            iconUnselected: AppIcons.orangeSelectedIcon,
+                            color: AppColors.onboardingTwoBg.withAlpha(35),
+                            selected: levelOfConcern == 'Orange',
+                            onTap: () {
+                              orangentap();
+                            },
+                            textColor: AppColors.onboardingTwoBg,
+                          ),
+                        ),
+                        UIHelper.horizontalSpace(8.w),
+                        Expanded(
+                          child: LevelButtonWidget(
+                            label: 'Red',
+                            iconSelected: AppIcons.redUnselectedIcon,
+                            iconUnselected: AppIcons.redSelectedIcon,
+                            color: AppColors.red.withAlpha(35),
+                            selected: levelOfConcern == 'Red',
+                            onTap: () {
+                              redOntap();
+                            },
+                            textColor: AppColors.red,
+                          ),
+                        ),
+                        UIHelper.horizontalSpace(8.w),
+                        LevelButtonWidget(
+                          label: 'N/A',
+                          iconSelected: AppIcons.nAUnSelectedIcon,
+                          iconUnselected: AppIcons.nASelectedIcon,
+                          color: AppColors.c000000.withAlpha(35),
+                          selected: levelOfConcern == 'N/A',
+                          onTap: () {
+                            nAOntap();
+                          },
+                          textColor: AppColors.c000000,
+                        ),
+                      ],
+                    ),
+                    UIHelper.verticalSpace(12.h),
+                    Text(
+                      'Observations',
+                      style: TextFontStyle.headlinePoppins50016,
+                    ),
+                    UIHelper.verticalSpace(8.h),
+                    CustomTextFormField(
+                      controller: observationController,
+                      hintText: 'Describe the observations...',
+                      maxline: 4,
+                      isBorder: true,
+                      borderColor: AppColors.grey300,
+                      borderRadius: 12.r,
+                    ),
+                    UIHelper.verticalSpace(12.h),
+                    Text(
+                      'Upload Photo',
+                      style: TextFontStyle.headlinePoppins50016,
+                    ),
+                    UIHelper.verticalSpace(8.h),
+                    GestureDetector(
+                      onTap: () {
+                        imagePickerOntap();
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(12.sp),
+                        decoration: BoxDecoration(
+                          color: AppColors.cFFFFFF,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(color: AppColors.grey300),
+                        ),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (_imageFileList.isNotEmpty) ...[
+                                for (final image in _imageFileList)
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8.w),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      child: SizedBox(
+                                        width: 78.w,
+                                        height: 78.h,
+                                        child: Image.file(
+                                          File(image.path),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                              Container(
+                                width: 78.w,
+                                height: 78.h,
+                                decoration: BoxDecoration(
+                                  color: AppColors.cFFFFFF,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(color: AppColors.grey300),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppIcons.uploadPhotoCamIcon,
+                                    ),
+                                    UIHelper.verticalSpace(6.h),
+                                    Text(
+                                      'Add',
+                                      style: TextFontStyle.headlinePoppins40014
+                                          .copyWith(color: AppColors.grey400),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
