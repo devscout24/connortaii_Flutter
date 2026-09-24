@@ -28,19 +28,19 @@ class StartInspectionContainerWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Text(
-                    "Start a new property inspection and generate a report.",
-                    style: TextFontStyle.headlinePoppins40016.copyWith(
-                      color: AppColors.grey800,
-                    ),
+                  child: Column(
+                    children: [
+                      UIHelper.verticalSpace(12.h),
+                      Text(
+                        "Start a new property inspection and generate a report.",
+                        style: TextFontStyle.headlinePoppins40018grey.copyWith(
+                          color: AppColors.grey800,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: Image.asset(
-                    AppImages.startInspectionIcon,
-                    height: 100.h,
-                  ),
-                ),
+                Image.asset(AppImages.startInspectionIcon, height: 100.h),
               ],
             ),
             UIHelper.verticalSpace(8.h),
