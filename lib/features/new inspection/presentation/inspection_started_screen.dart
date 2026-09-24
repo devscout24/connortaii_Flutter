@@ -5,6 +5,7 @@ import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_accessibitlity_button_widget.dart';
+import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_reason_chip_widget.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/level_button_widget.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
@@ -450,42 +451,6 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class BuildReasonChipWidget extends StatelessWidget {
-  final String reason;
-  final bool isSelected;
-  final VoidCallback onTap;
-  const BuildReasonChipWidget({
-    super.key,
-    required this.reason,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(28.r),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.c000000 : AppColors.cFFFFFF,
-          borderRadius: BorderRadius.circular(28.r),
-        ),
-        child: Text(
-          reason,
-          style: isSelected
-              ? TextFontStyle.headlinePoppins50014.copyWith(
-                  color: AppColors.cFFFFFF,
-                )
-              : TextFontStyle.headlinePoppins40014,
         ),
       ),
     );
