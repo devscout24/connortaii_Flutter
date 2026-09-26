@@ -28,8 +28,9 @@ final class Endpoints {
   static String deleteAccount() => "/api/auth/delete";
   static String getUserProfile() => "/api/user/profile";
   static String updateProfile() => "/api/user/update";
+
   static String register() => "/api/users/register";
-  static String registerEmailVerify() => "/api/auth/email-verify";
+  static String registerEmailVerify() => "/api/users/register/otp-verify";
   static String resendEmailVerify() => "/api/auth/resend-otp";
   static String forgotPassword() => "/api/password/forget";
   static String forgotPasswordVerifyOtp() => "/api/password/verify-email";

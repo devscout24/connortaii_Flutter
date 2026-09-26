@@ -99,7 +99,7 @@ class _ForgotPasswordVerifyScreenState
                 UIHelper.verticalSpace(20.h),
                 PinCodeTextField(
                   appContext: context,
-                  length: 6,
+                  length: 4,
                   controller: otpController,
                   keyboardType: TextInputType.number,
                   backgroundColor: Colors.transparent,
@@ -115,7 +115,7 @@ class _ForgotPasswordVerifyScreenState
                     //   vertical: 12.h,
                     // ),
                     fieldHeight: 55.h,
-                    fieldWidth: 50.w,
+                    fieldWidth: 80.w,
                     activeColor: AppColors.grey200Color,
                     activeFillColor: AppColors.grey200Color,
                     inactiveColor: AppColors.grey200Color,
