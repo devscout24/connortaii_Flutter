@@ -2,13 +2,18 @@ import 'dart:async';
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/common_widget/custom_back_button.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
+import 'package:connortaii_app/constants/app_constants.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/di.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class SignupVerifyScreen extends StatefulWidget {
@@ -57,46 +62,48 @@ class _SignupVerifyScreenState extends State<SignupVerifyScreen>
     super.dispose();
   }
 
-  // bool isLoading = false;
-  // //reSendCodeRxObj.reSendCodeRx
-  // Future<void> otpVerifyMethod() async {
-  //   try {
-  //     if (formKey.currentState!.validate()) {
-  //       setState(() {
-  //         isLoading = true;
-  //       });
+  bool isLoading = false;
+  //reSendCodeRxObj.reSendCodeRx
+  Future<void> otpVerifyMethod() async {
+    try {
+      if (formKey.currentState!.validate()) {
+        setState(() {
+          isLoading = true;
+        });
 
-  //       await signupEmailVerifyOtpRxObj
-  //           .signupEmailVerifyOtpRx(
-  //             otp: otpController.text,
-  //             email: widget.email,
-  //           )
-  //           .then((value) {
-  //             if (value) {
-  //               setState(() {
-  //                 isLoading = false;
-  //               });
-  //               ToastUtil.showShortToast('Verification Successfull');
-  //               getProfileRXObj.getProfileRX();
-  //               NavigationService.navigateTo(
-  //                 Routes.signupCongratulationsScreen,
-  //               );
-  //               getProfileRXObj.getProfileRX();
-  //               appData.write(kKeyUserEmail, widget.email);
-  //             } else {
-  //               setState(() {
-  //                 isLoading = false;
-  //               });
-  //             }
-  //           });
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     ToastUtil.showShortToast(e.toString());
-  //   }
-  // }
+        await signupEmailVerifyOtpRxObj
+            .signupEmailVerifyOtpRx(
+              otp: otpController.text,
+              email: widget.email,
+            )
+            .then((value) {
+              if (value) {
+                setState(() {
+                  isLoading = false;
+                });
+                ToastUtil.showShortToast('Verification Successfull');
+                NavigationService.navigateTo(Routes.loginScreen);
+
+                // getProfileRXObj.getProfileRX();
+                // NavigationService.navigateTo(
+                //   Routes.signupCongratulationsScreen,
+                // );
+                // getProfileRXObj.getProfileRX();
+                appData.write(kKeyUserEmail, widget.email);
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ToastUtil.showShortToast(e.toString());
+    }
+  }
 
   // bool isResendLoading = false;
 
@@ -161,7 +168,7 @@ class _SignupVerifyScreenState extends State<SignupVerifyScreen>
               UIHelper.verticalSpace(20.h),
               PinCodeTextField(
                 appContext: context,
-                length: 6,
+                length: 4,
                 controller: otpController,
                 keyboardType: TextInputType.number,
                 backgroundColor: Colors.transparent,
@@ -177,7 +184,7 @@ class _SignupVerifyScreenState extends State<SignupVerifyScreen>
                   //   vertical: 12.h,
                   // ),
                   fieldHeight: 55.h,
-                  fieldWidth: 50.w,
+                  fieldWidth: 80.w,
                   activeColor: AppColors.grey200Color,
                   activeFillColor: AppColors.grey200Color,
                   inactiveColor: AppColors.grey200Color,
@@ -189,21 +196,19 @@ class _SignupVerifyScreenState extends State<SignupVerifyScreen>
                 ),
               ),
               UIHelper.verticalSpace(12.h),
-              // isLoading
-              //     ? Center(
-              //         child: SpinKitCircle(
-              //           color: AppColors.buttonbgColor,
-              //           size: 60.h,
-              //         ),
-              //       )
-              //     :
-              CustomButton(
-                onTap: () {
-                  NavigationService.navigateTo(Routes.loginScreen);
-                  // otpVerifyMethod();
-                },
-                title: 'Verify',
-              ),
+              isLoading
+                  ? Center(
+                      child: SpinKitCircle(
+                        color: AppColors.c000000,
+                        size: 60.h,
+                      ),
+                    )
+                  : CustomButton(
+                      onTap: () {
+                        otpVerifyMethod();
+                      },
+                      title: 'Verify',
+                    ),
               UIHelper.verticalSpace(16.h),
               Center(
                 child: RichText(
