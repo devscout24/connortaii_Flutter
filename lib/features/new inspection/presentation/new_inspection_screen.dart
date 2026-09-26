@@ -114,8 +114,8 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
       'propertyName': propertyNameController.text.trim(),
     };
 
-    debugPrint('Inspection payload: $payload');
-    _showMessage('Inspection saved successfully');
+    // debugPrint('Inspection payload: $payload');
+    // _showMessage('Inspection saved successfully');
     NavigationService.navigateTo(Routes.reportGeneratedScreen);
   }
 
