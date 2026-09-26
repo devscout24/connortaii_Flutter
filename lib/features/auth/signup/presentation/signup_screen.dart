@@ -9,9 +9,12 @@ import 'package:connortaii_app/features/auth/signup/presentation/widgets/have_an
 import 'package:connortaii_app/features/auth/signup/presentation/widgets/signup_image_picker_widget.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:validator_kit/validator_kit.dart';
@@ -46,6 +49,48 @@ class _SignupScreenState extends State<SignupScreen> {
         _pickedImage = pickedFile;
       });
     }
+  }
+
+  bool isLoading = false;
+
+  Future<bool> createProfileMethod() async {
+    try {
+      if (formKey.currentState!.validate()) {
+        setState(() {
+          isLoading = true;
+        });
+
+        final result = await signupRxOBJ.signupRx(
+          avatar: _pickedImage,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          email: emailController.text,
+          password: passwordController.text,
+          passwordConfirmation: confirmPasswordController.text,
+          agreeToTerms: isChecked,
+        );
+
+        setState(() {
+          isLoading = false;
+        });
+
+        if (result) {
+          ToastUtil.showLongToast('Signup Successfully');
+          NavigationService.navigateToWithArgs(Routes.signupVerifyScreen, {
+            'email': emailController.text,
+          });
+        } else {
+          // ToastUtil.showLongToast('Signup failed');
+        }
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ToastUtil.showShortToast(e.toString());
+    }
+
+    return true;
   }
 
   @override
@@ -219,34 +264,43 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 UIHelper.verticalSpace(16.h),
 
-                CustomButton(
-                  onTap: () {
-                    NavigationService.navigateToWithArgs(
-                      Routes.signupVerifyScreen,
-                      {'email': emailController.text},
-                    );
-                  },
-                  title: 'Sign Up',
-                ),
+                isLoading
+                    ? Center(
+                        child: SpinKitCircle(
+                          color: AppColors.c000000,
+                          size: 60.h,
+                        ),
+                      )
+                    : CustomButton(
+                        onTap: () {
+                          createProfileMethod();
+                          // NavigationService.navigateToWithArgs(
+                          //   Routes.signupVerifyScreen,
+                          //   {'email': emailController.text},
+                          // );
+                        },
+                        title: 'Sign Up',
+                      ),
                 UIHelper.verticalSpace(8.h),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Checkbox(
-                    //   value: isChecked,
-                    //   activeColor: AppColors.titleTextColor,
-                    //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    //   visualDensity: const VisualDensity(
-                    //     horizontal: -4,
-                    //     vertical: -4,
-                    //   ),
-                    //   onChanged: (value) {
-                    //     setState(() {
-                    //       isChecked = value!;
-                    //     });
-                    //   },
-                    // ),
-                    // UIHelper.horizontalSpace(2.w),
+                    Checkbox(
+                      value: isChecked,
+                      activeColor: AppColors.titleTextColor,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: const VisualDensity(
+                        horizontal: -4,
+                        vertical: -4,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          isChecked = value!;
+                        });
+                        // log(isChecked.toString());
+                      },
+                    ),
+                    UIHelper.horizontalSpace(2.w),
                     CheckboxRowWidget(
                       privacyOnTap: () {
                         // NavigationService.navigateTo(Routes.privacyPolicyScreen);

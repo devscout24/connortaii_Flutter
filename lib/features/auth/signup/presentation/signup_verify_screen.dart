@@ -153,7 +153,7 @@ class _SignupVerifyScreenState extends State<SignupVerifyScreen>
               ),
               UIHelper.verticalSpace(8.h),
               Text(
-                "we have sent the code to this email md*********@gmail.com",
+                "we have sent the code to this email ${widget.email}",
                 style: TextFontStyle.headlinePoppins50016.copyWith(
                   color: AppColors.grey500,
                 ),

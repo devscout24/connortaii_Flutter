@@ -6,7 +6,7 @@
 import 'package:connortaii_app/constants/app_constants.dart';
 import 'package:connortaii_app/helpers/di.dart';
 
-const String url = "https://admin.fabricrootz.com";
+const String url = "https://connortaii.thewarriors.team";
 
 final class NetworkConstants {
   NetworkConstants._();
@@ -28,7 +28,7 @@ final class Endpoints {
   static String deleteAccount() => "/api/auth/delete";
   static String getUserProfile() => "/api/user/profile";
   static String updateProfile() => "/api/user/update";
-  static String register() => "/api/auth/register";
+  static String register() => "/api/users/register";
   static String registerEmailVerify() => "/api/auth/email-verify";
   static String resendEmailVerify() => "/api/auth/resend-otp";
   static String forgotPassword() => "/api/password/forget";
