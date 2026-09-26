@@ -114,16 +114,16 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
       'propertyName': propertyNameController.text.trim(),
     };
 
-    // debugPrint('Inspection payload: $payload');
+    debugPrint('Inspection payload: $payload');
     // _showMessage('Inspection saved successfully');
     NavigationService.navigateTo(Routes.reportGeneratedScreen);
   }
 
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
+  // void _showMessage(String message) {
+  //   ScaffoldMessenger.of(
+  //     context,
+  //   ).showSnackBar(SnackBar(content: Text(message)));
+  // }
 
   Widget _buildStepThree() {
     return Container(
