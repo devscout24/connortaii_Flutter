@@ -37,14 +37,19 @@ final class SignupEmailVerifyOtpRx
 
   @override
   handleSuccessWithReturn(SignupVerifyResponseModel data) {
-    // appData.write(kKeyAccessToken, data.token);
+    // Save token from response
+    if (data.data?.token != null) {
+      appData.write(kKeyAccessToken, data.data!.token);
+    }
     // appData.write(kKeyUserID, data.data?.id);
     // appData.write(kKeyEmail, data.data?.email);
     appData.write(kKeyIsLoggedIn, true);
     // appData.write(kKeyUserID, data.data?.id);
     // appData.write(kKeyAssignedClinicianID, data.data?.assignedClinicianId);
-    String token = appData.read(kKeyAccessToken);
-    DioSingleton.instance.update(token);
+    String? token = appData.read(kKeyAccessToken);
+    if (token != null) {
+      DioSingleton.instance.update(token);
+    }
     dataFetcher.sink.add(data);
     return data;
   }
