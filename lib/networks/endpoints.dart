@@ -20,7 +20,7 @@ final class NetworkConstants {
 final class Endpoints {
   Endpoints._();
   //backend_url
-  static String logIn() => "/api/auth/login";
+  static String logIn() => "/api/users/login";
   static String logout() => "/api/auth/logout";
   static String deleteAccount() => "/api/auth/delete";
   static String getUserProfile() => "/api/user/profile";

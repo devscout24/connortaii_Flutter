@@ -1,12 +1,9 @@
+import 'package:connortaii_app/features/auth/login/data/rx_post_sign_in/rx.dart';
+import 'package:connortaii_app/features/auth/login/model/login_response_model.dart';
 import 'package:connortaii_app/features/auth/signup/data/rx_post_resend_otp_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/data/rx_post_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/model/signup_verify_response_model.dart';
 import 'package:rxdart/rxdart.dart';
-
-// LoginRX loginRXObj = LoginRX(
-//   empty: LoginResponseModel(),
-//   dataFetcher: BehaviorSubject<LoginResponseModel>(),
-// );
 
 // LogOutRx logOutRXOBJ = LogOutRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
 import 'package:connortaii_app/features/auth/signup/data/rx_post_create_profile/rx.dart';
@@ -21,4 +18,9 @@ SignupEmailVerifyOtpRx signupEmailVerifyOtpRxObj = SignupEmailVerifyOtpRx(
 SignupResendOtpRx signupResendOtpRxOBJ = SignupResendOtpRx(
   empty: {},
   dataFetcher: BehaviorSubject<Map>(),
+);
+
+LoginRX loginRXObj = LoginRX(
+  empty: LoginResponseModel(),
+  dataFetcher: BehaviorSubject<LoginResponseModel>(),
 );
