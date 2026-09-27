@@ -7,7 +7,9 @@ import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/auth/login/presentation/widget/dont_have_an_account_widget.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -32,33 +34,33 @@ class _LoginScreenState extends State<LoginScreen>
   bool isObscureText = true;
   bool isLoading = false;
 
-  // Future<void> loginMethod() async {
-  //   if (!formKey.currentState!.validate()) return;
+  Future<void> loginMethod() async {
+    if (!formKey.currentState!.validate()) return;
 
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
+    try {
+      setState(() {
+        isLoading = true;
+      });
 
-  //     final isSuccess = await loginRXObj.logInRX(
-  //       email: emailController.text,
-  //       password: passwordController.text,
-  //     );
+      final isSuccess = await loginRXObj.logInRX(
+        email: emailController.text,
+        password: passwordController.text,
+      );
 
-  //     if (isSuccess) {
-  //       ToastUtil.showShortToast('Success Log In');
-  //       NavigationService.navigateTo(Routes.navigationScreen);
-  //     } else {
-  //       // ToastUtil.showShortToast('Log In Failed');
-  //     }
-  //   } catch (e) {
-  //     ToastUtil.showShortToast('Error: ${e.toString()}');
-  //   } finally {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
+      if (isSuccess) {
+        ToastUtil.showShortToast('Success Log In');
+        NavigationService.navigateTo(Routes.navigationScreen);
+      } else {
+        // ToastUtil.showShortToast('Log In Failed');
+      }
+    } catch (e) {
+      ToastUtil.showShortToast('Error: ${e.toString()}');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -190,9 +192,9 @@ class _LoginScreenState extends State<LoginScreen>
                       )
                     : CustomButton(
                         onTap: () {
-                          NavigationService.navigateTo(Routes.navigationScreen);
+                          // NavigationService.navigateTo(Routes.navigationScreen);
 
-                          // loginMethod();
+                          loginMethod();
                         },
                         title: 'Sign in',
                       ),
