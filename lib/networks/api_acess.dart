@@ -1,3 +1,4 @@
+import 'package:connortaii_app/features/auth/signup/data/rx_post_resend_otp_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/data/rx_post_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/model/signup_verify_response_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,4 +16,9 @@ SignupRx signupRxOBJ = SignupRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
 SignupEmailVerifyOtpRx signupEmailVerifyOtpRxObj = SignupEmailVerifyOtpRx(
   empty: SignupVerifyResponseModel(),
   dataFetcher: BehaviorSubject<SignupVerifyResponseModel>(),
+);
+
+SignupResendOtpRx signupResendOtpRxOBJ = SignupResendOtpRx(
+  empty: {},
+  dataFetcher: BehaviorSubject<Map>(),
 );
