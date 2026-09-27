@@ -84,11 +84,6 @@ class _SignupVerifyScreenState extends State<SignupVerifyScreen>
                 ToastUtil.showShortToast('Verification Successfull');
                 NavigationService.navigateTo(Routes.loginScreen);
 
-                // getProfileRXObj.getProfileRX();
-                // NavigationService.navigateTo(
-                //   Routes.signupCongratulationsScreen,
-                // );
-                // getProfileRXObj.getProfileRX();
                 appData.write(kKeyUserEmail, widget.email);
               } else {
                 setState(() {
