@@ -87,6 +87,37 @@ class _ForgotPasswordVerifyScreenState
     }
   }
 
+  bool isResendLoading = false;
+
+  Future<void> resendOtpMethod() async {
+    try {
+      {
+        setState(() {
+          isResendLoading = true;
+        });
+
+        await forgotPasswordResendOtpRxOBJ
+            .forgotPasswordResendOtpRx(email: widget.email)
+            .then((value) {
+              if (value) {
+                setState(() {
+                  isResendLoading = false;
+                });
+              } else {
+                setState(() {
+                  isResendLoading = false;
+                });
+              }
+            });
+      }
+    } catch (e) {
+      setState(() {
+        isResendLoading = false;
+      });
+      ToastUtil.showShortToast(e.toString());
+    }
+  }
+
   @override
   void dispose() {
     timer?.cancel();
@@ -170,54 +201,57 @@ class _ForgotPasswordVerifyScreenState
                       )
                     : CustomButton(
                         onTap: () {
-                          // NavigationService.navigateTo(
-                          //   Routes.forgotUpdatePasswordScreen,
-                          // );
                           otpVerifyMethod();
                         },
                         title: 'Verify',
                       ),
                 UIHelper.verticalSpace(16.h),
-                Center(
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: "I didn't get the code. ",
-                      style: TextFontStyle.headlinePoppins50016.copyWith(
-                        color: AppColors.grey400,
+                isResendLoading
+                    ? Center(
+                        child: SpinKitPianoWave(
+                          color: AppColors.c000000,
+                          size: 10.h,
+                        ),
+                      )
+                    : Center(
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            text: "I didn't get the code. ",
+                            style: TextFontStyle.headlinePoppins50016.copyWith(
+                              color: AppColors.grey400,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: "Resend" + ' ',
+                                style: TextFontStyle.headlinePoppins50016
+                                    .copyWith(
+                                      color: startTime == 0
+                                          ? AppColors.textColor
+                                          : AppColors.grey400,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    if (startTime == 0) {
+                                      resendOtpMethod();
+                                    }
+                                  },
+                              ),
+                              TextSpan(
+                                text: "in" + ' ',
+                                style: TextFontStyle.headlinePoppins50016
+                                    .copyWith(color: AppColors.grey400),
+                              ),
+                              TextSpan(
+                                text: '00:$startTime',
+                                style: TextFontStyle.headlinePoppins50016
+                                    .copyWith(color: AppColors.grey400),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      children: [
-                        TextSpan(
-                          text: "Resend" + ' ',
-                          style: TextFontStyle.headlinePoppins50016.copyWith(
-                            color: startTime == 0
-                                ? AppColors.textColor
-                                : AppColors.grey400,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              if (startTime == 0) {
-                                // resendOtpMethod();
-                              }
-                            },
-                        ),
-                        TextSpan(
-                          text: "in" + ' ',
-                          style: TextFontStyle.headlinePoppins50016.copyWith(
-                            color: AppColors.grey400,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '00:$startTime',
-                          style: TextFontStyle.headlinePoppins50016.copyWith(
-                            color: AppColors.grey400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
