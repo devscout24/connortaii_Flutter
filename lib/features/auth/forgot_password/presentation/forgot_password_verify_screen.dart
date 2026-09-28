@@ -170,10 +170,10 @@ class _ForgotPasswordVerifyScreenState
                       )
                     : CustomButton(
                         onTap: () {
-                          NavigationService.navigateTo(
-                            Routes.forgotUpdatePasswordScreen,
-                          );
-                          // otpVerifyMethod();
+                          // NavigationService.navigateTo(
+                          //   Routes.forgotUpdatePasswordScreen,
+                          // );
+                          otpVerifyMethod();
                         },
                         title: 'Verify',
                       ),
