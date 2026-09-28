@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/assets_helper/app_image.dart';
@@ -7,7 +9,9 @@ import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -26,6 +30,40 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final formKey = GlobalKey<FormState>();
 
   bool isLoading = false;
+
+  Future<void> forgotEmailMethod() async {
+    try {
+      if (formKey.currentState!.validate()) {
+        setState(() {
+          isLoading = true;
+        });
+        await forgotPasswordRxOBJ
+            .forgotPasswordRx(email: emailController.text)
+            .then((value) {
+              if (value) {
+                setState(() {
+                  isLoading = false;
+                });
+                log("Forgot password response value: $value");
+
+                NavigationService.navigateToWithArgs(
+                  Routes.forgotPasswordVerifyScreen,
+                  {'email': emailController.text},
+                );
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ToastUtil.showShortToast(e.toString());
+    }
+  }
 
   @override
   void dispose() {
@@ -93,17 +131,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 isLoading
                     ? Center(
                         child: SpinKitCircle(
-                          color: AppColors.buttonbgColor,
+                          color: AppColors.c000000,
                           size: 60.h,
                         ),
                       )
                     : CustomButton(
                         onTap: () {
-                          NavigationService.navigateToWithArgs(
-                            Routes.forgotPasswordVerifyScreen,
-                            {'email': emailController.text},
-                          );
-                          // forgotEmailMethod();
+                          forgotEmailMethod();
                         },
                         title: 'Get OTP',
                       ),

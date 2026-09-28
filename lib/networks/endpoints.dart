@@ -30,7 +30,7 @@ final class Endpoints {
   static String registerEmailVerify() => "/api/users/register/otp-verify";
   static String resendEmailVerify() => "/api/users/register/otp-resend";
 
-  static String forgotPassword() => "/api/password/forget";
+  static String forgotPassword() => "/api/users/login/email-verify";
   static String forgotPasswordVerifyOtp() => "/api/password/verify-email";
   static String forgotChangePassword() => "/api/password/new";
   static String userChangePassword() => "/api/user/update/password";
