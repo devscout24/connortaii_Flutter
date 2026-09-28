@@ -6,10 +6,13 @@ import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class ForgotPasswordVerifyScreen extends StatefulWidget {
@@ -47,6 +50,41 @@ class _ForgotPasswordVerifyScreenState
         });
       }
     });
+  }
+
+  bool isLoading = false;
+
+  //reSendCodeRxObj.reSendCodeRx
+  Future<void> otpVerifyMethod() async {
+    try {
+      if (formKey.currentState!.validate()) {
+        setState(() {
+          isLoading = true;
+        });
+        await forgotPasswordOtpVerifyRxObj
+            .forgotPasswordOtpVerifyRx(
+              otp: otpController.text,
+              email: widget.email,
+            )
+            .then((value) {
+              if (value) {
+                setState(() {
+                  isLoading = false;
+                });
+                NavigationService.navigateTo(Routes.forgotUpdatePasswordScreen);
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ToastUtil.showShortToast(e.toString());
+    }
   }
 
   @override
@@ -89,7 +127,7 @@ class _ForgotPasswordVerifyScreenState
                 UIHelper.verticalSpace(8.h),
                 Center(
                   child: Text(
-                    "we have sent the code to this email md*********@gmail.com",
+                    "we have sent the code to this email ${widget.email}",
                     style: TextFontStyle.headlinePoppins50016.copyWith(
                       color: AppColors.grey500,
                     ),
@@ -110,10 +148,6 @@ class _ForgotPasswordVerifyScreenState
                   useExternalAutoFillGroup: true,
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
-                    // fieldOuterPadding: EdgeInsets.symmetric(
-                    //   horizontal: 12.w,
-                    //   vertical: 12.h,
-                    // ),
                     fieldHeight: 55.h,
                     fieldWidth: 80.w,
                     activeColor: AppColors.grey200Color,
@@ -127,23 +161,22 @@ class _ForgotPasswordVerifyScreenState
                   ),
                 ),
                 UIHelper.verticalSpace(12.h),
-                // isLoading
-                //     ? Center(
-                //         child: SpinKitCircle(
-                //           color: AppColors.buttonbgColor,
-                //           size: 60.h,
-                //         ),
-                //       )
-                //     :
-                CustomButton(
-                  onTap: () {
-                    NavigationService.navigateTo(
-                      Routes.forgotUpdatePasswordScreen,
-                    );
-                    // otpVerifyMethod();
-                  },
-                  title: 'Verify',
-                ),
+                isLoading
+                    ? Center(
+                        child: SpinKitCircle(
+                          color: AppColors.c000000,
+                          size: 60.h,
+                        ),
+                      )
+                    : CustomButton(
+                        onTap: () {
+                          NavigationService.navigateTo(
+                            Routes.forgotUpdatePasswordScreen,
+                          );
+                          // otpVerifyMethod();
+                        },
+                        title: 'Verify',
+                      ),
                 UIHelper.verticalSpace(16.h),
                 Center(
                   child: RichText(
