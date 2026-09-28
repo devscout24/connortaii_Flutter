@@ -13,7 +13,10 @@ final class ForgotPasswordResendOtpApi {
   Future<Map> forgotPasswordResendOtpApi({required String email}) async {
     try {
       Map data = {"email": email};
-      Response response = await postHttp(Endpoints.resendEmailVerify(), data);
+      Response response = await postHttp(
+        Endpoints.forgotPasswordResendOtp(),
+        data,
+      );
 
       if (response.statusCode == 200) {
         final data = json.decode(json.encode(response.data));
