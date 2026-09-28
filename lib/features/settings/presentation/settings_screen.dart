@@ -2,15 +2,21 @@ import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/common_widget/custom_icon_button.dart';
+import 'package:connortaii_app/constants/app_constants.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/settings/presentation/widgets/custom_logout_dialog.dart';
 import 'package:connortaii_app/features/settings/presentation/widgets/profile_details_row_widget.dart';
 import 'package:connortaii_app/features/settings/presentation/widgets/setting_items_row_widgets.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/di.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
+import 'package:connortaii_app/networks/dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -20,6 +26,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,9 +122,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       cancelOnTap: () {
                         NavigationService.goBack;
                       },
-                      confirmOnTap: () {
-                        NavigationService.navigateTo(Routes.loginScreen);
+                      confirmOnTap: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => const Center(
+                            child: SpinKitFadingCircle(
+                              color: AppColors.c000000,
+                              size: 60.0,
+                            ),
+                          ),
+                        );
+
+                        final value = await logOutRXOBJ.logOutRx();
+
+                        setState(() {
+                          isLoading = false;
+                          appData.write(kKeyIsLoggedIn, false);
+                          appData.write(kKeyAccessToken, null);
+                          appData.write(kKeyFCMToken, null);
+                        });
+
+                        if (value) {
+                          await appData.write(kKeyIsLoggedIn, false);
+                          await appData.write(kKeyAccessToken, null);
+                          await appData.write(kKeyFCMToken, null);
+
+                          ToastUtil.showShortToast("Logout successfully.");
+                          DioSingleton.instance.update("");
+
+                          NavigationService.navigateToReplacementUntil(
+                            Routes.loginScreen,
+                          );
+                        } else {
+                          ToastUtil.showShortToast("Failed to logout.");
+                        }
                       },
+                      // confirmOnTap: () {
+                      //   NavigationService.navigateTo(Routes.loginScreen);
+                      // },
                     );
                   },
                 );
