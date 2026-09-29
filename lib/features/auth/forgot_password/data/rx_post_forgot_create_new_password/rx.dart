@@ -14,13 +14,15 @@ final class ForgotPasswordChangeRx extends RxResponseInt<Map> {
   ValueStream get getFileData => dataFetcher.stream;
 
   Future<bool> forgotPasswordChangeRx({
-    required String token,
+    required String email,
+    required String resetToken,
     required String confirmPassword,
     required String newPassword,
   }) async {
     try {
       Map data = await api.forgotPasswordChangeApi(
-        token: token,
+        email: email,
+        resetToken: resetToken,
         newPassword: newPassword,
         confirmPassword: confirmPassword,
       );

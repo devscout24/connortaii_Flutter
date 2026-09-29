@@ -13,13 +13,15 @@ final class ForgotPasswordChangeApi {
   static ForgotPasswordChangeApi get instance => _singleton;
 
   Future<Map> forgotPasswordChangeApi({
-    required String token,
+    required String email,
+    required String resetToken,
     required String newPassword,
     required String confirmPassword,
   }) async {
     try {
       var data = ({
-        "token": token,
+        "email": email,
+        "reset_token": resetToken,
         "password": newPassword,
         "password_confirmation": confirmPassword,
       });

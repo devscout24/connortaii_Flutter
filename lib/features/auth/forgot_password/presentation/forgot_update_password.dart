@@ -4,10 +4,14 @@ import 'package:connortaii_app/assets_helper/app_image.dart';
 import 'package:connortaii_app/common_widget/custom_back_button.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
+import 'package:connortaii_app/constants/app_constants.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/di.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -15,7 +19,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:validator_kit/validator_kit.dart';
 
 class ForgotUpdatePasswordScreen extends StatefulWidget {
-  const ForgotUpdatePasswordScreen({super.key});
+  final String email;
+
+  const ForgotUpdatePasswordScreen({super.key, required this.email});
 
   @override
   State<ForgotUpdatePasswordScreen> createState() =>
@@ -33,6 +39,39 @@ class _ForgotUpdatePasswordScreenState
   bool isConfirmPasswordChecked = false;
   bool isConfirmPasswordObscureText = true;
   bool isLoading = false;
+
+  Future<void> changePasswordMethod() async {
+    if (formKey.currentState!.validate()) {
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        final success = await forgotPasswordChangeRxOBJ.forgotPasswordChangeRx(
+          email: widget.email,
+          newPassword: passwordController.text,
+          confirmPassword: confirmPasswordController.text,
+          resetToken: appData.read(kKeyotpVerifyToken),
+        );
+        if (success) {
+          setState(() {
+            isLoading = false;
+          });
+          NavigationService.navigateTo(Routes.loginScreen);
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (error) {
+        setState(() {
+          isLoading = false;
+        });
+        ToastUtil.showShortToast("Reset password failed: ${error.toString()}");
+      }
+    } else {
+      ToastUtil.showShortToast("Invalid form data");
+    }
+  }
 
   @override
   void dispose() {
@@ -156,8 +195,7 @@ class _ForgotUpdatePasswordScreenState
                       )
                     : CustomButton(
                         onTap: () {
-                          NavigationService.navigateTo(Routes.loginScreen);
-                          // changePasswordMethod();
+                          changePasswordMethod();
                         },
                         title: 'Change',
                       ),
