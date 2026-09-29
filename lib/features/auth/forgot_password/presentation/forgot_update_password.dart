@@ -189,7 +189,7 @@ class _ForgotUpdatePasswordScreenState
                 isLoading
                     ? Center(
                         child: SpinKitCircle(
-                          color: AppColors.buttonbgColor,
+                          color: AppColors.c000000,
                           size: 60.h,
                         ),
                       )
