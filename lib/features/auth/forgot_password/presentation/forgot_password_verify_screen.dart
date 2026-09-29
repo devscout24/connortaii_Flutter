@@ -71,7 +71,10 @@ class _ForgotPasswordVerifyScreenState
                 setState(() {
                   isLoading = false;
                 });
-                NavigationService.navigateTo(Routes.forgotUpdatePasswordScreen);
+                NavigationService.navigateToWithArgs(
+                  Routes.forgotUpdatePasswordScreen,
+                  {'email': widget.email},
+                );
               } else {
                 setState(() {
                   isLoading = false;

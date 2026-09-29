@@ -34,7 +34,7 @@ final class ForgotPasswordOtpVerifyRx
 
   @override
   handleSuccessWithReturn(ForgotPasswordVerifyResponseModel data) {
-    appData.write(kKeyotpVerifyToken, data.data);
+    appData.write(kKeyotpVerifyToken, data.data?.resetToken);
   }
 
   @override

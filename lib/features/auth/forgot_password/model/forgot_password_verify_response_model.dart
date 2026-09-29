@@ -36,41 +36,16 @@ class ForgotPasswordVerifyResponseModel {
 }
 
 class Data {
-  int? id;
-  String? firstName;
-  String? lastName;
-  String? email;
-  dynamic avatar;
-  int? agreeToTerms;
+  String? resetToken;
 
-  Data({
-    this.id,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.avatar,
-    this.agreeToTerms,
-  });
+  Data({this.resetToken});
 
   factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-    id: json["id"],
-    firstName: json["first_name"],
-    lastName: json["last_name"],
-    email: json["email"],
-    avatar: json["avatar"],
-    agreeToTerms: json["agree_to_terms"],
-  );
+  factory Data.fromJson(Map<String, dynamic> json) =>
+      Data(resetToken: json["reset_token"]);
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "first_name": firstName,
-    "last_name": lastName,
-    "email": email,
-    "avatar": avatar,
-    "agree_to_terms": agreeToTerms,
-  };
+  Map<String, dynamic> toJson() => {"reset_token": resetToken};
 }

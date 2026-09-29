@@ -138,13 +138,16 @@ final class RouteGenerator {
               );
 
       case Routes.forgotUpdatePasswordScreen:
+        Map args = settings.arguments as Map;
+
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: const ForgotUpdatePasswordScreen(),
+                widget: ForgotUpdatePasswordScreen(email: args['email']),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) => const ForgotUpdatePasswordScreen(),
+                builder: (context) =>
+                    ForgotUpdatePasswordScreen(email: args['email']),
               );
 
       case Routes.homeScreen:
