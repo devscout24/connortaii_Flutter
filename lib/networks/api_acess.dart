@@ -8,6 +8,7 @@ import 'package:connortaii_app/features/auth/login/model/login_response_model.da
 import 'package:connortaii_app/features/auth/signup/data/rx_post_resend_otp_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/data/rx_post_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/model/signup_verify_response_model.dart';
+import 'package:connortaii_app/features/settings/data/rx_delete_account/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_get_profile/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_edit_profile/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_log_out/rx.dart';
@@ -60,6 +61,11 @@ GetProfileRX getProfileRXObj = GetProfileRX(
 );
 
 EditProfileRx editProfileRxOBJ = EditProfileRx(
+  empty: {},
+  dataFetcher: BehaviorSubject<Map>(),
+);
+
+DeleteAccountRx deleteAccountRxObj = DeleteAccountRx(
   empty: {},
   dataFetcher: BehaviorSubject<Map>(),
 );
