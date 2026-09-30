@@ -8,7 +8,9 @@ import 'package:connortaii_app/features/auth/login/model/login_response_model.da
 import 'package:connortaii_app/features/auth/signup/data/rx_post_resend_otp_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/data/rx_post_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/model/signup_verify_response_model.dart';
+import 'package:connortaii_app/features/settings/data/rx_get_profile/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_log_out/rx.dart';
+import 'package:connortaii_app/features/settings/model/profile_details_response_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:connortaii_app/features/auth/signup/data/rx_post_create_profile/rx.dart';
@@ -50,3 +52,8 @@ ForgotPasswordResendOtpRx forgotPasswordResendOtpRxOBJ =
     ForgotPasswordResendOtpRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
 
 LogOutRx logOutRXOBJ = LogOutRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
+
+GetProfileRX getProfileRXObj = GetProfileRX(
+  empty: ProfileDetailsResponseModel(),
+  dataFetcher: BehaviorSubject<ProfileDetailsResponseModel>(),
+);
