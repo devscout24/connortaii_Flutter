@@ -23,7 +23,7 @@ final class Endpoints {
   static String logIn() => "/api/users/login";
   static String logout() => "/api/user/logout";
   static String deleteAccount() => "/api/auth/delete";
-  static String getUserProfile() => "/api/user/profile";
+  static String getUserProfile() => "/api/user";
   static String updateProfile() => "/api/user/update";
 
   static String register() => "/api/users/register";

@@ -29,6 +29,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    getProfileRXObj.getProfileRX();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBarWidget(title: 'Settings'),
@@ -42,11 +48,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileDetailsRowWidget(
-              name: 'User Name',
-              email: 'user@example.com',
-              imageUrl:
-                  'https://img.magnific.com/free-psd/3d-illustration-with-online-avatar_23-2151303097.jpg?semt=ais_hybrid&w=740&q=80',
+            StreamBuilder(
+              stream: getProfileRXObj.dataFetcher,
+              builder: (context, snapshot) {
+                final data = snapshot.data?.data;
+
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    data == null) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                    child: const Center(
+                      child: SpinKitPulse(
+                        color: AppColors.buttonbgColor,
+                        size: 70.0,
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return const Center(child: Text(""));
+                }
+
+                return ProfileDetailsRowWidget(
+                  name: data?.firstName ?? 'User Name',
+                  email: data?.email ?? 'user@example.com',
+                  imageUrl:
+                      data?.avatar ??
+                      'https://img.magnific.com/free-psd/3d-illustration-with-online-avatar_23-2151303097.jpg?semt=ais_hybrid&w=740&q=80',
+                );
+              },
             ),
             UIHelper.verticalSpace(24.h),
             Text('Account', style: TextFontStyle.headlinePoppins60018),
