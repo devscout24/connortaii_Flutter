@@ -31,73 +31,75 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(
-          top: 52.h,
-          left: 12.w,
-          right: 12.w,
-          bottom: 12.h,
-        ),
-        child: Column(
-          children: [
-            StreamBuilder(
-              stream: getProfileRXObj.dataFetcher,
-              builder: (context, snapshot) {
-                final data = snapshot.data?.data;
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 52.h,
+            left: 12.w,
+            right: 12.w,
+            bottom: 12.h,
+          ),
+          child: Column(
+            children: [
+              StreamBuilder(
+                stream: getProfileRXObj.dataFetcher,
+                builder: (context, snapshot) {
+                  final data = snapshot.data?.data;
 
-                if (snapshot.connectionState == ConnectionState.waiting &&
-                    data == null) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    child: const Center(
-                      child: SpinKitPulse(
-                        color: AppColors.buttonbgColor,
-                        size: 70.0,
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      data == null) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: const Center(
+                        child: SpinKitPulse(
+                          color: AppColors.buttonbgColor,
+                          size: 70.0,
+                        ),
                       ),
-                    ),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return const Center(child: Text(""));
-                }
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return const Center(child: Text(""));
+                  }
 
-                return TopUserInfoWidget(
-                  imageUrl:
-                      data?.avatar ??
-                      'https://img.magnific.com/free-psd/3d-illustration-with-online-avatar_23-2151303097.jpg?semt=ais_hybrid&w=740&q=80',
-                  name: '${data?.firstName} ${data?.lastName}',
-                );
-              },
-            ),
-            UIHelper.verticalSpace(22.h),
-            StartInspectionContainerWidget(
-              onTap: () {
-                NavigationService.navigateTo(Routes.newInspectionScreen);
-              },
-            ),
-            UIHelper.verticalSpace(22.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Recent Inspections',
-                  style: TextFontStyle.headlinePoppins50018,
-                ),
-                Text('View All', style: TextFontStyle.headlinePoppins50014),
-              ],
-            ),
-            UIHelper.verticalSpace(12.h),
-            RecentInspectionWidget(
-              title: '12 Queen Street',
-              status: 'In Progress',
-              address: 'Auckland CBD',
-              date: '29 Aug 2026',
-              sectionCompleteValue: '1',
-              onTap: () {},
-            ),
-            UIHelper.verticalSpace(20.h),
-            NoInspectionWidget(),
-          ],
+                  return TopUserInfoWidget(
+                    imageUrl:
+                        data?.avatar ??
+                        'https://img.magnific.com/free-psd/3d-illustration-with-online-avatar_23-2151303097.jpg?semt=ais_hybrid&w=740&q=80',
+                    name: '${data?.firstName} ${data?.lastName}',
+                  );
+                },
+              ),
+              UIHelper.verticalSpace(22.h),
+              StartInspectionContainerWidget(
+                onTap: () {
+                  NavigationService.navigateTo(Routes.newInspectionScreen);
+                },
+              ),
+              UIHelper.verticalSpace(22.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Recent Inspections',
+                    style: TextFontStyle.headlinePoppins50018,
+                  ),
+                  Text('View All', style: TextFontStyle.headlinePoppins50014),
+                ],
+              ),
+              UIHelper.verticalSpace(12.h),
+              RecentInspectionWidget(
+                title: '12 Queen Street',
+                status: 'In Progress',
+                address: 'Auckland CBD',
+                date: '29 Aug 2026',
+                sectionCompleteValue: '1',
+                onTap: () {},
+              ),
+              UIHelper.verticalSpace(20.h),
+              NoInspectionWidget(),
+            ],
+          ),
         ),
       ),
     );
