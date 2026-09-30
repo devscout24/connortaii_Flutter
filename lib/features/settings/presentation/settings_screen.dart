@@ -70,8 +70,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
 
                 return ProfileDetailsRowWidget(
-                  name: data?.firstName ?? 'User Name',
-                  email: data?.email ?? 'user@example.com',
+                  name: '${data?.firstName} ${data?.lastName}',
+                  email: data?.email ?? '',
                   imageUrl:
                       data?.avatar ??
                       'https://img.magnific.com/free-psd/3d-illustration-with-online-avatar_23-2151303097.jpg?semt=ais_hybrid&w=740&q=80',

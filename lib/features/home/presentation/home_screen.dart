@@ -1,3 +1,4 @@
+import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/home/presentation/widgets/no_inspection_widget.dart';
 import 'package:connortaii_app/features/home/presentation/widgets/recent_inspection_widget.dart';
@@ -6,8 +7,10 @@ import 'package:connortaii_app/features/home/presentation/widgets/top_user_info_
 import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +20,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getProfileRXObj.getProfileRX();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,10 +40,34 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Column(
           children: [
-            TopUserInfoWidget(
-              imageUrl:
-                  'https://img.magnific.com/free-psd/3d-illustration-with-online-avatar_23-2151303097.jpg?semt=ais_hybrid&w=740&q=80',
-              name: 'John Carry',
+            StreamBuilder(
+              stream: getProfileRXObj.dataFetcher,
+              builder: (context, snapshot) {
+                final data = snapshot.data?.data;
+
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    data == null) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                    child: const Center(
+                      child: SpinKitPulse(
+                        color: AppColors.buttonbgColor,
+                        size: 70.0,
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return const Center(child: Text(""));
+                }
+
+                return TopUserInfoWidget(
+                  imageUrl:
+                      data?.avatar ??
+                      'https://img.magnific.com/free-psd/3d-illustration-with-online-avatar_23-2151303097.jpg?semt=ais_hybrid&w=740&q=80',
+                  name: '${data?.firstName} ${data?.lastName}',
+                );
+              },
             ),
             UIHelper.verticalSpace(22.h),
             StartInspectionContainerWidget(
