@@ -1,13 +1,19 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
+import 'package:connortaii_app/constants/app_constants.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/settings/presentation/widgets/custom_delete_account_dialog.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/di.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
+import 'package:connortaii_app/networks/dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SecurityScreen extends StatefulWidget {
@@ -18,6 +24,8 @@ class SecurityScreen extends StatefulWidget {
 }
 
 class _SecurityScreenState extends State<SecurityScreen> {
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,8 +89,46 @@ class _SecurityScreenState extends State<SecurityScreen> {
                       cancelOnTap: () {
                         NavigationService.goBack;
                       },
-                      confirmOnTap: () {
-                        NavigationService.navigateTo(Routes.signupScreen);
+                      confirmOnTap: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => const Center(
+                            child: SpinKitFadingCircle(
+                              color: AppColors.red500,
+                              size: 60.0,
+                            ),
+                          ),
+                        );
+
+                        final value = await deleteAccountRxObj
+                            .deleteAccountRx();
+                        setState(() {
+                          isLoading = false;
+                          appData.write(kKeyIsLoggedIn, false);
+                          appData.write(kKeyAccessToken, null);
+                          appData.write(kKeyFCMToken, null);
+                        });
+
+                        if (value) {
+                          await appData.write(kKeyIsLoggedIn, false);
+                          await appData.write(kKeyAccessToken, null);
+                          await appData.write(kKeyFCMToken, null);
+                          ToastUtil.showShortToast(
+                            "Account delete successfully.",
+                          );
+                          await appData.write(kKeyIsLoggedIn, false);
+                          DioSingleton.instance.update("");
+
+                          NavigationService.navigateToReplacementUntil(
+                            Routes.signupScreen,
+                          );
+                        } else {
+                          ToastUtil.showShortToast("Failed to delete account.");
+                        }
                       },
                     );
                   },
