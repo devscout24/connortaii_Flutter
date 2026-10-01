@@ -16,6 +16,12 @@ class PrivacyPolicyScreen extends StatefulWidget {
 
 class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   @override
+  void initState() {
+    super.initState();
+    privacyPolicyRXObj.privacyPolicyRX();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBarWidget(
@@ -27,7 +33,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(left: 12.w, right: 12.w, bottom: 48.h),
+          padding: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 48.h),
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.grey200Color,
@@ -38,7 +44,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
               child: StreamBuilder(
                 stream: privacyPolicyRXObj.dataFetcher,
                 builder: (context, snapshot) {
-                  final data = snapshot.data;
+                  final data = snapshot.data?.data;
 
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       data == null) {
@@ -46,7 +52,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: const Center(
                         child: SpinKitPulse(
-                          color: AppColors.buttonbgColor,
+                          color: AppColors.c000000,
                           size: 70.0,
                         ),
                       ),
@@ -55,7 +61,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   if (snapshot.hasError) {
                     return const Center(child: Text("No privacy policy found"));
                   }
-                  return HtmlViewWidget(input: '');
+                  return HtmlViewWidget(input: data?.pageContent ?? '');
                 },
               ),
             ),
