@@ -10,6 +10,7 @@ import 'package:connortaii_app/features/auth/signup/data/rx_post_verify/rx.dart'
 import 'package:connortaii_app/features/auth/signup/model/signup_verify_response_model.dart';
 import 'package:connortaii_app/features/settings/data/rx_delete_account/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_get_profile/rx.dart';
+import 'package:connortaii_app/features/settings/data/rx_post_change_password/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_edit_profile/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_log_out/rx.dart';
 import 'package:connortaii_app/features/settings/model/profile_details_response_model.dart';
@@ -66,6 +67,11 @@ EditProfileRx editProfileRxOBJ = EditProfileRx(
 );
 
 DeleteAccountRx deleteAccountRxObj = DeleteAccountRx(
+  empty: {},
+  dataFetcher: BehaviorSubject<Map>(),
+);
+
+PasswordChangeRx passwordChangeRxOBJ = PasswordChangeRx(
   empty: {},
   dataFetcher: BehaviorSubject<Map>(),
 );
