@@ -11,10 +11,13 @@ import 'package:connortaii_app/features/auth/signup/model/signup_verify_response
 import 'package:connortaii_app/features/settings/data/rx_delete_account/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_get_privacy_policy/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_get_profile/rx.dart';
+import 'package:connortaii_app/features/settings/data/rx_get_terms_condition/rx.dart';
+
 import 'package:connortaii_app/features/settings/data/rx_post_change_password/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_edit_profile/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_log_out/rx.dart';
 import 'package:connortaii_app/features/settings/model/get_privacy_policy_response_model.dart';
+import 'package:connortaii_app/features/settings/model/get_terms_condition_response_model.dart';
 import 'package:connortaii_app/features/settings/model/profile_details_response_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -81,4 +84,9 @@ PasswordChangeRx passwordChangeRxOBJ = PasswordChangeRx(
 PrivacyPolicyRX privacyPolicyRXObj = PrivacyPolicyRX(
   empty: GetPrivacyPolicyResponseModel(),
   dataFetcher: BehaviorSubject<GetPrivacyPolicyResponseModel>(),
+);
+
+TermsAndConditionsRX termsAndConditionsRXObj = TermsAndConditionsRX(
+  empty: GetTermsConditionResponseModel(),
+  dataFetcher: BehaviorSubject<GetTermsConditionResponseModel>(),
 );
