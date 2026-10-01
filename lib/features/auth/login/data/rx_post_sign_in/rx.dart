@@ -52,7 +52,8 @@ final class LoginRX extends RxResponseInt<LoginResponseModel> {
     if (error is DioException) {
       if (error.response!.statusCode == 422) {
         ToastUtil.showShortToast(error.response!.data["message"]);
-      } else if (error.response!.statusCode == 404) {
+      } else if (error.response!.statusCode == 404 ||
+          error.response!.statusCode == 401) {
         ToastUtil.showShortToast(error.response!.data["message"]);
       } else {
         ToastUtil.showShortToast(error.response!.data["error"]);
