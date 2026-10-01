@@ -34,7 +34,7 @@ class _HistoryScreenState extends State<HistoryScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: 'History'),
+      appBar: CustomAppBarWidget(title: 'History', showLeadingIcon: false),
       body: Padding(
         padding: EdgeInsets.all(12.sp),
         child: Column(
