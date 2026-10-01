@@ -36,6 +36,7 @@ final class Endpoints {
   static String userChangePassword() => "/api/user/update-password";
 
   static String getPrivacyPolicy() => "/api/pages/privacy-policy";
+  static String getTermsAndConditions() => "/api/pages/terms-conditions";
 
   /////////============> Push Notification FCM Token <============////////////
   // static String sentFcmToken() => "/firebase-token/add";
