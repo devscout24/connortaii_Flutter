@@ -9,10 +9,12 @@ import 'package:connortaii_app/features/auth/signup/data/rx_post_resend_otp_veri
 import 'package:connortaii_app/features/auth/signup/data/rx_post_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/model/signup_verify_response_model.dart';
 import 'package:connortaii_app/features/settings/data/rx_delete_account/rx.dart';
+import 'package:connortaii_app/features/settings/data/rx_get_privacy_policy/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_get_profile/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_change_password/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_edit_profile/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_post_log_out/rx.dart';
+import 'package:connortaii_app/features/settings/model/get_privacy_policy_response_model.dart';
 import 'package:connortaii_app/features/settings/model/profile_details_response_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -74,4 +76,9 @@ DeleteAccountRx deleteAccountRxObj = DeleteAccountRx(
 PasswordChangeRx passwordChangeRxOBJ = PasswordChangeRx(
   empty: {},
   dataFetcher: BehaviorSubject<Map>(),
+);
+
+PrivacyPolicyRX privacyPolicyRXObj = PrivacyPolicyRX(
+  empty: GetPrivacyPolicyResponseModel(),
+  dataFetcher: BehaviorSubject<GetPrivacyPolicyResponseModel>(),
 );
