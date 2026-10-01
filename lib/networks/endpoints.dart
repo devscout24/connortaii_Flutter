@@ -34,7 +34,7 @@ final class Endpoints {
   static String forgotPasswordVerifyOtp() => "/api/users/login/otp-verify";
   static String forgotPasswordResendOtp() => "/api/users/login/otp-resend";
   static String forgotChangePassword() => "/api/users/login/reset-password";
-  static String userChangePassword() => "/api/user/update/password";
+  static String userChangePassword() => "/api/user/update-password";
 
   /////////============> Push Notification FCM Token <============////////////
   // static String sentFcmToken() => "/firebase-token/add";

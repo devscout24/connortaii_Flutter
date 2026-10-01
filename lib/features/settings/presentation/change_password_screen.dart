@@ -5,7 +5,9 @@ import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -29,6 +31,42 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool isNewPasswordObscureText = true;
   bool isConfirmPasswordObscureText = true;
   bool isLoading = false;
+
+  Future<void> changePasswordMethod() async {
+    if (!formKey.currentState!.validate()) return;
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      await passwordChangeRxOBJ
+          .passwordChangeRx(
+            currentPassword: oldPasswordController.text,
+            newPassword: newPasswordController.text,
+            confirmNewPassword: confirmPasswordController.text,
+          )
+          .then((value) async {
+            if (value) {
+              setState(() {
+                isLoading = false;
+              });
+              ToastUtil.showShortToast('Password updated successfully.');
+
+              // patientProfileShortInfoRXOObj.patientProfileShortInfoRX();
+              NavigationService.goBack;
+            } else {
+              setState(() {
+                isLoading = false;
+              });
+            }
+          });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ToastUtil.showShortToast(e.toString());
+    }
+  }
 
   @override
   void dispose() {
@@ -159,13 +197,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 isLoading
                     ? Center(
                         child: SpinKitCircle(
-                          color: AppColors.buttonbgColor,
+                          color: AppColors.c000000,
                           size: 60.h,
                         ),
                       )
                     : CustomButton(
                         onTap: () {
-                          NavigationService.goBack;
+                          changePasswordMethod();
                         },
                         title: 'Change',
                       ),
