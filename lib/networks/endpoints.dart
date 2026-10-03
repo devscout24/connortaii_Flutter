@@ -38,6 +38,9 @@ final class Endpoints {
   static String getPrivacyPolicy() => "/api/pages/privacy-policy";
   static String getTermsAndConditions() => "/api/pages/terms-conditions";
 
+  //steps
+  static String storeInspectionDetails() => "/api/inspections";
+
   /////////============> Push Notification FCM Token <============////////////
   // static String sentFcmToken() => "/firebase-token/add";
 
