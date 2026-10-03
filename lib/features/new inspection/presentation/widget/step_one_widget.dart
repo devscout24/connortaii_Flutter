@@ -18,10 +18,13 @@ class StepOneWidget extends StatelessWidget {
     required this.propertyNameController,
     required this.inspectionDateController,
     required this.propertyOwnerNameController,
-    required this.propertyOwnerPresenceController,
+    required this.propertyOwnerPresenceValue,
+    required this.onPropertyOwnerPresenceChanged,
     required this.otherPeoplePresenceController,
-    required this.houseOccupiedController,
-    required this.wasPropertyFurnishedController,
+    required this.houseOccupiedValue,
+    required this.onHouseOccupiedChanged,
+    required this.wasPropertyFurnishedValue,
+    required this.onWasPropertyFurnishedChanged,
     required this.buildingTypeController,
     required this.statusOfUtilitiesController,
     required this.weatherDuringInspectionController,
@@ -34,10 +37,13 @@ class StepOneWidget extends StatelessWidget {
   final TextEditingController propertyNameController;
   final TextEditingController inspectionDateController;
   final TextEditingController propertyOwnerNameController;
-  final TextEditingController propertyOwnerPresenceController;
+  final String? propertyOwnerPresenceValue;
+  final Function(String?) onPropertyOwnerPresenceChanged;
   final TextEditingController otherPeoplePresenceController;
-  final TextEditingController houseOccupiedController;
-  final TextEditingController wasPropertyFurnishedController;
+  final String? houseOccupiedValue;
+  final Function(String?) onHouseOccupiedChanged;
+  final String? wasPropertyFurnishedValue;
+  final Function(String?) onWasPropertyFurnishedChanged;
   final TextEditingController buildingTypeController;
   final TextEditingController statusOfUtilitiesController;
   final TextEditingController weatherDuringInspectionController;
@@ -162,12 +168,31 @@ class StepOneWidget extends StatelessWidget {
             style: TextFontStyle.headlinePoppins50016,
           ),
           UIHelper.verticalSpace(8.h),
-          CustomTextFormField(
-            controller: propertyOwnerPresenceController,
-            hintText: 'e.g “yes or no”',
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            fillColor: AppColors.cFFFFFF,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(color: AppColors.grey300),
+            ),
+            child: DropdownButton<String>(
+              value: propertyOwnerPresenceValue,
+              isExpanded: true,
+              underline: SizedBox.shrink(),
+              hint: Text(
+                'Select Yes or No',
+                style: TextFontStyle.headlinePoppins50016.copyWith(
+                  color: AppColors.grey500,
+                ),
+              ),
+              items: ['Yes', 'No'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: TextFontStyle.headlinePoppins50016),
+                );
+              }).toList(),
+              onChanged: onPropertyOwnerPresenceChanged,
+            ),
           ),
           UIHelper.verticalSpace(12.h),
           Text(
@@ -185,12 +210,31 @@ class StepOneWidget extends StatelessWidget {
           UIHelper.verticalSpace(12.h),
           Text('House Occupied *', style: TextFontStyle.headlinePoppins50016),
           UIHelper.verticalSpace(8.h),
-          CustomTextFormField(
-            controller: houseOccupiedController,
-            hintText: 'e.g “yes or no”',
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            fillColor: AppColors.cFFFFFF,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(color: AppColors.grey300),
+            ),
+            child: DropdownButton<String>(
+              value: houseOccupiedValue,
+              isExpanded: true,
+              underline: SizedBox.shrink(),
+              hint: Text(
+                'Select Yes or No',
+                style: TextFontStyle.headlinePoppins50016.copyWith(
+                  color: AppColors.grey500,
+                ),
+              ),
+              items: ['Yes', 'No'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: TextFontStyle.headlinePoppins50016),
+                );
+              }).toList(),
+              onChanged: onHouseOccupiedChanged,
+            ),
           ),
           UIHelper.verticalSpace(12.h),
           Text(
@@ -198,12 +242,31 @@ class StepOneWidget extends StatelessWidget {
             style: TextFontStyle.headlinePoppins50016,
           ),
           UIHelper.verticalSpace(8.h),
-          CustomTextFormField(
-            controller: wasPropertyFurnishedController,
-            hintText: 'e.g “yes or no”',
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            fillColor: AppColors.cFFFFFF,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            decoration: BoxDecoration(
+              color: AppColors.cFFFFFF,
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(color: AppColors.grey300),
+            ),
+            child: DropdownButton<String>(
+              value: wasPropertyFurnishedValue,
+              isExpanded: true,
+              underline: SizedBox.shrink(),
+              hint: Text(
+                'Select Yes or No',
+                style: TextFontStyle.headlinePoppins50016.copyWith(
+                  color: AppColors.grey500,
+                ),
+              ),
+              items: ['Yes', 'No'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: TextFontStyle.headlinePoppins50016),
+                );
+              }).toList(),
+              onChanged: onWasPropertyFurnishedChanged,
+            ),
           ),
           UIHelper.verticalSpace(12.h),
           Text('Building Type *', style: TextFontStyle.headlinePoppins50016),

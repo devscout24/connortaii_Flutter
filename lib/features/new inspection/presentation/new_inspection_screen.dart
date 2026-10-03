@@ -33,13 +33,11 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
       TextEditingController();
   final TextEditingController propertyOwnerNameController =
       TextEditingController();
-  final TextEditingController propertyOwnerPresenceController =
-      TextEditingController();
+  String? propertyOwnerPresenceValue;
   final TextEditingController otherPeoplePresenceController =
       TextEditingController();
-  final TextEditingController houseOccupiedController = TextEditingController();
-  final TextEditingController wasPropertyFurnishedController =
-      TextEditingController();
+  String? houseOccupiedValue;
+  String? wasPropertyFurnishedValue;
   final TextEditingController buildingTypeController = TextEditingController();
   final TextEditingController statusOfUtilitiesController =
       TextEditingController();
@@ -82,6 +80,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
   @override
   void dispose() {
     heightConcernController.dispose();
+    otherPeoplePresenceController.dispose();
 
     for (final controller in concernControllers.values) {
       controller.dispose();
@@ -112,6 +111,14 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
       'address': addressController.text.trim(),
       'mobileNumber': mobileController.text.trim(),
       'propertyName': propertyNameController.text.trim(),
+      'propertyOwnerPresence':
+          propertyOwnerPresenceValue?.toLowerCase() == 'yes' ? true : false,
+      'houseOccupied': houseOccupiedValue?.toLowerCase() == 'yes'
+          ? true
+          : false,
+      'wasPropertyFurnished': wasPropertyFurnishedValue?.toLowerCase() == 'yes'
+          ? true
+          : false,
     };
 
     debugPrint('Inspection payload: $payload');
@@ -302,10 +309,16 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           propertyNameController: propertyNameController,
           inspectionDateController: inspectionDateController,
           propertyOwnerNameController: propertyOwnerNameController,
-          propertyOwnerPresenceController: propertyOwnerPresenceController,
+          propertyOwnerPresenceValue: propertyOwnerPresenceValue,
+          onPropertyOwnerPresenceChanged: (value) =>
+              setState(() => propertyOwnerPresenceValue = value),
           otherPeoplePresenceController: otherPeoplePresenceController,
-          houseOccupiedController: houseOccupiedController,
-          wasPropertyFurnishedController: wasPropertyFurnishedController,
+          houseOccupiedValue: houseOccupiedValue,
+          onHouseOccupiedChanged: (value) =>
+              setState(() => houseOccupiedValue = value),
+          wasPropertyFurnishedValue: wasPropertyFurnishedValue,
+          onWasPropertyFurnishedChanged: (value) =>
+              setState(() => wasPropertyFurnishedValue = value),
           buildingTypeController: buildingTypeController,
           statusOfUtilitiesController: statusOfUtilitiesController,
           weatherDuringInspectionController: weatherDuringInspectionController,
@@ -795,10 +808,16 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           propertyNameController: propertyNameController,
           inspectionDateController: inspectionDateController,
           propertyOwnerNameController: propertyOwnerNameController,
-          propertyOwnerPresenceController: propertyOwnerPresenceController,
+          propertyOwnerPresenceValue: propertyOwnerPresenceValue,
+          onPropertyOwnerPresenceChanged: (value) =>
+              setState(() => propertyOwnerPresenceValue = value),
           otherPeoplePresenceController: otherPeoplePresenceController,
-          houseOccupiedController: houseOccupiedController,
-          wasPropertyFurnishedController: wasPropertyFurnishedController,
+          houseOccupiedValue: houseOccupiedValue,
+          onHouseOccupiedChanged: (value) =>
+              setState(() => houseOccupiedValue = value),
+          wasPropertyFurnishedValue: wasPropertyFurnishedValue,
+          onWasPropertyFurnishedChanged: (value) =>
+              setState(() => wasPropertyFurnishedValue = value),
           buildingTypeController: buildingTypeController,
           statusOfUtilitiesController: statusOfUtilitiesController,
           weatherDuringInspectionController: weatherDuringInspectionController,
