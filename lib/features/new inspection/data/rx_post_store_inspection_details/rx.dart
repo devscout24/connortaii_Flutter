@@ -14,17 +14,37 @@ final class StoreInspectionDetailsRx extends RxResponseInt<Map> {
   ValueStream get getFileData => dataFetcher.stream;
 
   Future<bool> storeInspectionDetailsRx({
+    required String inspectorName,
     required String email,
-    required String resetToken,
-    required String confirmPassword,
-    required String newPassword,
+    required String mobileNumber,
+    required String propertyAddress,
+    required String propertyName,
+    required String inspectionDate,
+    required String propertyOwnerName,
+    required String propertyOwnerPresence,
+    required String otherPeoplePresence,
+    required String houseOccupied,
+    required String propertyFurnished,
+    required String buildingType,
+    required String statusOfUtilities,
+    required String weatherDuringInspection,
   }) async {
     try {
       Map data = await api.storeInspectionDetailsApi(
+        inspectorName: inspectorName,
         email: email,
-        resetToken: resetToken,
-        newPassword: newPassword,
-        confirmPassword: confirmPassword,
+        mobileNumber: mobileNumber,
+        propertyAddress: propertyAddress,
+        propertyName: propertyName,
+        inspectionDate: inspectionDate,
+        propertyOwnerName: propertyOwnerName,
+        propertyOwnerPresence: propertyOwnerPresence,
+        otherPeoplePresence: otherPeoplePresence,
+        houseOccupied: houseOccupied,
+        propertyFurnished: propertyFurnished,
+        buildingType: buildingType,
+        statusOfUtilities: statusOfUtilities,
+        weatherDuringInspection: weatherDuringInspection,
       );
       handleSuccessWithReturn(data);
       return true;

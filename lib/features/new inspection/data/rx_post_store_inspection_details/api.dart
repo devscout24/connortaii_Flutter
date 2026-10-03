@@ -13,17 +13,37 @@ final class StoreInspectionDetailsApi {
   static StoreInspectionDetailsApi get instance => _singleton;
 
   Future<Map> storeInspectionDetailsApi({
+    required String inspectorName,
     required String email,
-    required String resetToken,
-    required String newPassword,
-    required String confirmPassword,
+    required String mobileNumber,
+    required String propertyAddress,
+    required String propertyName,
+    required String inspectionDate,
+    required String propertyOwnerName,
+    required String propertyOwnerPresence,
+    required String otherPeoplePresence,
+    required String houseOccupied,
+    required String propertyFurnished,
+    required String buildingType,
+    required String statusOfUtilities,
+    required String weatherDuringInspection,
   }) async {
     try {
       var data = ({
+        "inspector_name": inspectorName,
         "email": email,
-        "reset_token": resetToken,
-        "password": newPassword,
-        "password_confirmation": confirmPassword,
+        "mobile_number": mobileNumber,
+        "property_address": propertyAddress,
+        "property_name": propertyName,
+        "inspection_date": inspectionDate,
+        "property_owner_name": propertyOwnerName,
+        "property_owner_presence": propertyOwnerPresence,
+        "other_people_presence": otherPeoplePresence,
+        "house_occupied": houseOccupied,
+        "property_furnished": propertyFurnished,
+        "building_type": buildingType,
+        "status_of_utilities": statusOfUtilities,
+        "weather_during_inspection": weatherDuringInspection,
       });
 
       Response response = await postHttp(
