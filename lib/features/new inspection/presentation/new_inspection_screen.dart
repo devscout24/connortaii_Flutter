@@ -173,15 +173,8 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     };
 
     debugPrint('Inspection payload: $payload');
-    // _showMessage('Inspection saved successfully');
     NavigationService.navigateTo(Routes.reportGeneratedScreen);
   }
-
-  // void _showMessage(String message) {
-  //   ScaffoldMessenger.of(
-  //     context,
-  //   ).showSnackBar(SnackBar(content: Text(message)));
-  // }
 
   Widget _buildStepThree() {
     return Container(
