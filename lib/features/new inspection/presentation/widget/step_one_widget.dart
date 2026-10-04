@@ -91,6 +91,10 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.combine([
+              ValidatorKit.required(),
+              ValidatorKit.email(),
+            ]),
           ),
           UIHelper.verticalSpace(12.h),
           Text('Mobile Number *', style: TextFontStyle.headlinePoppins50016),
@@ -101,6 +105,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
           Row(
@@ -128,6 +133,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
           Text('Property Name *', style: TextFontStyle.headlinePoppins50016),
@@ -138,6 +144,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
           Text('Inspection Date *', style: TextFontStyle.headlinePoppins50016),
@@ -148,6 +155,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
           Text(
@@ -161,6 +169,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
           Text(
@@ -206,6 +215,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
           Text('House Occupied *', style: TextFontStyle.headlinePoppins50016),
@@ -277,6 +287,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
           Text(
@@ -290,6 +301,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
           Text(
@@ -303,6 +315,7 @@ class StepOneWidget extends StatelessWidget {
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.done,
             fillColor: AppColors.cFFFFFF,
+            validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),
         ],

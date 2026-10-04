@@ -20,10 +20,10 @@ final class StoreInspectionDetailsApi {
     required String propertyName,
     required String inspectionDate,
     required String propertyOwnerName,
-    required String propertyOwnerPresence,
+    required bool propertyOwnerPresence,
     required String otherPeoplePresence,
-    required String houseOccupied,
-    required String propertyFurnished,
+    required bool houseOccupied,
+    required bool propertyFurnished,
     required String buildingType,
     required String statusOfUtilities,
     required String weatherDuringInspection,
@@ -51,7 +51,7 @@ final class StoreInspectionDetailsApi {
         data,
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(json.encode(response.data));
         return data;
       } else {

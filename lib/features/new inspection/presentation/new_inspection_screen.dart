@@ -9,7 +9,9 @@ import 'package:connortaii_app/features/new%20inspection/presentation/widget/ove
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/step_one_widget.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -89,7 +91,56 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     super.dispose();
   }
 
+  bool isLoading = false;
+
+  Future<void> _submitStepOne() async {
+    if (!formKey.currentState!.validate()) return;
+
+    try {
+      setState(() => isLoading = true);
+
+      final isSuccess = await storeInspectionDetailsRxOBJ
+          .storeInspectionDetailsRx(
+            inspectorName: inspectorNameController.text.trim(),
+            email: emailController.text.trim(),
+            mobileNumber: mobileController.text.trim(),
+            propertyAddress: addressController.text.trim(),
+            propertyName: propertyNameController.text.trim(),
+            inspectionDate: inspectionDateController.text.trim(),
+            propertyOwnerName: propertyOwnerNameController.text.trim(),
+            propertyOwnerPresence:
+                propertyOwnerPresenceValue?.toLowerCase() == 'yes',
+            otherPeoplePresence: otherPeoplePresenceController.text.trim(),
+            houseOccupied: houseOccupiedValue?.toLowerCase() == 'yes',
+            propertyFurnished:
+                wasPropertyFurnishedValue?.toLowerCase() == 'yes',
+            buildingType: buildingTypeController.text.trim(),
+            statusOfUtilities: statusOfUtilitiesController.text.trim(),
+            weatherDuringInspection: weatherDuringInspectionController.text
+                .trim(),
+          );
+
+      if (isSuccess) {
+        ToastUtil.showShortToast('Inspection details saved successfully');
+        if (_activeStep < 2) {
+          setState(() => _activeStep++);
+        } else {
+          NavigationService.navigateTo(Routes.reportGeneratedScreen);
+        }
+      }
+    } catch (e) {
+      ToastUtil.showShortToast('Error: ${e.toString()}');
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
   void _nextStep() {
+    if (_activeStep == 0) {
+      _submitStepOne();
+      return;
+    }
+
     if (_activeStep < 2) {
       setState(() => _activeStep++);
       return;
@@ -298,7 +349,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     );
   }
 
-  Widget _buildCurrentStep() {
+  Widget buildCurrentStepWidget() {
     switch (_activeStep) {
       case 0:
         return StepOneWidget(
@@ -848,21 +899,28 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
             children: [
               ActiveStepWidget(activeStep: _activeStep),
               UIHelper.verticalSpace(28.h),
-              _buildCurrentStep(),
-              UIHelper.verticalSpace(24.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      onTap: () {
-                        _nextStep();
-                      },
-                      title: _activeStep == 2
-                          ? 'Review Inspection'
-                          : 'Continue',
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    buildCurrentStepWidget(),
+                    UIHelper.verticalSpace(24.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomButton(
+                            onTap: () {
+                              _nextStep();
+                            },
+                            title: _activeStep == 2
+                                ? 'Review Inspection'
+                                : 'Continue',
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
