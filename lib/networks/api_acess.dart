@@ -8,7 +8,7 @@ import 'package:connortaii_app/features/auth/login/model/login_response_model.da
 import 'package:connortaii_app/features/auth/signup/data/rx_post_resend_otp_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/data/rx_post_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/model/signup_verify_response_model.dart';
-import 'package:connortaii_app/features/new%20inspection/data/rx_post_add_health_safety_response/rx.dart';
+import 'package:connortaii_app/features/new%20inspection/data/rx_post_add_health_safety_check/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_post_store_inspection_details/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_delete_account/rx.dart';
 import 'package:connortaii_app/features/settings/data/rx_get_privacy_policy/rx.dart';
@@ -98,5 +98,7 @@ StoreInspectionDetailsRx storeInspectionDetailsRxOBJ = StoreInspectionDetailsRx(
   dataFetcher: BehaviorSubject<Map>(),
 );
 
-AddHealthSafetyResponseRx addHealthSafetyResponseRxOBJ =
-    AddHealthSafetyResponseRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
+AddHealthSafetyCheckRx addHealthSafetyCheckRxOBJ = AddHealthSafetyCheckRx(
+  empty: {},
+  dataFetcher: BehaviorSubject<Map>(),
+);

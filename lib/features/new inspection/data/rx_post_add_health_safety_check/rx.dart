@@ -6,20 +6,20 @@ import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 import 'api.dart';
 
-final class AddHealthSafetyResponseRx extends RxResponseInt<Map> {
-  final api = AddHealthSafetyResponseApi.instance;
+final class AddHealthSafetyCheckRx extends RxResponseInt<Map> {
+  final api = AddHealthSafetyCheckApi.instance;
 
-  AddHealthSafetyResponseRx({required super.empty, required super.dataFetcher});
+  AddHealthSafetyCheckRx({required super.empty, required super.dataFetcher});
 
   ValueStream get getFileData => dataFetcher.stream;
 
-  Future<bool> addHealthSafetyResponseRx({
+  Future<bool> addHealthSafetyCheckRx({
     required bool isChecked,
     required bool hasConcern,
     required String concernDetails,
   }) async {
     try {
-      Map data = await api.addHealthSafetyResponseApi(
+      Map data = await api.addHealthSafetyCheckApi(
         isChecked: isChecked,
         hasConcern: hasConcern,
         concernDetails: concernDetails,
