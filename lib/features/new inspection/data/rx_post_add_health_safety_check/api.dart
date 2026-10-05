@@ -6,12 +6,12 @@ import 'package:connortaii_app/networks/endpoints.dart';
 import 'package:connortaii_app/networks/exception_handler/data_source.dart';
 import 'package:dio/dio.dart';
 
-final class AddHealthSafetyResponseApi {
-  static final AddHealthSafetyResponseApi _singleton =
-      AddHealthSafetyResponseApi._internal();
-  AddHealthSafetyResponseApi._internal();
-  static AddHealthSafetyResponseApi get instance => _singleton;
-  Future<Map> addHealthSafetyResponseApi({
+final class AddHealthSafetyCheckApi {
+  static final AddHealthSafetyCheckApi _singleton =
+      AddHealthSafetyCheckApi._internal();
+  AddHealthSafetyCheckApi._internal();
+  static AddHealthSafetyCheckApi get instance => _singleton;
+  Future<Map> addHealthSafetyCheckApi({
     required bool isChecked,
     required bool hasConcern,
     required String concernDetails,
@@ -24,7 +24,7 @@ final class AddHealthSafetyResponseApi {
       });
 
       Response response = await postHttp(
-        Endpoints.addHealthSafetyResponse(),
+        Endpoints.addHealthSafetyCheck(),
         data,
       );
 
