@@ -40,6 +40,7 @@ final class Endpoints {
 
   //steps
   static String storeInspectionDetails() => "/api/inspections";
+  static String addHealthSafetyResponse() => "/api/health-safety-responses/2";
 
   /////////============> Push Notification FCM Token <============////////////
   // static String sentFcmToken() => "/firebase-token/add";
