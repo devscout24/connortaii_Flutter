@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Recent Inspections',
                     style: TextFontStyle.headlinePoppins50018,
                   ),
-                  Text('View All', style: TextFontStyle.headlinePoppins50014),
+                  // Text('View All', style: TextFontStyle.headlinePoppins50014),
                 ],
               ),
               UIHelper.verticalSpace(12.h),
