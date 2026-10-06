@@ -13,7 +13,7 @@ final class StoreInspectionDetailsRx extends RxResponseInt<Map> {
 
   ValueStream get getFileData => dataFetcher.stream;
 
-  Future<bool> storeInspectionDetailsRx({
+  Future<Map> storeInspectionDetailsRx({
     required String inspectorName,
     required String email,
     required String mobileNumber,
@@ -47,10 +47,10 @@ final class StoreInspectionDetailsRx extends RxResponseInt<Map> {
         weatherDuringInspection: weatherDuringInspection,
       );
       handleSuccessWithReturn(data);
-      return true;
+      return data;
     } catch (error) {
       handleErrorWithReturn(error);
-      return false;
+      return {};
     }
   }
 

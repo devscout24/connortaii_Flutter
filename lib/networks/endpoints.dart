@@ -40,7 +40,13 @@ final class Endpoints {
 
   //steps
   static String storeInspectionDetails() => "/api/inspections";
-  static String addHealthSafetyCheck() => "/api/health-safety-responses/2";
+  // create new health safety response (POST)
+  static String createHealthSafetyResponse() => "/api/health-safety-responses";
+  // update existing health safety response by response id (PUT)
+  static String updateHealthSafetyResponse({required int responseId}) =>
+      "/api/health-safety-responses/$responseId";
+  static String healthSafetyItemsByInspection({required int inspectionId}) =>
+      "/api/inspections/$inspectionId/health-safety-responses";
 
   /////////============> Push Notification FCM Token <============////////////
   // static String sentFcmToken() => "/firebase-token/add";
