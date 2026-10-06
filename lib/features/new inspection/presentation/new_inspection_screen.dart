@@ -23,6 +23,11 @@ class NewInspectionScreen extends StatefulWidget {
 }
 
 class _NewInspectionScreenState extends State<NewInspectionScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   int _activeStep = 0;
 
   //step 1
@@ -92,6 +97,243 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
   }
 
   bool isLoading = false;
+  int? _inspectionId;
+
+  /// Map of local item key -> existing health safety response id (from GET)
+  final Map<String, int?> _healthSafetyResponseIds = {};
+
+  Future<void> _fetchAndPopulateHealthSafetyItems(int inspectionId) async {
+    try {
+      await getHealthSafetyItemsByInspectionRXObj
+          .getHealthSafetyItemsByInspectionRX(inspectionId: inspectionId);
+
+      final model =
+          await getHealthSafetyItemsByInspectionRXObj.articleSteam.first;
+
+      if (model.data != null) {
+        for (final datum in model.data!) {
+          final int? healthItemId = datum.healthSafetyItemId ?? datum.item?.id;
+          if (healthItemId == null) continue;
+
+          final check = _healthSafetyChecks.firstWhere(
+            (item) => (item['id'] as int) == healthItemId,
+            orElse: () => {},
+          );
+
+          if (check.isEmpty) continue;
+
+          final key = check['key'] as String;
+
+          // store response id for updates
+          _healthSafetyResponseIds[key] = datum.id;
+
+          // populate UI state
+          final bool checked = datum.isChecked ?? false;
+          final bool hasConcern = datum.hasConcern ?? false;
+          final String? details = datum.concernDetails;
+
+          setState(() {
+            switch (key) {
+              case 'identifiable':
+                isIdentifiableChecked = checked;
+                break;
+              case 'phone_tablet':
+                isPhoneTabletChecked = checked;
+                break;
+              case 'tools':
+                isToolsChecked = checked;
+                break;
+              case 'ppe':
+                isPPEChecked = checked;
+                break;
+              case 'property_occupants':
+                isPropertyOccupantsChecked = checked;
+                break;
+              case 'height':
+                isHeightChecked = checked;
+                isHeightConcernSaved = hasConcern;
+                if (details != null) heightConcernController.text = details;
+                break;
+              case 'electricity':
+                isElectricityChecked = checked;
+                break;
+              case 'slips_trips_falls':
+                isSlipTripFallsChecked = checked;
+                break;
+              case 'chemicals':
+                isChemicalsChecked = checked;
+                break;
+              default:
+                break;
+            }
+
+            if (key != 'height') {
+              concernSaved[key] = hasConcern;
+              if (details != null) _getConcernController(key).text = details;
+            }
+          });
+        }
+      }
+    } catch (e) {
+      // ignore — leave defaults in place
+    }
+  }
+
+  Map<String, dynamic> _extractInspectionId(Map<dynamic, dynamic> response) {
+    final payload = response['data'];
+    if (payload is Map) {
+      final id =
+          payload['id'] ?? payload['inspection_id'] ?? payload['inspectionId'];
+      if (id != null) {
+        return {'id': id};
+      }
+    }
+
+    final id =
+        response['id'] ?? response['inspection_id'] ?? response['inspectionId'];
+    if (id != null) {
+      return {'id': id};
+    }
+
+    return {};
+  }
+
+  final List<Map<String, dynamic>> _healthSafetyChecks = [
+    {'id': 1, 'key': 'identifiable', 'title': 'Identifiable'},
+    {'id': 2, 'key': 'phone_tablet', 'title': 'Phone / Tablet'},
+    {'id': 3, 'key': 'tools', 'title': 'Tools'},
+    {'id': 4, 'key': 'ppe', 'title': 'PPE'},
+    {'id': 5, 'key': 'property_occupants', 'title': 'Property Occupants'},
+    {'id': 6, 'key': 'height', 'title': 'Height'},
+    {'id': 7, 'key': 'electricity', 'title': 'Electricity'},
+    {'id': 8, 'key': 'slips_trips_falls', 'title': 'Slips, Trips & Falls'},
+    {'id': 9, 'key': 'chemicals', 'title': 'Chemicals / Hazardous Substances'},
+  ];
+
+  int get _completedHealthSafetyChecks => [
+    isIdentifiableChecked,
+    isPhoneTabletChecked,
+    isToolsChecked,
+    isPPEChecked,
+    isPropertyOccupantsChecked,
+    isHeightChecked,
+    isElectricityChecked,
+    isSlipTripFallsChecked,
+    isChemicalsChecked,
+  ].where((value) => value).length;
+
+  Map<String, dynamic> _getHealthSafetyItemByKey(String key) {
+    return _healthSafetyChecks.firstWhere(
+      (item) => item['key'] == key,
+      orElse: () => {'id': 0, 'key': key, 'title': key},
+    );
+  }
+
+  List<Map<String, dynamic>> _buildHealthSafetyPayloads() {
+    return [
+      {
+        'key': 'identifiable',
+        'isChecked': isIdentifiableChecked,
+        'hasConcern': concernSaved['identifiable'] ?? false,
+        'concernDetails': _getConcernController('identifiable').text.trim(),
+      },
+      {
+        'key': 'phone_tablet',
+        'isChecked': isPhoneTabletChecked,
+        'hasConcern': concernSaved['phone_tablet'] ?? false,
+        'concernDetails': _getConcernController('phone_tablet').text.trim(),
+      },
+      {
+        'key': 'tools',
+        'isChecked': isToolsChecked,
+        'hasConcern': concernSaved['tools'] ?? false,
+        'concernDetails': _getConcernController('tools').text.trim(),
+      },
+      {
+        'key': 'ppe',
+        'isChecked': isPPEChecked,
+        'hasConcern': concernSaved['ppe'] ?? false,
+        'concernDetails': _getConcernController('ppe').text.trim(),
+      },
+      {
+        'key': 'property_occupants',
+        'isChecked': isPropertyOccupantsChecked,
+        'hasConcern': concernSaved['property_occupants'] ?? false,
+        'concernDetails': _getConcernController(
+          'property_occupants',
+        ).text.trim(),
+      },
+      {
+        'key': 'height',
+        'isChecked': isHeightChecked,
+        'hasConcern': isHeightConcernSaved,
+        'concernDetails': heightConcernController.text.trim(),
+      },
+      {
+        'key': 'electricity',
+        'isChecked': isElectricityChecked,
+        'hasConcern': concernSaved['electricity'] ?? false,
+        'concernDetails': _getConcernController('electricity').text.trim(),
+      },
+      {
+        'key': 'slips_trips_falls',
+        'isChecked': isSlipTripFallsChecked,
+        'hasConcern': concernSaved['slips_trips_falls'] ?? false,
+        'concernDetails': _getConcernController(
+          'slips_trips_falls',
+        ).text.trim(),
+      },
+      {
+        'key': 'chemicals',
+        'isChecked': isChemicalsChecked,
+        'hasConcern': concernSaved['chemicals'] ?? false,
+        'concernDetails': _getConcernController('chemicals').text.trim(),
+      },
+    ];
+  }
+
+  Future<void> _submitHealthSafetyChecks() async {
+    if (_inspectionId == null) {
+      ToastUtil.showShortToast(
+        'Inspection is not created yet. Please complete step 1 first.',
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      final checks = _buildHealthSafetyPayloads();
+
+      for (final check in checks) {
+        final item = _getHealthSafetyItemByKey(check['key'] as String);
+        final responseId = _healthSafetyResponseIds[check['key'] as String];
+        final success = await addHealthSafetyCheckRxOBJ.addHealthSafetyCheckRx(
+          inspectionId: _inspectionId!,
+          healthSafetyItemId: (item['id'] as int?) ?? 0,
+          isChecked: check['isChecked'] as bool,
+          hasConcern: check['hasConcern'] as bool,
+          concernDetails: (check['concernDetails'] as String?) ?? '',
+          responseId: responseId,
+        );
+
+        if (!success) {
+          return;
+        }
+      }
+
+      ToastUtil.showShortToast('Health & safety checks saved successfully');
+      if (_activeStep < 2) {
+        setState(() => _activeStep++);
+      } else {
+        NavigationService.navigateTo(Routes.reportGeneratedScreen);
+      }
+    } catch (e) {
+      ToastUtil.showShortToast('Error: ${e.toString()}');
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
   Future<void> _submitStepOne() async {
     if (!formKey.currentState!.validate()) return;
@@ -99,7 +341,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     try {
       setState(() => isLoading = true);
 
-      final isSuccess = await storeInspectionDetailsRxOBJ
+      final responseData = await storeInspectionDetailsRxOBJ
           .storeInspectionDetailsRx(
             inspectorName: inspectorNameController.text.trim(),
             email: emailController.text.trim(),
@@ -120,14 +362,24 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                 .trim(),
           );
 
-      if (isSuccess) {
+      final extracted = _extractInspectionId(responseData);
+      if (extracted['id'] != null) {
+        _inspectionId = int.tryParse(extracted['id'].toString());
+      }
+
+      if (_inspectionId != null) {
         ToastUtil.showShortToast('Inspection details saved successfully');
+        // fetch existing health & safety responses for this inspection
+        _fetchAndPopulateHealthSafetyItems(_inspectionId!);
         if (_activeStep < 2) {
           setState(() => _activeStep++);
         } else {
           NavigationService.navigateTo(Routes.reportGeneratedScreen);
         }
+        return;
       }
+
+      ToastUtil.showShortToast('Inspection created but no ID was returned.');
     } catch (e) {
       ToastUtil.showShortToast('Error: ${e.toString()}');
     } finally {
@@ -138,6 +390,11 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
   void _nextStep() {
     if (_activeStep == 0) {
       _submitStepOne();
+      return;
+    }
+
+    if (_activeStep == 1) {
+      _submitHealthSafetyChecks();
       return;
     }
 
@@ -206,7 +463,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           UIHelper.customDivider(color: AppColors.grey300),
           UIHelper.verticalSpace(16.h),
           Text(
-            '1 of 10 checks completed',
+            '${_completedHealthSafetyChecks} of ${_healthSafetyChecks.length} checks completed',
             style: TextFontStyle.headlinePoppins50014,
           ),
           UIHelper.verticalSpace(8.h),
@@ -215,7 +472,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
             backgroundColor: AppColors.cFFFFFF,
             color: AppColors.c000000,
             borderRadius: BorderRadius.circular(16.r),
-            value: 1 / 10,
+            value: _completedHealthSafetyChecks / _healthSafetyChecks.length,
           ),
           UIHelper.verticalSpace(16.h),
           OverviewItemListRowWidget(
@@ -397,7 +654,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
               UIHelper.customDivider(color: AppColors.grey300),
               UIHelper.verticalSpace(16.h),
               Text(
-                '1 of 9 checks completed',
+                '${_completedHealthSafetyChecks} of ${_healthSafetyChecks.length} checks completed',
                 style: TextFontStyle.headlinePoppins50014,
               ),
               UIHelper.verticalSpace(8.h),
@@ -406,7 +663,8 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                 backgroundColor: AppColors.cFFFFFF,
                 color: AppColors.c000000,
                 borderRadius: BorderRadius.circular(16.r),
-                value: 1 / 9,
+                value:
+                    _completedHealthSafetyChecks / _healthSafetyChecks.length,
               ),
               UIHelper.verticalSpace(16.h),
               // 1

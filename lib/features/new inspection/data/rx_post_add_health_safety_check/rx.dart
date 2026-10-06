@@ -4,6 +4,7 @@ import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/networks/rx_base.dart';
 import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
+
 import 'api.dart';
 
 final class AddHealthSafetyCheckRx extends RxResponseInt<Map> {
@@ -14,15 +15,21 @@ final class AddHealthSafetyCheckRx extends RxResponseInt<Map> {
   ValueStream get getFileData => dataFetcher.stream;
 
   Future<bool> addHealthSafetyCheckRx({
+    required int inspectionId,
+    required int healthSafetyItemId,
     required bool isChecked,
     required bool hasConcern,
     required String concernDetails,
+    int? responseId,
   }) async {
     try {
-      Map data = await api.addHealthSafetyCheckApi(
+      final Map data = await api.addHealthSafetyCheckApi(
+        inspectionId: inspectionId,
+        healthSafetyItemId: healthSafetyItemId,
         isChecked: isChecked,
         hasConcern: hasConcern,
         concernDetails: concernDetails,
+        responseId: responseId,
       );
       handleSuccessWithReturn(data);
       return true;
@@ -37,11 +44,11 @@ final class AddHealthSafetyCheckRx extends RxResponseInt<Map> {
     if (error is DioException) {
       final data = error.response?.data;
 
-      String message = "Something went wrong";
+      String message = 'Something went wrong';
 
       if (data is Map<String, dynamic>) {
-        if (data["error"] is Map && data["error"] != null) {
-          final errors = data["error"] as Map;
+        if (data['error'] is Map && data['error'] != null) {
+          final errors = data['error'] as Map;
 
           final firstKey = errors.keys.first;
           final firstError = errors[firstKey];
@@ -51,8 +58,8 @@ final class AddHealthSafetyCheckRx extends RxResponseInt<Map> {
           } else if (firstError is String) {
             message = firstError;
           }
-        } else if (data["message"] != null) {
-          message = data["message"].toString();
+        } else if (data['message'] != null) {
+          message = data['message'].toString();
         }
       }
 
