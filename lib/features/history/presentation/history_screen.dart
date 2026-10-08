@@ -1,4 +1,3 @@
-import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/features/history/presentation/widgets/history_completed_widget.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.cFFFFFF,
       appBar: CustomAppBarWidget(title: 'History', showLeadingIcon: false),
       body: SingleChildScrollView(
         child: Padding(
@@ -44,7 +42,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 }
-
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Old Design Code >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // import 'package:connortaii_app/assets_helper/app_colors.dart';
 // import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 // import 'package:connortaii_app/constants/text_font_style.dart';
