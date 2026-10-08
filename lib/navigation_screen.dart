@@ -43,7 +43,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         showMaterialDialog(context);
       },
       child: Scaffold(
-        backgroundColor: AppColors.cFFFFFF,
+        backgroundColor: Colors.white,
         body: IndexedStack(index: _currentIndex, children: _screens),
         bottomNavigationBar: _buildBottomNavigationBar(),
       ),
