@@ -42,7 +42,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 }
-
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Old Design Code >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // import 'package:connortaii_app/assets_helper/app_colors.dart';
 // import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 // import 'package:connortaii_app/constants/text_font_style.dart';
