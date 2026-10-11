@@ -517,7 +517,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                           status: overviewData?.accessibilityStatus ?? '',
                           onTap: () {
                             NavigationService.navigateToWithArgs(
-                              Routes.inspectionStartedScreen,
+                              Routes.inspectionAccessibilityScreen,
                               {'title': overviewData?.sectionType ?? ''},
                             );
                           },
