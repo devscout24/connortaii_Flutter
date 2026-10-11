@@ -140,7 +140,7 @@ class StepOneWidget extends StatelessWidget {
           UIHelper.verticalSpace(8.h),
           CustomTextFormField(
             controller: propertyNameController,
-            hintText: 'Enter Property Address',
+            hintText: 'Enter Property Name',
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             fillColor: AppColors.cFFFFFF,
