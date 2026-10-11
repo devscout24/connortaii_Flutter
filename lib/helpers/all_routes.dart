@@ -7,7 +7,7 @@ import 'package:connortaii_app/features/auth/signup/presentation/signup_screen.d
 import 'package:connortaii_app/features/auth/signup/presentation/signup_verify_screen.dart';
 import 'package:connortaii_app/features/history/presentation/history_screen.dart';
 import 'package:connortaii_app/features/home/presentation/home_screen.dart';
-import 'package:connortaii_app/features/new%20inspection/presentation/inspection_started_screen.dart';
+import 'package:connortaii_app/features/new%20inspection/presentation/inspection_accessibility_screen.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/new_inspection_screen.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/report_generated_screen.dart';
 import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
@@ -47,7 +47,8 @@ final class Routes {
   static const String privacyPolicyScreen = '/PrivacyPolicyScreen';
   static const String termsConditionScreen = '/TermsConditionScreen';
   static const String newInspectionScreen = '/NewInspectionScreen';
-  static const String inspectionStartedScreen = '/InspectionStartedScreen';
+  static const String inspectionAccessibilityScreen =
+      '/InspectionAccessibilityScreen';
   static const String reportGeneratedScreen = '/ReportGeneratedScreen';
 }
 
@@ -242,17 +243,22 @@ final class RouteGenerator {
                 builder: (context) => const ReportGeneratedScreen(),
               );
 
-      case Routes.inspectionStartedScreen:
+      case Routes.inspectionAccessibilityScreen:
         Map args = settings.arguments as Map;
 
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: InspectionStartedScreen(title: args['title']),
+                widget: InspectionAccessibilityScreen(
+                  title: args['title'],
+                  id: args['id'],
+                ),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) =>
-                    InspectionStartedScreen(title: args['title']),
+                builder: (context) => InspectionAccessibilityScreen(
+                  title: args['title'],
+                  id: args['id'],
+                ),
               );
 
       default:

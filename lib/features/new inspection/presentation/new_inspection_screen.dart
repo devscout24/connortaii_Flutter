@@ -14,6 +14,7 @@ import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class NewInspectionScreen extends StatefulWidget {
   const NewInspectionScreen({super.key});
@@ -25,6 +26,9 @@ class NewInspectionScreen extends StatefulWidget {
 class _NewInspectionScreenState extends State<NewInspectionScreen> {
   @override
   void initState() {
+    getInspectionOverViewRXObj.getInspectionOverViewRX(
+      inspectionId: _inspectionId ?? 0,
+    );
     super.initState();
   }
 
@@ -462,135 +466,71 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           UIHelper.verticalSpace(16.h),
           UIHelper.customDivider(color: AppColors.grey300),
           UIHelper.verticalSpace(16.h),
-          Text(
-            '${_completedHealthSafetyChecks} of ${_healthSafetyChecks.length} checks completed',
-            style: TextFontStyle.headlinePoppins50014,
-          ),
-          UIHelper.verticalSpace(8.h),
-          LinearProgressIndicator(
-            minHeight: 6.h,
-            backgroundColor: AppColors.cFFFFFF,
-            color: AppColors.c000000,
-            borderRadius: BorderRadius.circular(16.r),
-            value: _completedHealthSafetyChecks / _healthSafetyChecks.length,
-          ),
-          UIHelper.verticalSpace(16.h),
-          OverviewItemListRowWidget(
-            index: '1',
-            title: 'Exterior Roof',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Exterior Roof'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '2',
-            title: 'Roof Space',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Roof Space'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '3',
-            title: 'External Wall Cladding',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'External Wall Cladding'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '4',
-            title: 'Foundation & Subfloor',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Foundation & Subfloor'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '5',
-            title: 'Plumbing System',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Plumbing System'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '6',
-            title: 'Electrical System',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Electrical System'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '7',
-            title: 'Weather Tightness',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Weather Tightness'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '8',
-            title: 'Site Improvements',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Site Improvements'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '9',
-            title: 'Pest & Potential Hazards',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Pest & Potential Hazards'},
-              );
-            },
-          ),
-          UIHelper.verticalSpace(12.h),
-          OverviewItemListRowWidget(
-            index: '10',
-            title: 'Interior Elements',
-            status: 'Not Started',
-            onTap: () {
-              NavigationService.navigateToWithArgs(
-                Routes.inspectionStartedScreen,
-                {'title': 'Interior Elements'},
+          StreamBuilder(
+            stream: getInspectionOverViewRXObj.dataFetcher,
+            builder: (context, snapshot) {
+              final data = snapshot.data?.data;
+
+              if (snapshot.connectionState == ConnectionState.waiting &&
+                  data == null) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  child: const Center(
+                    child: SpinKitPulse(
+                      color: AppColors.buttonbgColor,
+                      size: 70.0,
+                    ),
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                return const Center(child: Text(""));
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${0} of ${data?.length} checks completed',
+                    style: TextFontStyle.headlinePoppins50014,
+                  ),
+                  UIHelper.verticalSpace(8.h),
+                  LinearProgressIndicator(
+                    minHeight: 6.h,
+                    backgroundColor: AppColors.cFFFFFF,
+                    color: AppColors.c000000,
+                    borderRadius: BorderRadius.circular(16.r),
+                    value: _completedHealthSafetyChecks / (data?.length ?? 1),
+                  ),
+                  UIHelper.verticalSpace(16.h),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: data?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final overviewData = data?[index];
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 12.h),
+                        child: OverviewItemListRowWidget(
+                          index: overviewData?.id.toString() ?? '',
+                          title: overviewData?.sectionType ?? '',
+                          status: overviewData?.accessibilityStatus ?? '',
+                          onTap: () {
+                            NavigationService.navigateToWithArgs(
+                              Routes.inspectionAccessibilityScreen,
+                              {
+                                'title': overviewData?.sectionType ?? '',
+                                'id': overviewData?.id,
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ],
               );
             },
           ),
@@ -1180,3 +1120,120 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+         // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '2',
+          //   title: 'Roof Space',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'Roof Space'},
+          //     );
+          //   },
+          // ),
+          // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '3',
+          //   title: 'External Wall Cladding',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'External Wall Cladding'},
+          //     );
+          //   },
+          // ),
+          // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '4',
+          //   title: 'Foundation & Subfloor',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'Foundation & Subfloor'},
+          //     );
+          //   },
+          // ),
+          // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '5',
+          //   title: 'Plumbing System',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'Plumbing System'},
+          //     );
+          //   },
+          // ),
+          // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '6',
+          //   title: 'Electrical System',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'Electrical System'},
+          //     );
+          //   },
+          // ),
+          // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '7',
+          //   title: 'Weather Tightness',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'Weather Tightness'},
+          //     );
+          //   },
+          // ),
+          // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '8',
+          //   title: 'Site Improvements',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'Site Improvements'},
+          //     );
+          //   },
+          // ),
+          // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '9',
+          //   title: 'Pest & Potential Hazards',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'Pest & Potential Hazards'},
+          //     );
+          //   },
+          // ),
+          // UIHelper.verticalSpace(12.h),
+          // OverviewItemListRowWidget(
+          //   index: '10',
+          //   title: 'Interior Elements',
+          //   status: 'Not Started',
+          //   onTap: () {
+          //     NavigationService.navigateToWithArgs(
+          //       Routes.inspectionStartedScreen,
+          //       {'title': 'Interior Elements'},
+          //     );
+          //   },
+          // ),

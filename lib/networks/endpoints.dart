@@ -49,6 +49,7 @@ final class Endpoints {
       "/api/inspections/$inspectionId/health-safety-responses";
   static String getInspectionOverView({required int inspectionId}) =>
       "/api/inspections/$inspectionId/sections";
+  static String getSectionAccessible({required int id}) => "/api/sections/$id";
 
   /////////============> Push Notification FCM Token <============////////////
   // static String sentFcmToken() => "/firebase-token/add";

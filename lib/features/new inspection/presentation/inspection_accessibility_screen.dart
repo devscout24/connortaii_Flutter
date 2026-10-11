@@ -7,20 +7,27 @@ import 'package:connortaii_app/features/new%20inspection/presentation/widget/bui
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_section_card_widget.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
-class InspectionStartedScreen extends StatefulWidget {
+class InspectionAccessibilityScreen extends StatefulWidget {
   final String title;
-  const InspectionStartedScreen({super.key, required this.title});
+  final int id;
+  const InspectionAccessibilityScreen({
+    super.key,
+    required this.title,
+    required this.id,
+  });
 
   @override
-  State<InspectionStartedScreen> createState() =>
-      _InspectionStartedScreenState();
+  State<InspectionAccessibilityScreen> createState() =>
+      _InspectionAccessibilityScreenState();
 }
 
-class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
+class _InspectionAccessibilityScreenState
+    extends State<InspectionAccessibilityScreen> {
   bool? isRestricted;
   String selectedRestrictionReason = '';
   final TextEditingController restrictionController = TextEditingController();
@@ -99,6 +106,12 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  @override
+  void initState() {
+    getSectionAccessibleRXObj.getSectionAccessibleRX(id: 1);
+    super.initState();
   }
 
   @override
@@ -244,183 +257,51 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
                       ],
                       if (isRestricted == false) ...[
                         UIHelper.verticalSpace(16.h),
-                        BuildSectionCard(
-                          number: 1,
-                          title: 'Roof Type / Material',
-                          expanded: sectionOneExpanded,
-                          onToggle: () => setState(
-                            () => sectionOneExpanded = !sectionOneExpanded,
-                          ),
-                          typeController: roofTypeController,
-                          levelOfConcern: roofTypeLevelOfConcern,
-                          observationController: roofObservationController,
-                          imageFileList: roofTypeImageFiles,
-                          grenOntap: () {
-                            setState(() {
-                              roofTypeLevelOfConcern = 'Green';
-                            });
-                          },
-                          orangentap: () {
-                            setState(() {
-                              roofTypeLevelOfConcern = 'Orange';
-                            });
-                          },
-                          redOntap: () {
-                            setState(() {
-                              roofTypeLevelOfConcern = 'Red';
-                            });
-                          },
-                          nAOntap: () {
-                            setState(() {
-                              roofTypeLevelOfConcern = 'N/A';
-                            });
-                          },
-                          imagePickerOntap: () {
-                            onImageButtonPressed(roofTypeImageFiles);
-                          },
-                        ),
-                        BuildSectionCard(
-                          number: 2,
-                          title: 'Overall Condition',
-                          expanded: sectionTwoExpanded,
-                          onToggle: () => setState(
-                            () => sectionTwoExpanded = !sectionTwoExpanded,
-                          ),
-                          typeController: overallConditionTypeController,
-                          levelOfConcern: overallConditionLevelOfConcern,
-                          observationController:
-                              overallConditionObservationController,
-                          imageFileList: overallConditionImageFiles,
-                          grenOntap: () {
-                            setState(() {
-                              overallConditionLevelOfConcern = 'Green';
-                            });
-                          },
-                          orangentap: () {
-                            setState(() {
-                              overallConditionLevelOfConcern = 'Orange';
-                            });
-                          },
-                          redOntap: () {
-                            setState(() {
-                              overallConditionLevelOfConcern = 'Red';
-                            });
-                          },
-                          nAOntap: () {
-                            setState(() {
-                              overallConditionLevelOfConcern = 'N/A';
-                            });
-                          },
-                          imagePickerOntap: () {
-                            onImageButtonPressed(overallConditionImageFiles);
+                        ListView.builder(
+                          itemCount: 10,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          itemBuilder: (context, index) {
+                            return BuildSectionCard(
+                              number: 1,
+                              title: 'Roof Type / Material',
+                              expanded: sectionOneExpanded,
+                              onToggle: () => setState(
+                                () => sectionOneExpanded = !sectionOneExpanded,
+                              ),
+                              typeController: roofTypeController,
+                              levelOfConcern: roofTypeLevelOfConcern,
+                              observationController: roofObservationController,
+                              imageFileList: roofTypeImageFiles,
+                              grenOntap: () {
+                                setState(() {
+                                  roofTypeLevelOfConcern = 'Green';
+                                });
+                              },
+                              orangentap: () {
+                                setState(() {
+                                  roofTypeLevelOfConcern = 'Orange';
+                                });
+                              },
+                              redOntap: () {
+                                setState(() {
+                                  roofTypeLevelOfConcern = 'Red';
+                                });
+                              },
+                              nAOntap: () {
+                                setState(() {
+                                  roofTypeLevelOfConcern = 'N/A';
+                                });
+                              },
+                              imagePickerOntap: () {
+                                onImageButtonPressed(roofTypeImageFiles);
+                              },
+                            );
                           },
                         ),
-                        BuildSectionCard(
-                          number: 3,
-                          title: 'Roof Covering',
-                          expanded: sectionThreeExpanded,
-                          onToggle: () => setState(
-                            () => sectionThreeExpanded = !sectionThreeExpanded,
-                          ),
-                          typeController: roofCoveringTypeController,
-                          levelOfConcern: roofCoveringLevelOfConcern,
-                          observationController:
-                              roofCoveringObservationController,
-                          imageFileList: roofCoveringImageFiles,
-                          grenOntap: () {
-                            setState(() {
-                              roofCoveringLevelOfConcern = 'Green';
-                            });
-                          },
-                          orangentap: () {
-                            setState(() {
-                              roofCoveringLevelOfConcern = 'Orange';
-                            });
-                          },
-                          redOntap: () {
-                            setState(() {
-                              roofCoveringLevelOfConcern = 'Red';
-                            });
-                          },
-                          nAOntap: () {
-                            setState(() {
-                              roofCoveringLevelOfConcern = 'N/A';
-                            });
-                          },
-                          imagePickerOntap: () {
-                            onImageButtonPressed(roofCoveringImageFiles);
-                          },
-                        ),
-                        BuildSectionCard(
-                          number: 4,
-                          title: 'Gutters & Downpipes',
-                          expanded: sectionFourExpanded,
-                          onToggle: () => setState(
-                            () => sectionFourExpanded = !sectionFourExpanded,
-                          ),
-                          typeController: gluttersTypeController,
-                          levelOfConcern: gluttersLevelOfConcern,
-                          observationController: gluttersObservationController,
-                          imageFileList: guttersImageFiles,
-                          grenOntap: () {
-                            setState(() {
-                              gluttersLevelOfConcern = 'Green';
-                            });
-                          },
-                          orangentap: () {
-                            setState(() {
-                              gluttersLevelOfConcern = 'Orange';
-                            });
-                          },
-                          redOntap: () {
-                            setState(() {
-                              gluttersLevelOfConcern = 'Red';
-                            });
-                          },
-                          nAOntap: () {
-                            setState(() {
-                              gluttersLevelOfConcern = 'N/A';
-                            });
-                          },
-                          imagePickerOntap: () {
-                            onImageButtonPressed(guttersImageFiles);
-                          },
-                        ),
-                        BuildSectionCard(
-                          number: 5,
-                          title: 'Flashings & Penetrations',
-                          expanded: sectionFiveExpanded,
-                          onToggle: () => setState(
-                            () => sectionFiveExpanded = !sectionFiveExpanded,
-                          ),
-                          typeController: flashingsTypeController,
-                          levelOfConcern: flashingsLevelOfConcern,
-                          observationController: flashingsObservationController,
-                          imageFileList: flashingsImageFiles,
-                          grenOntap: () {
-                            setState(() {
-                              flashingsLevelOfConcern = 'Green';
-                            });
-                          },
-                          orangentap: () {
-                            setState(() {
-                              flashingsLevelOfConcern = 'Orange';
-                            });
-                          },
-                          redOntap: () {
-                            setState(() {
-                              flashingsLevelOfConcern = 'Red';
-                            });
-                          },
-                          nAOntap: () {
-                            setState(() {
-                              flashingsLevelOfConcern = 'N/A';
-                            });
-                          },
-                          imagePickerOntap: () {
-                            onImageButtonPressed(flashingsImageFiles);
-                          },
-                        ),
+
                         UIHelper.verticalSpace(18.h),
                         SizedBox(
                           width: double.infinity,
@@ -453,3 +334,146 @@ class _InspectionStartedScreenState extends State<InspectionStartedScreen> {
     );
   }
 }
+
+     // BuildSectionCard(
+                        //   number: 2,
+                        //   title: 'Overall Condition',
+                        //   expanded: sectionTwoExpanded,
+                        //   onToggle: () => setState(
+                        //     () => sectionTwoExpanded = !sectionTwoExpanded,
+                        //   ),
+                        //   typeController: overallConditionTypeController,
+                        //   levelOfConcern: overallConditionLevelOfConcern,
+                        //   observationController:
+                        //       overallConditionObservationController,
+                        //   imageFileList: overallConditionImageFiles,
+                        //   grenOntap: () {
+                        //     setState(() {
+                        //       overallConditionLevelOfConcern = 'Green';
+                        //     });
+                        //   },
+                        //   orangentap: () {
+                        //     setState(() {
+                        //       overallConditionLevelOfConcern = 'Orange';
+                        //     });
+                        //   },
+                        //   redOntap: () {
+                        //     setState(() {
+                        //       overallConditionLevelOfConcern = 'Red';
+                        //     });
+                        //   },
+                        //   nAOntap: () {
+                        //     setState(() {
+                        //       overallConditionLevelOfConcern = 'N/A';
+                        //     });
+                        //   },
+                        //   imagePickerOntap: () {
+                        //     onImageButtonPressed(overallConditionImageFiles);
+                        //   },
+                        // ),
+                        // BuildSectionCard(
+                        //   number: 3,
+                        //   title: 'Roof Covering',
+                        //   expanded: sectionThreeExpanded,
+                        //   onToggle: () => setState(
+                        //     () => sectionThreeExpanded = !sectionThreeExpanded,
+                        //   ),
+                        //   typeController: roofCoveringTypeController,
+                        //   levelOfConcern: roofCoveringLevelOfConcern,
+                        //   observationController:
+                        //       roofCoveringObservationController,
+                        //   imageFileList: roofCoveringImageFiles,
+                        //   grenOntap: () {
+                        //     setState(() {
+                        //       roofCoveringLevelOfConcern = 'Green';
+                        //     });
+                        //   },
+                        //   orangentap: () {
+                        //     setState(() {
+                        //       roofCoveringLevelOfConcern = 'Orange';
+                        //     });
+                        //   },
+                        //   redOntap: () {
+                        //     setState(() {
+                        //       roofCoveringLevelOfConcern = 'Red';
+                        //     });
+                        //   },
+                        //   nAOntap: () {
+                        //     setState(() {
+                        //       roofCoveringLevelOfConcern = 'N/A';
+                        //     });
+                        //   },
+                        //   imagePickerOntap: () {
+                        //     onImageButtonPressed(roofCoveringImageFiles);
+                        //   },
+                        // ),
+                        // BuildSectionCard(
+                        //   number: 4,
+                        //   title: 'Gutters & Downpipes',
+                        //   expanded: sectionFourExpanded,
+                        //   onToggle: () => setState(
+                        //     () => sectionFourExpanded = !sectionFourExpanded,
+                        //   ),
+                        //   typeController: gluttersTypeController,
+                        //   levelOfConcern: gluttersLevelOfConcern,
+                        //   observationController: gluttersObservationController,
+                        //   imageFileList: guttersImageFiles,
+                        //   grenOntap: () {
+                        //     setState(() {
+                        //       gluttersLevelOfConcern = 'Green';
+                        //     });
+                        //   },
+                        //   orangentap: () {
+                        //     setState(() {
+                        //       gluttersLevelOfConcern = 'Orange';
+                        //     });
+                        //   },
+                        //   redOntap: () {
+                        //     setState(() {
+                        //       gluttersLevelOfConcern = 'Red';
+                        //     });
+                        //   },
+                        //   nAOntap: () {
+                        //     setState(() {
+                        //       gluttersLevelOfConcern = 'N/A';
+                        //     });
+                        //   },
+                        //   imagePickerOntap: () {
+                        //     onImageButtonPressed(guttersImageFiles);
+                        //   },
+                        // ),
+                        // BuildSectionCard(
+                        //   number: 5,
+                        //   title: 'Flashings & Penetrations',
+                        //   expanded: sectionFiveExpanded,
+                        //   onToggle: () => setState(
+                        //     () => sectionFiveExpanded = !sectionFiveExpanded,
+                        //   ),
+                        //   typeController: flashingsTypeController,
+                        //   levelOfConcern: flashingsLevelOfConcern,
+                        //   observationController: flashingsObservationController,
+                        //   imageFileList: flashingsImageFiles,
+                        //   grenOntap: () {
+                        //     setState(() {
+                        //       flashingsLevelOfConcern = 'Green';
+                        //     });
+                        //   },
+                        //   orangentap: () {
+                        //     setState(() {
+                        //       flashingsLevelOfConcern = 'Orange';
+                        //     });
+                        //   },
+                        //   redOntap: () {
+                        //     setState(() {
+                        //       flashingsLevelOfConcern = 'Red';
+                        //     });
+                        //   },
+                        //   nAOntap: () {
+                        //     setState(() {
+                        //       flashingsLevelOfConcern = 'N/A';
+                        //     });
+                        //   },
+                        //   imagePickerOntap: () {
+                        //     onImageButtonPressed(flashingsImageFiles);
+                        //   },
+                        // ),
