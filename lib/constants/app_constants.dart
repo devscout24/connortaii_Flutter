@@ -121,6 +121,7 @@ const String kKeyUserEmail = 'user_email';
 const String kKeyotpVerifyToken = 'otp_verify_token';
 const String kKeystripeAccountId = 'stripe_account_id';
 const String kKeyFCMToken = 'fcm_token';
+const String kKeyInspectionID = 'inspection_id';
 
 //order statuses
 
