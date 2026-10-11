@@ -10,6 +10,7 @@ import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class InspectionAccessibilityScreen extends StatefulWidget {
@@ -110,7 +111,7 @@ class _InspectionAccessibilityScreenState
 
   @override
   void initState() {
-    getSectionAccessibleRXObj.getSectionAccessibleRX(id: 1);
+    getSectionAccessibleRXObj.getSectionAccessibleRX(id: widget.id);
     super.initState();
   }
 
@@ -257,46 +258,74 @@ class _InspectionAccessibilityScreenState
                       ],
                       if (isRestricted == false) ...[
                         UIHelper.verticalSpace(16.h),
-                        ListView.builder(
-                          itemCount: 10,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          physics: NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            return BuildSectionCard(
-                              number: 1,
-                              title: 'Roof Type / Material',
-                              expanded: sectionOneExpanded,
-                              onToggle: () => setState(
-                                () => sectionOneExpanded = !sectionOneExpanded,
-                              ),
-                              typeController: roofTypeController,
-                              levelOfConcern: roofTypeLevelOfConcern,
-                              observationController: roofObservationController,
-                              imageFileList: roofTypeImageFiles,
-                              grenOntap: () {
-                                setState(() {
-                                  roofTypeLevelOfConcern = 'Green';
-                                });
-                              },
-                              orangentap: () {
-                                setState(() {
-                                  roofTypeLevelOfConcern = 'Orange';
-                                });
-                              },
-                              redOntap: () {
-                                setState(() {
-                                  roofTypeLevelOfConcern = 'Red';
-                                });
-                              },
-                              nAOntap: () {
-                                setState(() {
-                                  roofTypeLevelOfConcern = 'N/A';
-                                });
-                              },
-                              imagePickerOntap: () {
-                                onImageButtonPressed(roofTypeImageFiles);
+                        StreamBuilder(
+                          stream: getSectionAccessibleRXObj.dataFetcher,
+                          builder: (context, snapshot) {
+                            final data = snapshot.data?.data;
+
+                            if (snapshot.connectionState ==
+                                    ConnectionState.waiting &&
+                                data == null) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10.h),
+                                child: const Center(
+                                  child: SpinKitPulse(
+                                    color: AppColors.c000000,
+                                    size: 70.0,
+                                  ),
+                                ),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return const Center(child: Text(""));
+                            }
+
+                            return ListView.builder(
+                              itemCount: data?.checkpoints?.length ?? 0,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              physics: NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, index) {
+                                final checkPoints = data?.checkpoints?[index];
+
+                                return BuildSectionCard(
+                                  number: checkPoints?.order ?? 0,
+                                  title: checkPoints?.label ?? '',
+                                  expanded: sectionOneExpanded,
+                                  onToggle: () => setState(
+                                    () => sectionOneExpanded =
+                                        !sectionOneExpanded,
+                                  ),
+                                  typeController: roofTypeController,
+                                  levelOfConcern: roofTypeLevelOfConcern,
+                                  observationController:
+                                      roofObservationController,
+                                  imageFileList: roofTypeImageFiles,
+                                  grenOntap: () {
+                                    setState(() {
+                                      roofTypeLevelOfConcern = 'Green';
+                                    });
+                                  },
+                                  orangentap: () {
+                                    setState(() {
+                                      roofTypeLevelOfConcern = 'Orange';
+                                    });
+                                  },
+                                  redOntap: () {
+                                    setState(() {
+                                      roofTypeLevelOfConcern = 'Red';
+                                    });
+                                  },
+                                  nAOntap: () {
+                                    setState(() {
+                                      roofTypeLevelOfConcern = 'N/A';
+                                    });
+                                  },
+                                  imagePickerOntap: () {
+                                    onImageButtonPressed(roofTypeImageFiles);
+                                  },
+                                );
                               },
                             );
                           },

@@ -1,6 +1,7 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
+import 'package:connortaii_app/constants/app_constants.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/active_step_widget.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_height_safety_card_widget.dart';
@@ -8,6 +9,7 @@ import 'package:connortaii_app/features/new%20inspection/presentation/widget/bui
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/overview_item_list_row_widget.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/step_one_widget.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
+import 'package:connortaii_app/helpers/di.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
@@ -26,10 +28,20 @@ class NewInspectionScreen extends StatefulWidget {
 class _NewInspectionScreenState extends State<NewInspectionScreen> {
   @override
   void initState() {
-    getInspectionOverViewRXObj.getInspectionOverViewRX(
-      inspectionId: _inspectionId ?? 0,
-    );
     super.initState();
+    _inspectionId = appData.read<int>(kKeyInspectionID);
+    if (_inspectionId != null) {
+      _loadInspectionOverview();
+    } else {
+      getInspectionOverViewRXObj.getInspectionOverViewRX(inspectionId: 0);
+    }
+  }
+
+  Future<void> _loadInspectionOverview() async {
+    if (_inspectionId == null) return;
+    await getInspectionOverViewRXObj.getInspectionOverViewRX(
+      inspectionId: _inspectionId!,
+    );
   }
 
   int _activeStep = 0;
@@ -372,6 +384,8 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
       }
 
       if (_inspectionId != null) {
+        await appData.write(kKeyInspectionID, _inspectionId);
+        await _loadInspectionOverview();
         ToastUtil.showShortToast('Inspection details saved successfully');
         // fetch existing health & safety responses for this inspection
         _fetchAndPopulateHealthSafetyItems(_inspectionId!);
@@ -469,10 +483,10 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           StreamBuilder(
             stream: getInspectionOverViewRXObj.dataFetcher,
             builder: (context, snapshot) {
-              final data = snapshot.data?.data;
+              final data = snapshot.data?.data ?? [];
 
               if (snapshot.connectionState == ConnectionState.waiting &&
-                  data == null) {
+                  data.isEmpty) {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.h),
                   child: const Center(
@@ -484,14 +498,20 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                 );
               }
               if (snapshot.hasError) {
-                return const Center(child: Text(""));
+                return const Center(child: Text('Unable to load overview'));
+              }
+
+              if (data.isEmpty) {
+                return const Center(
+                  child: Text('No inspection overview available yet.'),
+                );
               }
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${0} of ${data?.length} checks completed',
+                    '$_completedHealthSafetyChecks of ${data.length} checks completed',
                     style: TextFontStyle.headlinePoppins50014,
                   ),
                   UIHelper.verticalSpace(8.h),
@@ -500,7 +520,9 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                     backgroundColor: AppColors.cFFFFFF,
                     color: AppColors.c000000,
                     borderRadius: BorderRadius.circular(16.r),
-                    value: _completedHealthSafetyChecks / (data?.length ?? 1),
+                    value:
+                        _completedHealthSafetyChecks /
+                        (data.isEmpty ? 1 : data.length),
                   ),
                   UIHelper.verticalSpace(16.h),
                   ListView.builder(
@@ -508,21 +530,27 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                     scrollDirection: Axis.vertical,
                     physics: NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
-                    itemCount: data?.length ?? 0,
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
-                      final overviewData = data?[index];
+                      final overviewData = data[index];
                       return Padding(
                         padding: EdgeInsets.only(bottom: 12.h),
                         child: OverviewItemListRowWidget(
-                          index: overviewData?.id.toString() ?? '',
-                          title: overviewData?.sectionType ?? '',
-                          status: overviewData?.accessibilityStatus ?? '',
+                          index: overviewData.id?.toString() ?? '${index + 1}',
+                          title:
+                              overviewData.sectionType ??
+                              'Section ${index + 1}',
+                          status:
+                              overviewData.accessibilityStatus ?? 'Not Started',
                           onTap: () {
                             NavigationService.navigateToWithArgs(
                               Routes.inspectionAccessibilityScreen,
                               {
-                                'title': overviewData?.sectionType ?? '',
-                                'id': overviewData?.id,
+                                'title':
+                                    overviewData.sectionType ??
+                                    'Section ${index + 1}',
+                                'id': overviewData.id,
+                                'inspectionId': _inspectionId,
                               },
                             );
                           },
@@ -594,7 +622,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
               UIHelper.customDivider(color: AppColors.grey300),
               UIHelper.verticalSpace(16.h),
               Text(
-                '${_completedHealthSafetyChecks} of ${_healthSafetyChecks.length} checks completed',
+                '$_completedHealthSafetyChecks of ${_healthSafetyChecks.length} checks completed',
                 style: TextFontStyle.headlinePoppins50014,
               ),
               UIHelper.verticalSpace(8.h),
