@@ -14,6 +14,7 @@ import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class NewInspectionScreen extends StatefulWidget {
   const NewInspectionScreen({super.key});
@@ -25,6 +26,7 @@ class NewInspectionScreen extends StatefulWidget {
 class _NewInspectionScreenState extends State<NewInspectionScreen> {
   @override
   void initState() {
+    getInspectionOverViewRXObj.getInspectionOverViewRX(inspectionId: 1);
     super.initState();
   }
 
@@ -462,39 +464,68 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           UIHelper.verticalSpace(16.h),
           UIHelper.customDivider(color: AppColors.grey300),
           UIHelper.verticalSpace(16.h),
-          Text(
-            '${_completedHealthSafetyChecks} of ${_healthSafetyChecks.length} checks completed',
-            style: TextFontStyle.headlinePoppins50014,
-          ),
-          UIHelper.verticalSpace(8.h),
-          LinearProgressIndicator(
-            minHeight: 6.h,
-            backgroundColor: AppColors.cFFFFFF,
-            color: AppColors.c000000,
-            borderRadius: BorderRadius.circular(16.r),
-            value: _completedHealthSafetyChecks / _healthSafetyChecks.length,
-          ),
-          UIHelper.verticalSpace(16.h),
-          ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 12.h),
-                child: OverviewItemListRowWidget(
-                  index: '${index + 1}',
-                  title: 'title',
-                  status: 'status',
-                  onTap: () {
-                    NavigationService.navigateToWithArgs(
-                      Routes.inspectionStartedScreen,
-                      {'title': _healthSafetyChecks[index]['title']},
-                    );
-                  },
-                ),
+          StreamBuilder(
+            stream: getInspectionOverViewRXObj.dataFetcher,
+            builder: (context, snapshot) {
+              final data = snapshot.data?.data;
+
+              if (snapshot.connectionState == ConnectionState.waiting &&
+                  data == null) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  child: const Center(
+                    child: SpinKitPulse(
+                      color: AppColors.buttonbgColor,
+                      size: 70.0,
+                    ),
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                return const Center(child: Text(""));
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${0} of ${data?.length} checks completed',
+                    style: TextFontStyle.headlinePoppins50014,
+                  ),
+                  UIHelper.verticalSpace(8.h),
+                  LinearProgressIndicator(
+                    minHeight: 6.h,
+                    backgroundColor: AppColors.cFFFFFF,
+                    color: AppColors.c000000,
+                    borderRadius: BorderRadius.circular(16.r),
+                    value: _completedHealthSafetyChecks / (data?.length ?? 1),
+                  ),
+                  UIHelper.verticalSpace(16.h),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: data?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final overviewData = data?[index];
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 12.h),
+                        child: OverviewItemListRowWidget(
+                          index: overviewData?.id.toString() ?? '',
+                          title: overviewData?.sectionType ?? '',
+                          status: overviewData?.accessibilityStatus ?? '',
+                          onTap: () {
+                            NavigationService.navigateToWithArgs(
+                              Routes.inspectionStartedScreen,
+                              {'title': overviewData?.sectionType ?? ''},
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ],
               );
             },
           ),

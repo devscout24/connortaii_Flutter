@@ -43,11 +43,11 @@ class Datum {
   int? id;
   int? inspectionId;
   String? sectionType;
-  Status? accessibilityStatus;
+  String? accessibilityStatus;
   dynamic restrictionReason;
   dynamic restrictionDescription;
   int? isCompleted;
-  Status? overallStatus;
+  String? overallStatus;
   DateTime? createdAt;
   DateTime? updatedAt;
   List<Checkpoint>? checkpoints;
@@ -74,11 +74,11 @@ class Datum {
     id: json["id"],
     inspectionId: json["inspection_id"],
     sectionType: json["section_type"],
-    accessibilityStatus: statusValues.map[json["accessibility_status"]],
+    accessibilityStatus: json["accessibility_status"],
     restrictionReason: json["restriction_reason"],
     restrictionDescription: json["restriction_description"],
     isCompleted: json["is_completed"],
-    overallStatus: statusValues.map[json["overall_status"]],
+    overallStatus: json["overall_status"],
     createdAt: json["created_at"] == null
         ? null
         : DateTime.parse(json["created_at"]),
@@ -96,11 +96,11 @@ class Datum {
     "id": id,
     "inspection_id": inspectionId,
     "section_type": sectionType,
-    "accessibility_status": statusValues.reverse[accessibilityStatus],
+    "accessibility_status": accessibilityStatus,
     "restriction_reason": restrictionReason,
     "restriction_description": restrictionDescription,
     "is_completed": isCompleted,
-    "overall_status": statusValues.reverse[overallStatus],
+    "overall_status": overallStatus,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
     "checkpoints": checkpoints == null
@@ -108,10 +108,6 @@ class Datum {
         : List<dynamic>.from(checkpoints!.map((x) => x.toJson())),
   };
 }
-
-enum Status { PENDING }
-
-final statusValues = EnumValues({"pending": Status.PENDING});
 
 class Checkpoint {
   int? id;
