@@ -248,12 +248,17 @@ final class RouteGenerator {
 
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: InspectionAccessibilityScreen(title: args['title']),
+                widget: InspectionAccessibilityScreen(
+                  title: args['title'],
+                  id: args['id'],
+                ),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) =>
-                    InspectionAccessibilityScreen(title: args['title']),
+                builder: (context) => InspectionAccessibilityScreen(
+                  title: args['title'],
+                  id: args['id'],
+                ),
               );
 
       default:

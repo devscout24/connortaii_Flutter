@@ -26,7 +26,9 @@ class NewInspectionScreen extends StatefulWidget {
 class _NewInspectionScreenState extends State<NewInspectionScreen> {
   @override
   void initState() {
-    getInspectionOverViewRXObj.getInspectionOverViewRX(inspectionId: 1);
+    getInspectionOverViewRXObj.getInspectionOverViewRX(
+      inspectionId: _inspectionId ?? 0,
+    );
     super.initState();
   }
 
@@ -518,7 +520,10 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                           onTap: () {
                             NavigationService.navigateToWithArgs(
                               Routes.inspectionAccessibilityScreen,
-                              {'title': overviewData?.sectionType ?? ''},
+                              {
+                                'title': overviewData?.sectionType ?? '',
+                                'id': overviewData?.id,
+                              },
                             );
                           },
                         ),

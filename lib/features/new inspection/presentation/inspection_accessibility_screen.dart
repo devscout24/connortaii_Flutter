@@ -7,13 +7,19 @@ import 'package:connortaii_app/features/new%20inspection/presentation/widget/bui
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_section_card_widget.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class InspectionAccessibilityScreen extends StatefulWidget {
   final String title;
-  const InspectionAccessibilityScreen({super.key, required this.title});
+  final int id;
+  const InspectionAccessibilityScreen({
+    super.key,
+    required this.title,
+    required this.id,
+  });
 
   @override
   State<InspectionAccessibilityScreen> createState() =>
@@ -100,6 +106,12 @@ class _InspectionAccessibilityScreenState
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  @override
+  void initState() {
+    getSectionAccessibleRXObj.getSectionAccessibleRX(id: 1);
+    super.initState();
   }
 
   @override
