@@ -3,7 +3,7 @@ import 'dart:convert';
 class GetInspectionOverViewResponseModel {
   bool? success;
   String? message;
-  List<Datum>? data;
+  Data? data;
   int? code;
 
   GetInspectionOverViewResponseModel({
@@ -23,23 +23,47 @@ class GetInspectionOverViewResponseModel {
   ) => GetInspectionOverViewResponseModel(
     success: json["success"],
     message: json["message"],
-    data: json["data"] == null
-        ? []
-        : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+    data: json["data"] == null ? null : Data.fromJson(json["data"]),
     code: json["code"],
   );
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": message,
-    "data": data == null
-        ? []
-        : List<dynamic>.from(data!.map((x) => x.toJson())),
+    "data": data?.toJson(),
     "code": code,
   };
 }
 
-class Datum {
+class Data {
+  int? totalSections;
+  int? completedSections;
+  List<Section>? sections;
+
+  Data({this.totalSections, this.completedSections, this.sections});
+
+  factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    totalSections: json["total_sections"],
+    completedSections: json["completed_sections"],
+    sections: json["sections"] == null
+        ? []
+        : List<Section>.from(json["sections"]!.map((x) => Section.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "total_sections": totalSections,
+    "completed_sections": completedSections,
+    "sections": sections == null
+        ? []
+        : List<dynamic>.from(sections!.map((x) => x.toJson())),
+  };
+}
+
+class Section {
   int? id;
   int? inspectionId;
   String? sectionType;
@@ -50,9 +74,11 @@ class Datum {
   String? overallStatus;
   DateTime? createdAt;
   DateTime? updatedAt;
+  String? label;
+  int? order;
   List<Checkpoint>? checkpoints;
 
-  Datum({
+  Section({
     this.id,
     this.inspectionId,
     this.sectionType,
@@ -63,14 +89,16 @@ class Datum {
     this.overallStatus,
     this.createdAt,
     this.updatedAt,
+    this.label,
+    this.order,
     this.checkpoints,
   });
 
-  factory Datum.fromRawJson(String str) => Datum.fromJson(json.decode(str));
+  factory Section.fromRawJson(String str) => Section.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Section.fromJson(Map<String, dynamic> json) => Section(
     id: json["id"],
     inspectionId: json["inspection_id"],
     sectionType: json["section_type"],
@@ -85,6 +113,8 @@ class Datum {
     updatedAt: json["updated_at"] == null
         ? null
         : DateTime.parse(json["updated_at"]),
+    label: json["label"],
+    order: json["order"],
     checkpoints: json["checkpoints"] == null
         ? []
         : List<Checkpoint>.from(
@@ -103,6 +133,8 @@ class Datum {
     "overall_status": overallStatus,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
+    "label": label,
+    "order": order,
     "checkpoints": checkpoints == null
         ? []
         : List<dynamic>.from(checkpoints!.map((x) => x.toJson())),

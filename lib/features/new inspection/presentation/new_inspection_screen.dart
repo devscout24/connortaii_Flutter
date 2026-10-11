@@ -407,7 +407,11 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
 
   void _nextStep() {
     if (_activeStep == 0) {
-      _submitStepOne();
+      isLoading
+          ? Center(
+              child: SpinKitCircle(color: AppColors.textColor, size: 60.h),
+            )
+          : _submitStepOne();
       return;
     }
 
@@ -483,7 +487,10 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           StreamBuilder(
             stream: getInspectionOverViewRXObj.dataFetcher,
             builder: (context, snapshot) {
-              final data = snapshot.data?.data ?? [];
+              final data = snapshot.data?.data?.sections ?? [];
+              final totalSections = snapshot.data?.data?.totalSections ?? 0;
+              final completedSections =
+                  snapshot.data?.data?.completedSections ?? 0;
 
               if (snapshot.connectionState == ConnectionState.waiting &&
                   data.isEmpty) {
@@ -511,7 +518,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '$_completedHealthSafetyChecks of ${data.length} checks completed',
+                    '$completedSections of $totalSections checks completed',
                     style: TextFontStyle.headlinePoppins50014,
                   ),
                   UIHelper.verticalSpace(8.h),
@@ -521,8 +528,8 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                     color: AppColors.c000000,
                     borderRadius: BorderRadius.circular(16.r),
                     value:
-                        _completedHealthSafetyChecks /
-                        (data.isEmpty ? 1 : data.length),
+                        completedSections /
+                        (totalSections == 0 ? 1 : totalSections),
                   ),
                   UIHelper.verticalSpace(16.h),
                   ListView.builder(
@@ -536,10 +543,9 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                       return Padding(
                         padding: EdgeInsets.only(bottom: 12.h),
                         child: OverviewItemListRowWidget(
-                          index: overviewData.id?.toString() ?? '${index + 1}',
-                          title:
-                              overviewData.sectionType ??
-                              'Section ${index + 1}',
+                          index:
+                              overviewData.order?.toString() ?? '${index + 1}',
+                          title: overviewData.label ?? 'Section ${index + 1}',
                           status:
                               overviewData.accessibilityStatus ?? 'Not Started',
                           onTap: () {
