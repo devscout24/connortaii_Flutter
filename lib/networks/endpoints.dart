@@ -50,6 +50,8 @@ final class Endpoints {
   static String getInspectionOverView({required int inspectionId}) =>
       "/api/inspections/$inspectionId/sections";
   static String getSectionAccessible({required int id}) => "/api/sections/$id";
+  static String postRestrictedAccessibility({required int id}) =>
+      "/api/sections/$id/accessibility";
 
   /////////============> Push Notification FCM Token <============////////////
   // static String sentFcmToken() => "/firebase-token/add";
