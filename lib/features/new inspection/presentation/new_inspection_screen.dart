@@ -553,7 +553,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                               Routes.inspectionAccessibilityScreen,
                               {
                                 'title':
-                                    overviewData.sectionType ??
+                                    overviewData.label ??
                                     'Section ${index + 1}',
                                 'id': overviewData.id,
                                 'inspectionId': _inspectionId,
