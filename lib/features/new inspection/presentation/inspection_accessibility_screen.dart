@@ -52,6 +52,13 @@ class _InspectionAccessibilityScreenState
   final TextEditingController flashingsObservationController =
       TextEditingController();
 
+  final Set<int> expandedCheckpointIds = {};
+  final Map<int, _CheckpointFormState> _checkpointStates = {};
+
+  _CheckpointFormState _getCheckpointState(int itemId) {
+    return _checkpointStates.putIfAbsent(itemId, () => _CheckpointFormState());
+  }
+
   String roofTypeLevelOfConcern = '';
   String overallConditionLevelOfConcern = '';
   String roofCoveringLevelOfConcern = '';
@@ -72,6 +79,16 @@ class _InspectionAccessibilityScreenState
 
   final ImagePicker _picker = ImagePicker();
 
+  void toggleCheckpointExpansion(int itemId) {
+    setState(() {
+      if (expandedCheckpointIds.contains(itemId)) {
+        expandedCheckpointIds.remove(itemId);
+      } else {
+        expandedCheckpointIds.add(itemId);
+      }
+    });
+  }
+
   @override
   void dispose() {
     restrictionController.dispose();
@@ -85,11 +102,82 @@ class _InspectionAccessibilityScreenState
     gluttersObservationController.dispose();
     flashingsTypeController.dispose();
     flashingsObservationController.dispose();
+    for (final state in _checkpointStates.values) {
+      state.dispose();
+    }
     super.dispose();
   }
 
   Future<void> onImageButtonPressed(List<XFile> targetList) async {
+    final selectedSource = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: AppColors.cFFFFFF,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(16.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 48.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.grey300,
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                ),
+                UIHelper.verticalSpace(16.h),
+                ListTile(
+                  leading: Icon(
+                    Icons.camera_alt_outlined,
+                    color: AppColors.c000000,
+                  ),
+                  title: Text(
+                    'Camera',
+                    style: TextFontStyle.headlinePoppins50016,
+                  ),
+                  onTap: () => Navigator.pop(context, ImageSource.camera),
+                ),
+                Divider(color: AppColors.grey300),
+                ListTile(
+                  leading: Icon(
+                    Icons.photo_library_outlined,
+                    color: AppColors.c000000,
+                  ),
+                  title: Text(
+                    'Gallery',
+                    style: TextFontStyle.headlinePoppins50016,
+                  ),
+                  onTap: () => Navigator.pop(context, ImageSource.gallery),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (selectedSource == null) return;
+
     try {
+      if (selectedSource == ImageSource.camera) {
+        final pickedFile = await _picker.pickImage(
+          source: ImageSource.camera,
+          imageQuality: 80,
+        );
+
+        if (pickedFile != null) {
+          setState(() {
+            targetList.add(pickedFile);
+          });
+        }
+        return;
+      }
+
       final pickedFiles = await _picker.pickMultiImage(imageQuality: 80);
       if (pickedFiles.isNotEmpty) {
         setState(() {
@@ -317,42 +405,161 @@ class _InspectionAccessibilityScreenState
                               padding: EdgeInsets.zero,
                               itemBuilder: (context, index) {
                                 final checkPoints = data?.checkpoints?[index];
+                                final itemId =
+                                    checkPoints?.id ??
+                                    checkPoints?.order ??
+                                    index;
+                                final isExpanded = expandedCheckpointIds
+                                    .contains(itemId);
+                                final checkpointState = _getCheckpointState(
+                                  itemId,
+                                );
 
                                 return BuildSectionCard(
                                   number: checkPoints?.order ?? 0,
                                   title: checkPoints?.label ?? '',
-                                  expanded: sectionOneExpanded,
-                                  onToggle: () => setState(
-                                    () => sectionOneExpanded =
-                                        !sectionOneExpanded,
-                                  ),
-                                  typeController: roofTypeController,
-                                  levelOfConcern: roofTypeLevelOfConcern,
+                                  expanded: isExpanded,
+                                  onToggle: () =>
+                                      toggleCheckpointExpansion(itemId),
+                                  typeController:
+                                      checkpointState.typeController,
+                                  levelOfConcern:
+                                      checkpointState.levelOfConcern,
                                   observationController:
-                                      roofObservationController,
-                                  imageFileList: roofTypeImageFiles,
+                                      checkpointState.observationController,
+                                  imageFileList: checkpointState.imageFiles,
                                   greenOntap: () {
                                     setState(() {
-                                      roofTypeLevelOfConcern = 'Green';
+                                      checkpointState.levelOfConcern = 'Green';
                                     });
                                   },
                                   orangeOntap: () {
                                     setState(() {
-                                      roofTypeLevelOfConcern = 'Orange';
+                                      checkpointState.levelOfConcern = 'Orange';
                                     });
                                   },
                                   redOntap: () {
                                     setState(() {
-                                      roofTypeLevelOfConcern = 'Red';
+                                      checkpointState.levelOfConcern = 'Red';
                                     });
                                   },
                                   nAOntap: () {
                                     setState(() {
-                                      roofTypeLevelOfConcern = 'N/A';
+                                      checkpointState.levelOfConcern = 'N/A';
                                     });
                                   },
-                                  imagePickerOntap: () {
-                                    onImageButtonPressed(roofTypeImageFiles);
+                                  imagePickerOntap: () async {
+                                    final selectedSource =
+                                        await showModalBottomSheet<ImageSource>(
+                                          context: context,
+                                          backgroundColor: AppColors.cFFFFFF,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20.r),
+                                            ),
+                                          ),
+                                          builder: (context) {
+                                            return SafeArea(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(16.sp),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                      width: 48.w,
+                                                      height: 4.h,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            AppColors.grey300,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              100.r,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    UIHelper.verticalSpace(
+                                                      16.h,
+                                                    ),
+                                                    ListTile(
+                                                      leading: Icon(
+                                                        Icons
+                                                            .camera_alt_outlined,
+                                                        color:
+                                                            AppColors.c000000,
+                                                      ),
+                                                      title: Text(
+                                                        'Camera',
+                                                        style: TextFontStyle
+                                                            .headlinePoppins50016,
+                                                      ),
+                                                      onTap: () =>
+                                                          Navigator.pop(
+                                                            context,
+                                                            ImageSource.camera,
+                                                          ),
+                                                    ),
+                                                    Divider(
+                                                      color: AppColors.grey300,
+                                                    ),
+                                                    ListTile(
+                                                      leading: Icon(
+                                                        Icons
+                                                            .photo_library_outlined,
+                                                        color:
+                                                            AppColors.c000000,
+                                                      ),
+                                                      title: Text(
+                                                        'Gallery',
+                                                        style: TextFontStyle
+                                                            .headlinePoppins50016,
+                                                      ),
+                                                      onTap: () =>
+                                                          Navigator.pop(
+                                                            context,
+                                                            ImageSource.gallery,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+
+                                    if (selectedSource == null) return;
+
+                                    try {
+                                      if (selectedSource ==
+                                          ImageSource.camera) {
+                                        final pickedFile = await _picker
+                                            .pickImage(
+                                              source: ImageSource.camera,
+                                              imageQuality: 80,
+                                            );
+
+                                        if (pickedFile != null) {
+                                          setState(() {
+                                            checkpointState.imageFiles.add(
+                                              pickedFile,
+                                            );
+                                          });
+                                        }
+                                        return;
+                                      }
+
+                                      final pickedFiles = await _picker
+                                          .pickMultiImage(imageQuality: 80);
+                                      if (pickedFiles.isNotEmpty) {
+                                        setState(() {
+                                          checkpointState.imageFiles.addAll(
+                                            pickedFiles,
+                                          );
+                                        });
+                                      }
+                                    } catch (e) {
+                                      debugPrint(e.toString());
+                                    }
                                   },
                                 );
                               },
@@ -393,145 +600,14 @@ class _InspectionAccessibilityScreenState
   }
 }
 
-     // BuildSectionCard(
-                        //   number: 2,
-                        //   title: 'Overall Condition',
-                        //   expanded: sectionTwoExpanded,
-                        //   onToggle: () => setState(
-                        //     () => sectionTwoExpanded = !sectionTwoExpanded,
-                        //   ),
-                        //   typeController: overallConditionTypeController,
-                        //   levelOfConcern: overallConditionLevelOfConcern,
-                        //   observationController:
-                        //       overallConditionObservationController,
-                        //   imageFileList: overallConditionImageFiles,
-                        //   grenOntap: () {
-                        //     setState(() {
-                        //       overallConditionLevelOfConcern = 'Green';
-                        //     });
-                        //   },
-                        //   orangentap: () {
-                        //     setState(() {
-                        //       overallConditionLevelOfConcern = 'Orange';
-                        //     });
-                        //   },
-                        //   redOntap: () {
-                        //     setState(() {
-                        //       overallConditionLevelOfConcern = 'Red';
-                        //     });
-                        //   },
-                        //   nAOntap: () {
-                        //     setState(() {
-                        //       overallConditionLevelOfConcern = 'N/A';
-                        //     });
-                        //   },
-                        //   imagePickerOntap: () {
-                        //     onImageButtonPressed(overallConditionImageFiles);
-                        //   },
-                        // ),
-                        // BuildSectionCard(
-                        //   number: 3,
-                        //   title: 'Roof Covering',
-                        //   expanded: sectionThreeExpanded,
-                        //   onToggle: () => setState(
-                        //     () => sectionThreeExpanded = !sectionThreeExpanded,
-                        //   ),
-                        //   typeController: roofCoveringTypeController,
-                        //   levelOfConcern: roofCoveringLevelOfConcern,
-                        //   observationController:
-                        //       roofCoveringObservationController,
-                        //   imageFileList: roofCoveringImageFiles,
-                        //   grenOntap: () {
-                        //     setState(() {
-                        //       roofCoveringLevelOfConcern = 'Green';
-                        //     });
-                        //   },
-                        //   orangentap: () {
-                        //     setState(() {
-                        //       roofCoveringLevelOfConcern = 'Orange';
-                        //     });
-                        //   },
-                        //   redOntap: () {
-                        //     setState(() {
-                        //       roofCoveringLevelOfConcern = 'Red';
-                        //     });
-                        //   },
-                        //   nAOntap: () {
-                        //     setState(() {
-                        //       roofCoveringLevelOfConcern = 'N/A';
-                        //     });
-                        //   },
-                        //   imagePickerOntap: () {
-                        //     onImageButtonPressed(roofCoveringImageFiles);
-                        //   },
-                        // ),
-                        // BuildSectionCard(
-                        //   number: 4,
-                        //   title: 'Gutters & Downpipes',
-                        //   expanded: sectionFourExpanded,
-                        //   onToggle: () => setState(
-                        //     () => sectionFourExpanded = !sectionFourExpanded,
-                        //   ),
-                        //   typeController: gluttersTypeController,
-                        //   levelOfConcern: gluttersLevelOfConcern,
-                        //   observationController: gluttersObservationController,
-                        //   imageFileList: guttersImageFiles,
-                        //   grenOntap: () {
-                        //     setState(() {
-                        //       gluttersLevelOfConcern = 'Green';
-                        //     });
-                        //   },
-                        //   orangentap: () {
-                        //     setState(() {
-                        //       gluttersLevelOfConcern = 'Orange';
-                        //     });
-                        //   },
-                        //   redOntap: () {
-                        //     setState(() {
-                        //       gluttersLevelOfConcern = 'Red';
-                        //     });
-                        //   },
-                        //   nAOntap: () {
-                        //     setState(() {
-                        //       gluttersLevelOfConcern = 'N/A';
-                        //     });
-                        //   },
-                        //   imagePickerOntap: () {
-                        //     onImageButtonPressed(guttersImageFiles);
-                        //   },
-                        // ),
-                        // BuildSectionCard(
-                        //   number: 5,
-                        //   title: 'Flashings & Penetrations',
-                        //   expanded: sectionFiveExpanded,
-                        //   onToggle: () => setState(
-                        //     () => sectionFiveExpanded = !sectionFiveExpanded,
-                        //   ),
-                        //   typeController: flashingsTypeController,
-                        //   levelOfConcern: flashingsLevelOfConcern,
-                        //   observationController: flashingsObservationController,
-                        //   imageFileList: flashingsImageFiles,
-                        //   grenOntap: () {
-                        //     setState(() {
-                        //       flashingsLevelOfConcern = 'Green';
-                        //     });
-                        //   },
-                        //   orangentap: () {
-                        //     setState(() {
-                        //       flashingsLevelOfConcern = 'Orange';
-                        //     });
-                        //   },
-                        //   redOntap: () {
-                        //     setState(() {
-                        //       flashingsLevelOfConcern = 'Red';
-                        //     });
-                        //   },
-                        //   nAOntap: () {
-                        //     setState(() {
-                        //       flashingsLevelOfConcern = 'N/A';
-                        //     });
-                        //   },
-                        //   imagePickerOntap: () {
-                        //     onImageButtonPressed(flashingsImageFiles);
-                        //   },
-                        // ),
+class _CheckpointFormState {
+  final TextEditingController typeController = TextEditingController();
+  final TextEditingController observationController = TextEditingController();
+  final List<XFile> imageFiles = [];
+  String levelOfConcern = '';
+
+  void dispose() {
+    typeController.dispose();
+    observationController.dispose();
+  }
+}
