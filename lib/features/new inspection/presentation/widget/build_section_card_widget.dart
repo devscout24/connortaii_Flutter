@@ -20,8 +20,8 @@ class BuildSectionCard extends StatelessWidget {
   final String levelOfConcern;
   final TextEditingController observationController;
   final List<XFile> _imageFileList;
-  final VoidCallback grenOntap;
-  final VoidCallback orangentap;
+  final VoidCallback greenOntap;
+  final VoidCallback orangeOntap;
   final VoidCallback redOntap;
   final VoidCallback nAOntap;
   final VoidCallback imagePickerOntap;
@@ -36,8 +36,8 @@ class BuildSectionCard extends StatelessWidget {
     required this.levelOfConcern,
     required this.observationController,
     required this._imageFileList,
-    required this.grenOntap,
-    required this.orangentap,
+    required this.greenOntap,
+    required this.orangeOntap,
     required this.redOntap,
     required this.nAOntap,
     required this.imagePickerOntap,
@@ -120,7 +120,7 @@ class BuildSectionCard extends StatelessWidget {
                             color: AppColors.green500.withAlpha(35),
                             selected: levelOfConcern == 'Green',
                             onTap: () {
-                              grenOntap();
+                              greenOntap();
                             },
                             textColor: AppColors.green500,
                           ),
@@ -134,7 +134,7 @@ class BuildSectionCard extends StatelessWidget {
                             color: AppColors.onboardingTwoBg.withAlpha(35),
                             selected: levelOfConcern == 'Orange',
                             onTap: () {
-                              orangentap();
+                              orangeOntap();
                             },
                             textColor: AppColors.onboardingTwoBg,
                           ),
