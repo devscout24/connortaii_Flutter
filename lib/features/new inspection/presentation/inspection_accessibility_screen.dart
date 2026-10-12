@@ -1,6 +1,7 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
+import 'package:connortaii_app/constants/custom_app_list.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_accessibitlity_button_widget.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_reason_chip_widget.dart';
@@ -61,16 +62,6 @@ class _InspectionAccessibilityScreenState
   bool sectionThreeExpanded = false;
   bool sectionFourExpanded = false;
   bool sectionFiveExpanded = false;
-
-  final List<String> restrictionReasons = [
-    'Limited Access',
-    'Obstruction',
-    'Safety Concern',
-    'Concealed Element',
-    'Height',
-    'Confined Space',
-    'Other',
-  ];
 
   final List<XFile> roofTypeImageFiles = [];
   final List<XFile> overallConditionImageFiles = [];
