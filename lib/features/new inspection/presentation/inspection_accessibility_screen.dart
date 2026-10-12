@@ -7,6 +7,7 @@ import 'package:connortaii_app/features/new%20inspection/presentation/widget/bui
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_reason_chip_widget.dart';
 import 'package:connortaii_app/features/new%20inspection/presentation/widget/build_section_card_widget.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
+import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
@@ -104,6 +105,41 @@ class _InspectionAccessibilityScreenState
   void initState() {
     getSectionAccessibleRXObj.getSectionAccessibleRX(id: widget.id);
     super.initState();
+  }
+
+  bool isLoading = false;
+
+  Future<void> accessibilityRestrictedMethod() async {
+    // if (!formKey.currentState!.validate()) return;
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      final isSuccess = await addRestrictedAccessibilityRxOBJ
+          .addRestrictedAccessibilityRx(
+            accessibilityStatus: 'restricted',
+            restrictionReason:
+                restrictionReasonsBackendMap[selectedRestrictionReason] ??
+                'other',
+            restrictionDescription: restrictionController.text,
+            id: widget.id,
+          );
+
+      if (isSuccess) {
+        ToastUtil.showShortToast('Restriction added successfully');
+        NavigationService.goBack;
+      } else {
+        ToastUtil.showShortToast('Restriction added Failed');
+      }
+    } catch (e) {
+      ToastUtil.showShortToast('Error: ${e.toString()}');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -230,7 +266,9 @@ class _InspectionAccessibilityScreenState
                         SizedBox(
                           width: double.infinity,
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              accessibilityRestrictedMethod();
+                            },
                             child: Container(
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(vertical: 14.h),
