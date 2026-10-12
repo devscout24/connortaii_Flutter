@@ -331,12 +331,12 @@ class _InspectionAccessibilityScreenState
                                   observationController:
                                       roofObservationController,
                                   imageFileList: roofTypeImageFiles,
-                                  grenOntap: () {
+                                  greenOntap: () {
                                     setState(() {
                                       roofTypeLevelOfConcern = 'Green';
                                     });
                                   },
-                                  orangentap: () {
+                                  orangeOntap: () {
                                     setState(() {
                                       roofTypeLevelOfConcern = 'Orange';
                                     });
