@@ -52,6 +52,7 @@ final class Endpoints {
   static String getSectionAccessible({required int id}) => "/api/sections/$id";
   static String putRestrictedAccessibility({required int id}) =>
       "/api/sections/$id/accessibility";
+  static String postYesAccessible({required int id}) => "/api/checkpoints/$id";
 
   /////////============> Push Notification FCM Token <============////////////
   // static String sentFcmToken() => "/firebase-token/add";
