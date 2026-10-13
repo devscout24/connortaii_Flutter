@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/networks/rx_base.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 import 'api.dart';
 
@@ -13,17 +14,19 @@ final class AddYesAccessibleRx extends RxResponseInt<Map> {
   ValueStream get getFileData => dataFetcher.stream;
 
   Future<bool> addYesAccessibleRx({
-    required String accessibilityStatus,
-    required String restrictionReason,
-    required String restrictionDescription,
+    required String type,
+    required String levelOfConcern,
+    required String observations,
+    XFile? photo,
     required int id,
   }) async {
     try {
       final Map data = await api.addYesAccessibleApi(
-        accessibilityStatus: accessibilityStatus,
-        restrictionReason: restrictionReason,
-        restrictionDescription: restrictionDescription,
+        type: type,
+        levelOfConcern: levelOfConcern,
+        observations: observations,
         id: id,
+        photo: photo,
       );
       handleSuccessWithReturn(data);
       return true;

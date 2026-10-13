@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:connortaii_app/networks/dio/dio.dart';
 import 'package:connortaii_app/networks/endpoints.dart';
 import 'package:connortaii_app/networks/exception_handler/data_source.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 
 final class AddYesAccessibileApi {
   static final AddYesAccessibileApi _singleton =
@@ -11,22 +14,35 @@ final class AddYesAccessibileApi {
   static AddYesAccessibileApi get instance => _singleton;
 
   Future<Map> addYesAccessibleApi({
-    required String accessibilityStatus,
-    required String restrictionReason,
-    required String restrictionDescription,
+    required String type,
+    required String levelOfConcern,
+    required String observations,
     required int id,
+    XFile? photo,
   }) async {
     try {
-      var data = ({
-        "accessibility_status": accessibilityStatus,
-        "restriction_reason": restrictionReason,
-        "restriction_description": restrictionDescription,
+      final formData = FormData.fromMap({
+        "type": type,
+        "level_of_concern": levelOfConcern,
+        "observations": observations,
         "id": id,
       });
+      if (photo != null && await File(photo.path).exists()) {
+        formData.files.add(
+          MapEntry(
+            'photo',
+            await MultipartFile.fromFile(
+              photo.path,
+              filename: photo.name,
+              contentType: MediaType('image', 'jpeg'),
+            ),
+          ),
+        );
+      }
 
       Response response = await postHttp(
         Endpoints.postYesAccessible(id: id),
-        data,
+        formData,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
