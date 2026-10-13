@@ -13,6 +13,7 @@ import 'package:connortaii_app/features/new%20inspection/data/rx_get_inspection_
 import 'package:connortaii_app/features/new%20inspection/data/rx_get_inspection_section_accessible/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_post_add_health_safety_check/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_post_store_inspection_details/rx.dart';
+import 'package:connortaii_app/features/new%20inspection/data/rx_post_yes_accessible/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_put_restricted_accessibility/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/model/get_health_safety_items_by_inspection_response_model.dart';
 import 'package:connortaii_app/features/new%20inspection/model/get_inspection_overview_response_model.dart';
@@ -132,3 +133,8 @@ AddRestrictedAccessibilityRx addRestrictedAccessibilityRxOBJ =
       empty: {},
       dataFetcher: BehaviorSubject<Map>(),
     );
+
+AddYesAccessibleRx addYesAccessibleRxOBJ = AddYesAccessibleRx(
+  empty: {},
+  dataFetcher: BehaviorSubject<Map>(),
+);
