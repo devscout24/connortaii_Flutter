@@ -134,7 +134,7 @@ AddRestrictedAccessibilityRx addRestrictedAccessibilityRxOBJ =
       dataFetcher: BehaviorSubject<Map>(),
     );
 
-AddYesAccessibleRx addYesAccessibleRxOBJ = AddYesAccessibleRx(
+AddYesAccessibleRx addYesAccessibleRxObj = AddYesAccessibleRx(
   empty: {},
   dataFetcher: BehaviorSubject<Map>(),
 );
