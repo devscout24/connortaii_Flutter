@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:connortaii_app/features/auth/forgot_password/model/forgot_password_response_model.dart';
 import 'package:connortaii_app/networks/dio/dio.dart';
 import 'package:connortaii_app/networks/endpoints.dart';
 import 'package:connortaii_app/networks/exception_handler/data_source.dart';
@@ -9,14 +9,18 @@ final class ForgotPasswordApi {
   ForgotPasswordApi._internal();
   static ForgotPasswordApi get instance => _singleton;
 
-  Future<Map> forgotPasswordApi({required String email}) async {
+  Future<ForgotPasswordResponseModel> forgotPasswordApi({
+    required String email,
+  }) async {
     try {
-      FormData data = FormData.fromMap({"email": email});
+      FormData data = FormData.fromMap({"email": email.trim()});
 
       Response response = await postHttp(Endpoints.forgotPassword(), data);
 
       if (response.statusCode == 200) {
-        final data = json.decode(json.encode(response.data));
+        final data = ForgotPasswordResponseModel.fromJson(
+          Map<String, dynamic>.from(response.data),
+        );
         return data;
       } else {
         throw DataSource.DEFAULT.getFailure();

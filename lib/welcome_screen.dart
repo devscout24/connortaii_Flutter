@@ -20,8 +20,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Image.asset(AppImages.splash, height: 200.h),
-            Image.asset(AppIcons.splashLogo, height: 200.h),
+            Image.asset(AppIcons.logoTransparent, width: 260.w),
           ],
         ),
       ),

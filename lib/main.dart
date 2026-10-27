@@ -13,6 +13,7 @@ import 'package:connortaii_app/networks/dio/dio.dart';
 import 'package:connortaii_app/provider/scanned_image_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
@@ -22,7 +23,8 @@ import 'package:provider/provider.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {}
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -114,6 +116,7 @@ class UtillScreenMobile extends StatelessWidget {
             showMaterialDialog(context);
           },
           child: GetMaterialApp(
+            title: 'Building Assurance',
             showPerformanceOverlay: false,
             theme: ThemeData(
               primarySwatch: CustomTheme.kToDark,

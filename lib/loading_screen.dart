@@ -1,6 +1,7 @@
 import 'package:connortaii_app/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:connortaii_app/navigation_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'constants/app_constants.dart';
 import 'helpers/di.dart';
 import 'helpers/helper_methods.dart';
@@ -39,9 +40,13 @@ class _LoadingState extends State<Loading> {
     // await schedulePrayerNotifications(time);
 
     // await schedulePrayerNotifications();
-    setState(() {
-      _isLoading = false;
-    });
+    await Future.delayed(const Duration(milliseconds: 1800));
+    FlutterNativeSplash.remove();
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override

@@ -79,4 +79,3 @@ class CustomAppBarWidget extends StatelessWidget
   Size get preferredSize =>
       Size.fromHeight((toolbarHeight ?? kToolbarHeight) + 1.h);
 }
-

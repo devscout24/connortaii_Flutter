@@ -6,6 +6,10 @@ class AppIcons {
 
   // ///>>>>>>>>>>>>>>Bottom Navigation Icons >>>>>>>>>>>>>>>>
   static const String splashLogo = '$iconsRoute/splashLogo.png';
+  static const String buildingAssuranceLogo =
+      '$iconsRoute/BuildingAssuranceLogo.png';
+  static const String logoTransparent = '$iconsRoute/logo_transparent.png';
+  static const String splashScreenLogo = '$iconsRoute/splash_screen_logo.png';
   static const String imagePickerIcon = '$iconsRoute/imagePickerIcon.png';
 
   static const String backIcon = '$iconsRoute/backIcon.svg';

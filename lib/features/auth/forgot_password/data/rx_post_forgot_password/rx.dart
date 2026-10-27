@@ -1,23 +1,31 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 
 import 'dart:developer';
+import 'package:connortaii_app/features/auth/forgot_password/model/forgot_password_response_model.dart';
 import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/networks/rx_base.dart';
 import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 import 'api.dart';
 
-final class ForgotPasswordRx extends RxResponseInt<Map> {
+final class ForgotPasswordRx
+    extends RxResponseInt<ForgotPasswordResponseModel> {
   final api = ForgotPasswordApi.instance;
 
   ForgotPasswordRx({required super.empty, required super.dataFetcher});
 
-  ValueStream get getFileData => dataFetcher.stream;
+  ValueStream<ForgotPasswordResponseModel> get getFileData =>
+      dataFetcher.stream;
 
   Future<bool> forgotPasswordRx({required String email}) async {
     try {
-      Map data = await api.forgotPasswordApi(email: email);
+      ForgotPasswordResponseModel data = await api.forgotPasswordApi(
+        email: email,
+      );
       handleSuccessWithReturn(data);
+      if (data.message != null && data.message!.isNotEmpty) {
+        ToastUtil.showShortToast(data.message!);
+      }
       return true;
     } catch (error) {
       handleErrorWithReturn(error);
@@ -27,13 +35,31 @@ final class ForgotPasswordRx extends RxResponseInt<Map> {
 
   @override
   handleErrorWithReturn(dynamic error) {
+    String message = "Something went wrong";
     if (error is DioException) {
-      if (error.response!.statusCode == 400) {
-        ToastUtil.showShortToast(error.response!.data["message"]);
-      } else {
-        ToastUtil.showShortToast(error.response!.data["error"]);
+      final resData = error.response?.data;
+      if (resData is Map<String, dynamic>) {
+        final errorMap =
+            resData["data"] ?? resData["error"] ?? resData["errors"];
+        if (errorMap is Map && errorMap.isNotEmpty) {
+          final firstValue = errorMap.values.first;
+          if (firstValue is List && firstValue.isNotEmpty) {
+            message = firstValue.first.toString();
+          } else if (firstValue is String) {
+            message = firstValue;
+          }
+        } else if (resData["message"] != null &&
+            resData["message"].toString().isNotEmpty) {
+          message = resData["message"].toString();
+        }
+      } else if (resData is String && resData.isNotEmpty) {
+        message = resData;
       }
+    } else {
+      message = error.toString();
     }
+
+    ToastUtil.showShortToast(message);
     log(error.toString());
     dataFetcher.sink.addError(error);
     return false;

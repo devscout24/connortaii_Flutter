@@ -17,6 +17,9 @@ final class ForgotPasswordResendOtpRx extends RxResponseInt<Map> {
     try {
       Map data = await api.forgotPasswordResendOtpApi(email: email);
       handleSuccessWithReturn(data);
+      if (data["message"] != null && data["message"].toString().isNotEmpty) {
+        ToastUtil.showShortToast(data["message"].toString());
+      }
       return true;
     } catch (error) {
       handleErrorWithReturn(error);
@@ -26,13 +29,31 @@ final class ForgotPasswordResendOtpRx extends RxResponseInt<Map> {
 
   @override
   handleErrorWithReturn(dynamic error) {
+    String message = "Something went wrong";
     if (error is DioException) {
-      if (error.response!.statusCode == 429) {
-        ToastUtil.showShortToast(error.response!.data["message"]);
-      } else {
-        ToastUtil.showShortToast(error.response!.data["error"]);
+      final resData = error.response?.data;
+      if (resData is Map<String, dynamic>) {
+        final errorMap =
+            resData["data"] ?? resData["error"] ?? resData["errors"];
+        if (errorMap is Map && errorMap.isNotEmpty) {
+          final firstValue = errorMap.values.first;
+          if (firstValue is List && firstValue.isNotEmpty) {
+            message = firstValue.first.toString();
+          } else if (firstValue is String) {
+            message = firstValue;
+          }
+        } else if (resData["message"] != null &&
+            resData["message"].toString().isNotEmpty) {
+          message = resData["message"].toString();
+        }
+      } else if (resData is String && resData.isNotEmpty) {
+        message = resData;
       }
+    } else {
+      message = error.toString();
     }
+
+    ToastUtil.showShortToast(message);
     log(error.toString());
     dataFetcher.sink.addError(error);
     return false;

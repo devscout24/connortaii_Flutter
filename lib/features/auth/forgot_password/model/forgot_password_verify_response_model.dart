@@ -21,9 +21,11 @@ class ForgotPasswordVerifyResponseModel {
   factory ForgotPasswordVerifyResponseModel.fromJson(
     Map<String, dynamic> json,
   ) => ForgotPasswordVerifyResponseModel(
-    success: json["success"],
+    success: json["success"] ?? json["status"],
     message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    data: json["data"] != null && json["data"] is Map<String, dynamic>
+        ? Data.fromJson(json["data"])
+        : null,
     code: json["code"],
   );
 

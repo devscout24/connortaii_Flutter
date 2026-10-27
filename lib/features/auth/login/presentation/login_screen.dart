@@ -1,7 +1,6 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
-import 'package:connortaii_app/common_widget/custom_social_login_button_widget.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/auth/login/presentation/widget/dont_have_an_account_widget.dart';
@@ -104,46 +103,46 @@ class _LoginScreenState extends State<LoginScreen>
                   textAlign: TextAlign.center,
                 ),
                 UIHelper.verticalSpace(48.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: CustomSocialLoginButtonWidget(
-                        image: AppIcons.googleLoginIcon,
-                        onTap: () {},
-                        text: 'Google',
-                      ),
-                    ),
-                    UIHelper.horizontalSpace(12.w),
-                    Expanded(
-                      child: CustomSocialLoginButtonWidget(
-                        image: AppIcons.appleLoginIcon,
-                        onTap: () {},
-                        text: 'Apple',
-                      ),
-                    ),
-                  ],
-                ),
-                UIHelper.verticalSpace(12.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: UIHelper.customDivider(
-                        color: AppColors.grey200Color,
-                      ),
-                    ),
-                    UIHelper.horizontalSpace(10.w),
-                    Text('Or', style: TextFontStyle.headlinePoppins50014),
-                    UIHelper.horizontalSpace(10.w),
-                    Expanded(
-                      child: UIHelper.customDivider(
-                        color: AppColors.grey200Color,
-                      ),
-                    ),
-                  ],
-                ),
-                UIHelper.verticalSpace(24.h),
+                // Row(
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Expanded(
+                //       child: CustomSocialLoginButtonWidget(
+                //         image: AppIcons.googleLoginIcon,
+                //         onTap: () {},
+                //         text: 'Google',
+                //       ),
+                //     ),
+                //     UIHelper.horizontalSpace(12.w),
+                //     Expanded(
+                //       child: CustomSocialLoginButtonWidget(
+                //         image: AppIcons.appleLoginIcon,
+                //         onTap: () {},
+                //         text: 'Apple',
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // UIHelper.verticalSpace(12.h),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: UIHelper.customDivider(
+                //         color: AppColors.grey200Color,
+                //       ),
+                //     ),
+                //     UIHelper.horizontalSpace(10.w),
+                //     Text('Or', style: TextFontStyle.headlinePoppins50014),
+                //     UIHelper.horizontalSpace(10.w),
+                //     Expanded(
+                //       child: UIHelper.customDivider(
+                //         color: AppColors.grey200Color,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // UIHelper.verticalSpace(24.h),
                 Text('Email', style: TextFontStyle.headlinePoppins50016),
                 UIHelper.verticalSpace(8.h),
                 CustomTextFormField(

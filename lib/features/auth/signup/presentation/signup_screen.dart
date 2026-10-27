@@ -1,7 +1,6 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
-import 'package:connortaii_app/common_widget/custom_social_login_button_widget.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/auth/signup/presentation/widgets/checkbox_row_widget.dart';
@@ -17,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:validator_kit/validator_kit.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -42,13 +42,148 @@ class _SignupScreenState extends State<SignupScreen> {
   final ImagePicker _picker = ImagePicker();
   XFile? _pickedImage;
 
-  Future<void> pickImageFromGallery() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _pickedImage = pickedFile;
-      });
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      if (source == ImageSource.camera) {
+        final status = await Permission.camera.request();
+        if (status.isPermanentlyDenied) {
+          if (mounted) {
+            _showPermissionSettingsDialog('Camera');
+          }
+          return;
+        } else if (!status.isGranted) {
+          ToastUtil.showShortToast(
+            'Camera permission is required to take photos',
+          );
+          return;
+        }
+      }
+
+      final pickedFile = await _picker.pickImage(
+        source: source,
+        imageQuality: 85,
+      );
+      if (pickedFile != null) {
+        setState(() {
+          _pickedImage = pickedFile;
+        });
+      }
+    } catch (e) {
+      ToastUtil.showShortToast('Failed to pick image: $e');
     }
+  }
+
+  void _showPermissionSettingsDialog(String permissionName) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$permissionName Permission Required'),
+        content: Text(
+          '$permissionName access is disabled. Please enable it in app settings to continue.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              openAppSettings();
+            },
+            child: const Text('Open Settings'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showImageSourceBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.cFFFFFF,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 48.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.grey300,
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                ),
+                UIHelper.verticalSpace(16.h),
+                Text(
+                  'Select Profile Photo',
+                  style: TextFontStyle.headlinePoppins60020,
+                ),
+                UIHelper.verticalSpace(16.h),
+                ListTile(
+                  leading: Container(
+                    padding: EdgeInsets.all(8.sp),
+                    decoration: const BoxDecoration(
+                      color: AppColors.grey200Color,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt_rounded,
+                      color: AppColors.buttonbgColor,
+                    ),
+                  ),
+                  title: Text(
+                    'Take Photo',
+                    style: TextFontStyle.headlinePoppins50016,
+                  ),
+                  subtitle: Text(
+                    'Use your camera to take a photo',
+                    style: TextFontStyle.headlinePoppins40014grey,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickImage(ImageSource.camera);
+                  },
+                ),
+                Divider(color: AppColors.grey200Color),
+                ListTile(
+                  leading: Container(
+                    padding: EdgeInsets.all(8.sp),
+                    decoration: const BoxDecoration(
+                      color: AppColors.grey200Color,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.photo_library_rounded,
+                      color: AppColors.buttonbgColor,
+                    ),
+                  ),
+                  title: Text(
+                    'Choose from Gallery',
+                    style: TextFontStyle.headlinePoppins50016,
+                  ),
+                  subtitle: Text(
+                    'Select an existing photo from storage',
+                    style: TextFontStyle.headlinePoppins40014grey,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickImage(ImageSource.gallery);
+                  },
+                ),
+                UIHelper.verticalSpace(8.h),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   bool isLoading = false;
@@ -104,6 +239,7 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                UIHelper.verticalSpace(10.h),
                 Text(
                   'Create an account',
                   style: TextFontStyle.headlinePoppins60026,
@@ -116,49 +252,49 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 UIHelper.verticalSpace(48.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: CustomSocialLoginButtonWidget(
-                        image: AppIcons.googleLoginIcon,
-                        onTap: () {},
-                        text: 'Google',
-                      ),
-                    ),
-                    UIHelper.horizontalSpace(12.w),
-                    Expanded(
-                      child: CustomSocialLoginButtonWidget(
-                        image: AppIcons.appleLoginIcon,
-                        onTap: () {},
-                        text: 'Apple',
-                      ),
-                    ),
-                  ],
-                ),
-                UIHelper.verticalSpace(12.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: UIHelper.customDivider(
-                        color: AppColors.grey200Color,
-                      ),
-                    ),
-                    UIHelper.horizontalSpace(10.w),
-                    Text('Or', style: TextFontStyle.headlinePoppins50014),
-                    UIHelper.horizontalSpace(10.w),
-                    Expanded(
-                      child: UIHelper.customDivider(
-                        color: AppColors.grey200Color,
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Expanded(
+                //       child: CustomSocialLoginButtonWidget(
+                //         image: AppIcons.googleLoginIcon,
+                //         onTap: () {},
+                //         text: 'Google',
+                //       ),
+                //     ),
+                //     UIHelper.horizontalSpace(12.w),
+                //     Expanded(
+                //       child: CustomSocialLoginButtonWidget(
+                //         image: AppIcons.appleLoginIcon,
+                //         onTap: () {},
+                //         text: 'Apple',
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // UIHelper.verticalSpace(12.h),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: UIHelper.customDivider(
+                //         color: AppColors.grey200Color,
+                //       ),
+                //     ),
+                //     UIHelper.horizontalSpace(10.w),
+                //     Text('Or', style: TextFontStyle.headlinePoppins50014),
+                //     UIHelper.horizontalSpace(10.w),
+                //     Expanded(
+                //       child: UIHelper.customDivider(
+                //         color: AppColors.grey200Color,
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 UIHelper.verticalSpace(24.h),
-                GestureDetector(
-                  onTap: pickImageFromGallery,
-                  child: SignupImagePickerWidget(pickedImage: _pickedImage),
+                SignupImagePickerWidget(
+                  pickedImage: _pickedImage,
+                  onTap: _showImageSourceBottomSheet,
                 ),
                 UIHelper.verticalSpace(12.h),
                 Text('First Name', style: TextFontStyle.headlinePoppins50016),

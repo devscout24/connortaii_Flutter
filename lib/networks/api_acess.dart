@@ -2,6 +2,7 @@ import 'package:connortaii_app/features/auth/forgot_password/data/rx_post_forgot
 import 'package:connortaii_app/features/auth/forgot_password/data/rx_post_forgot_password/rx.dart';
 import 'package:connortaii_app/features/auth/forgot_password/data/rx_post_forgot_password_verify/rx.dart';
 import 'package:connortaii_app/features/auth/forgot_password/data/rx_post_forgot_resend_otp_verify/rx.dart';
+import 'package:connortaii_app/features/auth/forgot_password/model/forgot_password_response_model.dart';
 import 'package:connortaii_app/features/auth/forgot_password/model/forgot_password_verify_response_model.dart';
 import 'package:connortaii_app/features/auth/login/data/rx_post_sign_in/rx.dart';
 import 'package:connortaii_app/features/auth/login/model/login_response_model.dart';
@@ -51,8 +52,8 @@ LoginRX loginRXObj = LoginRX(
 );
 
 ForgotPasswordRx forgotPasswordRxOBJ = ForgotPasswordRx(
-  empty: {},
-  dataFetcher: BehaviorSubject<Map>(),
+  empty: ForgotPasswordResponseModel(),
+  dataFetcher: BehaviorSubject<ForgotPasswordResponseModel>(),
 );
 
 ForgotPasswordOtpVerifyRx forgotPasswordOtpVerifyRxObj =

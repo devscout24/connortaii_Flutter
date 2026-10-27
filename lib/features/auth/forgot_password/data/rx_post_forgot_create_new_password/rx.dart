@@ -42,18 +42,19 @@ final class ForgotPasswordChangeRx extends RxResponseInt<Map> {
       String message = "Something went wrong";
 
       if (data is Map<String, dynamic>) {
-        if (data["error"] is Map && data["error"] != null) {
-          final errors = data["error"] as Map;
-
-          final firstKey = errors.keys.first;
-          final firstError = errors[firstKey];
+        final errorMap =
+            data["data"] ?? data["error"] ?? data["errors"];
+        if (errorMap is Map && errorMap.isNotEmpty) {
+          final firstKey = errorMap.keys.first;
+          final firstError = errorMap[firstKey];
 
           if (firstError is List && firstError.isNotEmpty) {
-            message = firstError[0];
+            message = firstError[0].toString();
           } else if (firstError is String) {
             message = firstError;
           }
-        } else if (data["message"] != null) {
+        } else if (data["message"] != null &&
+            data["message"].toString().isNotEmpty) {
           message = data["message"].toString();
         }
       }

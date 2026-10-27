@@ -45,9 +45,10 @@ final class ForgotPasswordOtpVerifyRx
       String message = "Something went wrong";
 
       if (data is Map<String, dynamic>) {
-        final errorMap = data["error"];
+        final errorMap =
+            data["data"] ?? data["error"] ?? data["errors"];
 
-        if (errorMap is Map<String, dynamic>) {
+        if (errorMap is Map) {
           // get first error field
           final firstKey = errorMap.keys.first;
           final firstValue = errorMap[firstKey];

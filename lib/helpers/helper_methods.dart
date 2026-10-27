@@ -230,19 +230,47 @@ String removeAmPm(String time) {
 // }
 
 Future<void> initiInternetChecker() async {
+  bool isInitial = true;
+  InternetConnectionStatus? lastStatus;
+
   InternetConnectionChecker.createInstance(
-    checkTimeout: const Duration(seconds: 1),
-    checkInterval: const Duration(seconds: 2),
+    checkTimeout: const Duration(seconds: 4),
+    checkInterval: const Duration(seconds: 15),
+    addresses: [
+      AddressCheckOption(
+        uri: Uri.parse('https://one.one.one.one'),
+      ),
+      AddressCheckOption(
+        uri: Uri.parse('https://www.google.com'),
+      ),
+      AddressCheckOption(
+        uri: Uri.parse('https://connortaii.thewarriors.team'),
+      ),
+    ],
   ).onStatusChange.listen((status) {
-    switch (status) {
-      case InternetConnectionStatus.connected:
-        ToastUtil.showShortToast('Data connection is available.'.tr);
-        break;
-      case InternetConnectionStatus.disconnected:
+    if (isInitial) {
+      isInitial = false;
+      lastStatus = status;
+      // Only show error on initial launch if genuinely disconnected
+      if (status == InternetConnectionStatus.disconnected) {
         ToastUtil.showNoInternetToast();
-        break;
-      case InternetConnectionStatus.slow:
-      // TODO: Handle this case.
+      }
+      return;
+    }
+
+    // Only toast on actual status transitions
+    if (status != lastStatus) {
+      lastStatus = status;
+      switch (status) {
+        case InternetConnectionStatus.connected:
+          ToastUtil.showShortToast('Data connection is available.'.tr);
+          break;
+        case InternetConnectionStatus.disconnected:
+          ToastUtil.showNoInternetToast();
+          break;
+        case InternetConnectionStatus.slow:
+          break;
+      }
     }
   });
 }

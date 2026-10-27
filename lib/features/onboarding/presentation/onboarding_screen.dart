@@ -1,5 +1,5 @@
 import 'package:connortaii_app/assets_helper/app_colors.dart';
-import 'package:connortaii_app/assets_helper/app_icons.dart';
+import 'package:connortaii_app/assets_helper/app_image.dart';
 import 'package:connortaii_app/common_widget/custom_button.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
@@ -24,7 +24,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(
           children: [
             Spacer(),
-            Image.asset(AppIcons.splashLogo),
+            Image.asset(AppImages.onboardingImage),
             Spacer(),
             Text(
               'Welcome to Property Inspection',
