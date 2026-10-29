@@ -6,6 +6,7 @@ import 'package:connortaii_app/features/home/presentation/home_screen.dart';
 import 'package:connortaii_app/features/settings/presentation/settings_screen.dart';
 import 'package:connortaii_app/helpers/helper_methods.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:connortaii_app/networks/api_acess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -100,7 +101,15 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => setState(() => _currentIndex = index),
+      onTap: () {
+        setState(() => _currentIndex = index);
+        if (index == 1) {
+          getUserReportsRXObj.getUserReportsRX();
+          getAllInspectionsRXObj.getAllInspectionsRX();
+        } else if (index == 0) {
+          getHomeInspectionsRXObj.getHomeInspectionsRX();
+        }
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeInOut,

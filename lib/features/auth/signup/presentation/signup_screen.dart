@@ -190,6 +190,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future<bool> createProfileMethod() async {
     try {
+      if (!isChecked) {
+        ToastUtil.showShortToast(
+          'Please accept the terms and conditions to sign up',
+        );
+        return false;
+      }
+
       if (formKey.currentState!.validate()) {
         setState(() {
           isLoading = true;
@@ -398,26 +405,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 ),
-                UIHelper.verticalSpace(16.h),
-
-                isLoading
-                    ? Center(
-                        child: SpinKitCircle(
-                          color: AppColors.c000000,
-                          size: 60.h,
-                        ),
-                      )
-                    : CustomButton(
-                        onTap: () {
-                          createProfileMethod();
-                          // NavigationService.navigateToWithArgs(
-                          //   Routes.signupVerifyScreen,
-                          //   {'email': emailController.text},
-                          // );
-                        },
-                        title: 'Sign Up',
-                      ),
-                UIHelper.verticalSpace(8.h),
+                UIHelper.verticalSpace(14.h),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -431,20 +419,47 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       onChanged: (value) {
                         setState(() {
-                          isChecked = value!;
+                          isChecked = value ?? false;
                         });
-                        // log(isChecked.toString());
                       },
                     ),
                     UIHelper.horizontalSpace(2.w),
                     CheckboxRowWidget(
                       privacyOnTap: () {
-                        // NavigationService.navigateTo(Routes.privacyPolicyScreen);
+                        NavigationService.navigateTo(Routes.privacyPolicyScreen);
                       },
-                      termsOnTap: () {},
+                      termsOnTap: () {
+                        NavigationService.navigateTo(Routes.termsConditionScreen);
+                      },
                     ),
                   ],
                 ),
+                UIHelper.verticalSpace(24.h),
+                isLoading
+                    ? Center(
+                        child: SpinKitCircle(
+                          color: AppColors.c000000,
+                          size: 60.h,
+                        ),
+                      )
+                    : CustomButton(
+                        onTap: isChecked
+                            ? () {
+                                createProfileMethod();
+                              }
+                            : () {
+                                ToastUtil.showShortToast(
+                                  'Please accept the terms and conditions to sign up',
+                                );
+                              },
+                        title: 'Sign Up',
+                        fillColor: isChecked
+                            ? AppColors.c000000
+                            : AppColors.grey300,
+                        textColor: isChecked
+                            ? AppColors.cFFFFFF
+                            : AppColors.grey500,
+                      ),
                 UIHelper.verticalSpace(24.h),
                 HaveAnAccountWidget(
                   loginOnTap: () {
