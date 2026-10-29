@@ -17,12 +17,15 @@ final class AddRestrictedAccessibilityApi {
     required int id,
   }) async {
     try {
-      var data = ({
+      final Map<String, dynamic> data = {
         "accessibility_status": accessibilityStatus,
-        "restriction_reason": restrictionReason,
-        "restriction_description": restrictionDescription,
         "id": id,
-      });
+      };
+
+      if (accessibilityStatus == 'restricted') {
+        data["restriction_reason"] = restrictionReason;
+        data["restriction_description"] = restrictionDescription;
+      }
 
       Response response = await putHttp(
         Endpoints.putRestrictedAccessibility(id: id),

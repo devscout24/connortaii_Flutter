@@ -118,7 +118,7 @@ class BuildSectionCard extends StatelessWidget {
                             iconSelected: AppIcons.greenUnselectedIcon,
                             iconUnselected: AppIcons.greenSelectedIcon,
                             color: AppColors.green500.withAlpha(35),
-                            selected: levelOfConcern == 'Green',
+                            selected: levelOfConcern.toLowerCase() == 'green',
                             onTap: () {
                               greenOntap();
                             },
@@ -132,7 +132,7 @@ class BuildSectionCard extends StatelessWidget {
                             iconSelected: AppIcons.orangeUnselectedIcon,
                             iconUnselected: AppIcons.orangeSelectedIcon,
                             color: AppColors.onboardingTwoBg.withAlpha(35),
-                            selected: levelOfConcern == 'Orange',
+                            selected: levelOfConcern.toLowerCase() == 'orange',
                             onTap: () {
                               orangeOntap();
                             },
@@ -146,7 +146,7 @@ class BuildSectionCard extends StatelessWidget {
                             iconSelected: AppIcons.redUnselectedIcon,
                             iconUnselected: AppIcons.redSelectedIcon,
                             color: AppColors.red.withAlpha(35),
-                            selected: levelOfConcern == 'Red',
+                            selected: levelOfConcern.toLowerCase() == 'red',
                             onTap: () {
                               redOntap();
                             },
@@ -159,7 +159,8 @@ class BuildSectionCard extends StatelessWidget {
                           iconSelected: AppIcons.nAUnSelectedIcon,
                           iconUnselected: AppIcons.nASelectedIcon,
                           color: AppColors.c000000.withAlpha(35),
-                          selected: levelOfConcern == 'N/A',
+                          selected: levelOfConcern.toLowerCase() == 'na' ||
+                              levelOfConcern.toLowerCase() == 'n/a',
                           onTap: () {
                             nAOntap();
                           },

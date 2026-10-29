@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TopUserInfoWidget extends StatelessWidget {
   final String imageUrl;
   final String name;
+
   const TopUserInfoWidget({
     super.key,
     required this.imageUrl,
@@ -17,27 +18,52 @@ class TopUserInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final displayName = name.trim().isNotEmpty && name.trim() != "null null"
+        ? name.trim()
+        : "User";
+
     return Row(
       children: [
+        UIHelper.verticalSpace(84.h),
         ClipRRect(
           borderRadius: BorderRadius.circular(32.r),
-          child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            height: 56.h,
-            width: 56.w,
-            placeholder: (context, url) =>
-                Image.asset(AppImages.onboardingImage),
-            errorWidget: (context, url, error) =>
-                Image.asset(AppImages.onboardingImage),
-            fit: BoxFit.cover,
-          ),
+          child: imageUrl.isNotEmpty
+              ? CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  height: 56.h,
+                  width: 56.w,
+                  placeholder: (context, url) => Image.asset(
+                    AppImages.onboardingImage,
+                    height: 56.h,
+                    width: 56.w,
+                    fit: BoxFit.cover,
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    AppImages.onboardingImage,
+                    height: 56.h,
+                    width: 56.w,
+                    fit: BoxFit.cover,
+                  ),
+                  fit: BoxFit.cover,
+                )
+              : Image.asset(
+                  AppImages.onboardingImage,
+                  height: 56.h,
+                  width: 56.w,
+                  fit: BoxFit.cover,
+                ),
         ),
         UIHelper.horizontalSpace(12.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(name, style: TextFontStyle.headlinePoppins60018),
+              Text(
+                displayName,
+                style: TextFontStyle.headlinePoppins60018,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               Text(
                 "Ready for your next inspection?",
                 style: TextFontStyle.headlinePoppins40014.copyWith(

@@ -81,10 +81,18 @@ class _SignupVerifyScreenState extends State<SignupVerifyScreen>
                 setState(() {
                   isLoading = false;
                 });
-                ToastUtil.showShortToast('Verification Successfull');
-                NavigationService.navigateTo(Routes.loginScreen);
-
+                ToastUtil.showShortToast('Verification Successful');
                 appData.write(kKeyUserEmail, widget.email);
+                final token = appData.read<String>(kKeyAccessToken);
+                if (token != null && token.isNotEmpty) {
+                  NavigationService.navigateToReplacementUntil(
+                    Routes.navigationScreen,
+                  );
+                } else {
+                  NavigationService.navigateToReplacementUntil(
+                    Routes.loginScreen,
+                  );
+                }
               } else {
                 setState(() {
                   isLoading = false;

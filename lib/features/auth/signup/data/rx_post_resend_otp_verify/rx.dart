@@ -27,12 +27,16 @@ final class SignupResendOtpRx extends RxResponseInt<Map> {
 
   @override
   handleErrorWithReturn(dynamic error) {
-    if (error is DioException) {
-      if (error.response!.statusCode == 429) {
-        ToastUtil.showShortToast(error.response!.data["message"]);
-      } else {
-        ToastUtil.showShortToast(error.response!.data["error"]);
+    if (error is DioException && error.response != null) {
+      final resData = error.response!.data;
+      if (resData is Map) {
+        final msg = resData["message"] ?? resData["error"];
+        if (msg != null) {
+          ToastUtil.showShortToast(msg.toString());
+        }
       }
+    } else {
+      ToastUtil.showShortToast(error.toString());
     }
     log(error.toString());
     dataFetcher.sink.addError(error);

@@ -12,28 +12,55 @@ import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/di.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/toast.dart';
+import 'dart:developer';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:connortaii_app/networks/api_acess.dart';
+import 'package:connortaii_app/networks/dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class NewInspectionScreen extends StatefulWidget {
-  const NewInspectionScreen({super.key});
+  final String? title;
+  const NewInspectionScreen({super.key, this.title});
 
   @override
   State<NewInspectionScreen> createState() => _NewInspectionScreenState();
 }
 
 class _NewInspectionScreenState extends State<NewInspectionScreen> {
+  bool _isInitialLoading = false;
+
   @override
   void initState() {
     super.initState();
     _inspectionId = appData.read<int>(kKeyInspectionID);
     if (_inspectionId != null) {
-      _loadInspectionOverview();
+      _isInitialLoading = true;
+      _loadExistingInspection();
     } else {
+      _isInitialLoading = false;
+      _activeStep = 0;
       getInspectionOverViewRXObj.getInspectionOverViewRX(inspectionId: 0);
+    }
+  }
+
+  Future<void> _loadExistingInspection() async {
+    if (_inspectionId == null) return;
+    try {
+      await Future.wait([
+        _loadInspectionOverview(),
+        _fetchAndPopulateHealthSafetyItems(_inspectionId!),
+        _fetchInspectionDetails(),
+      ]);
+    } catch (e) {
+      log("Error loading existing inspection: $e");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isInitialLoading = false;
+        });
+      }
     }
   }
 
@@ -42,6 +69,71 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     await getInspectionOverViewRXObj.getInspectionOverViewRX(
       inspectionId: _inspectionId!,
     );
+  }
+
+  Future<void> _fetchInspectionDetails() async {
+    if (_inspectionId == null) return;
+    try {
+      final response = await getHttp("/api/inspections/$_inspectionId");
+      if (response.statusCode == 200 && response.data != null) {
+        final d = response.data['data'];
+        if (d is Map) {
+          setState(() {
+            inspectorNameController.text =
+                (d['inspector_name'] ?? '').toString();
+            emailController.text = (d['email'] ?? '').toString();
+            mobileController.text = (d['mobile_number'] ?? '').toString();
+            addressController.text = (d['property_address'] ?? '').toString();
+            propertyNameController.text =
+                (d['property_name'] ?? '').toString();
+            final rawDate = (d['inspection_date'] ?? '').toString();
+            inspectionDateController.text = rawDate.contains('T')
+                ? rawDate.split('T')[0]
+                : rawDate;
+            propertyOwnerNameController.text =
+                (d['property_owner_name'] ?? '').toString();
+            final ownerPresence = d['property_owner_presence'];
+            propertyOwnerPresenceValue = (ownerPresence == true ||
+                    ownerPresence == 1 ||
+                    ownerPresence == '1')
+                ? 'Yes'
+                : 'No';
+            otherPeoplePresenceController.text =
+                (d['other_people_presence'] ?? '').toString();
+            final occupied = d['house_occupied'];
+            houseOccupiedValue = (occupied == true ||
+                    occupied == 1 ||
+                    occupied == '1')
+                ? 'Yes'
+                : 'No';
+            final furnished = d['property_furnished'];
+            wasPropertyFurnishedValue = (furnished == true ||
+                    furnished == 1 ||
+                    furnished == '1')
+                ? 'Yes'
+                : 'No';
+            buildingTypeController.text =
+                (d['building_type'] ?? '').toString();
+            statusOfUtilitiesController.text =
+                (d['status_of_utilities'] ?? '').toString();
+            weatherDuringInspectionController.text =
+                (d['weather_during_inspection'] ?? '').toString();
+
+            final hsCompleted = d['health_safety_completed'];
+            final isHsDone = hsCompleted == 1 ||
+                hsCompleted == true ||
+                hsCompleted == '1';
+            if (isHsDone) {
+              _activeStep = 2;
+            } else {
+              _activeStep = 1;
+            }
+          });
+        }
+      }
+    } catch (e) {
+      log("Error fetching inspection details: $e");
+    }
   }
 
   int _activeStep = 0;
@@ -148,46 +240,47 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
           final bool hasConcern = datum.hasConcern ?? false;
           final String? details = datum.concernDetails;
 
-          setState(() {
-            switch (key) {
-              case 'identifiable':
-                isIdentifiableChecked = checked;
-                break;
-              case 'phone_tablet':
-                isPhoneTabletChecked = checked;
-                break;
-              case 'tools':
-                isToolsChecked = checked;
-                break;
-              case 'ppe':
-                isPPEChecked = checked;
-                break;
-              case 'property_occupants':
-                isPropertyOccupantsChecked = checked;
-                break;
-              case 'height':
-                isHeightChecked = checked;
-                isHeightConcernSaved = hasConcern;
-                if (details != null) heightConcernController.text = details;
-                break;
-              case 'electricity':
-                isElectricityChecked = checked;
-                break;
-              case 'slips_trips_falls':
-                isSlipTripFallsChecked = checked;
-                break;
-              case 'chemicals':
-                isChemicalsChecked = checked;
-                break;
-              default:
-                break;
-            }
+          switch (key) {
+            case 'identifiable':
+              isIdentifiableChecked = checked;
+              break;
+            case 'phone_tablet':
+              isPhoneTabletChecked = checked;
+              break;
+            case 'tools':
+              isToolsChecked = checked;
+              break;
+            case 'ppe':
+              isPPEChecked = checked;
+              break;
+            case 'property_occupants':
+              isPropertyOccupantsChecked = checked;
+              break;
+            case 'height':
+              isHeightChecked = checked;
+              isHeightConcernSaved = hasConcern;
+              if (details != null) heightConcernController.text = details;
+              break;
+            case 'electricity':
+              isElectricityChecked = checked;
+              break;
+            case 'slips_trips_falls':
+              isSlipTripFallsChecked = checked;
+              break;
+            case 'chemicals':
+              isChemicalsChecked = checked;
+              break;
+            default:
+              break;
+          }
 
-            if (key != 'height') {
-              concernSaved[key] = hasConcern;
-              if (details != null) _getConcernController(key).text = details;
-            }
-          });
+          if (key != 'height') {
+            concernSaved[key] = hasConcern;
+            if (details != null) _getConcernController(key).text = details;
+          }
+        }
+        if (mounted) {
+          setState(() {});
         }
       }
     } catch (e) {
@@ -342,7 +435,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
       if (_activeStep < 2) {
         setState(() => _activeStep++);
       } else {
-        NavigationService.navigateTo(Routes.reportGeneratedScreen);
+        _submitInspection();
       }
     } catch (e) {
       ToastUtil.showShortToast('Error: ${e.toString()}');
@@ -353,6 +446,12 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
 
   Future<void> _submitStepOne() async {
     if (!formKey.currentState!.validate()) return;
+
+    if (_inspectionId != null) {
+      _fetchAndPopulateHealthSafetyItems(_inspectionId!);
+      setState(() => _activeStep = 1);
+      return;
+    }
 
     try {
       setState(() => isLoading = true);
@@ -392,7 +491,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
         if (_activeStep < 2) {
           setState(() => _activeStep++);
         } else {
-          NavigationService.navigateTo(Routes.reportGeneratedScreen);
+          _submitInspection();
         }
         return;
       }
@@ -406,12 +505,10 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
   }
 
   void _nextStep() {
+    if (isLoading) return;
+
     if (_activeStep == 0) {
-      isLoading
-          ? Center(
-              child: SpinKitCircle(color: AppColors.textColor, size: 60.h),
-            )
-          : _submitStepOne();
+      _submitStepOne();
       return;
     }
 
@@ -435,24 +532,28 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
   }
 
   void _submitInspection() {
-    final payload = {
-      'inspectionName': inspectorNameController.text.trim(),
-      'inspectorEmail': emailController.text.trim(),
-      'address': addressController.text.trim(),
-      'mobileNumber': mobileController.text.trim(),
-      'propertyName': propertyNameController.text.trim(),
-      'propertyOwnerPresence':
-          propertyOwnerPresenceValue?.toLowerCase() == 'yes' ? true : false,
-      'houseOccupied': houseOccupiedValue?.toLowerCase() == 'yes'
-          ? true
-          : false,
-      'wasPropertyFurnished': wasPropertyFurnishedValue?.toLowerCase() == 'yes'
-          ? true
-          : false,
-    };
+    final id = _inspectionId ?? appData.read<int>(kKeyInspectionID);
+    if (id == null) {
+      ToastUtil.showShortToast('Inspection ID not found.');
+      return;
+    }
 
-    debugPrint('Inspection payload: $payload');
-    NavigationService.navigateTo(Routes.reportGeneratedScreen);
+    final title = propertyNameController.text.trim().isNotEmpty
+        ? propertyNameController.text.trim()
+        : (addressController.text.trim().isNotEmpty
+            ? addressController.text.trim()
+            : 'Inspection #$id');
+
+    final address = addressController.text.trim();
+
+    NavigationService.navigateToWithArgs(
+      Routes.reportGeneratedScreen,
+      {
+        'inspectionId': id,
+        'title': title,
+        'address': address,
+      },
+    );
   }
 
   Widget _buildStepThree() {
@@ -548,8 +649,8 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                           title: overviewData.label ?? 'Section ${index + 1}',
                           status:
                               overviewData.accessibilityStatus ?? 'Not Started',
-                          onTap: () {
-                            NavigationService.navigateToWithArgs(
+                          onTap: () async {
+                            await NavigationService.navigateToWithArgs(
                               Routes.inspectionAccessibilityScreen,
                               {
                                 'title':
@@ -559,6 +660,12 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                                 'inspectionId': _inspectionId,
                               },
                             );
+                            if (_inspectionId != null) {
+                              getInspectionOverViewRXObj
+                                  .getInspectionOverViewRX(
+                                    inspectionId: _inspectionId!,
+                                  );
+                            }
                           },
                         ),
                       );
@@ -1101,13 +1208,30 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     }
   }
 
+  String get _screenTitle {
+    if (widget.title != null && widget.title!.trim().isNotEmpty) {
+      return widget.title!.trim();
+    }
+    if (_inspectionId != null) {
+      if (propertyNameController.text.trim().isNotEmpty) {
+        return propertyNameController.text.trim();
+      }
+      return 'Inspection Details';
+    }
+    return 'New Inspection';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cFFFFFF,
       appBar: CustomAppBarWidget(
-        title: 'New Inspection',
+        title: _screenTitle,
         leadingOnTap: () {
+          if (_isInitialLoading) {
+            NavigationService.goBack;
+            return;
+          }
           if (_activeStep > 0) {
             _previousStep();
           } else {
@@ -1116,41 +1240,84 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
         },
         showLeadingIcon: true,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ActiveStepWidget(activeStep: _activeStep),
-              UIHelper.verticalSpace(28.h),
-              Form(
-                key: formKey,
+      body: _isInitialLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SpinKitPulse(
+                    color: AppColors.buttonbgColor,
+                    size: 60.sp,
+                  ),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    'Loading inspection details...',
+                    style: TextFontStyle.headlinePoppins50016.copyWith(
+                      color: AppColors.grey500,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : SafeArea(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.h),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildCurrentStepWidget(),
-                    UIHelper.verticalSpace(24.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomButton(
-                            onTap: () {
-                              _nextStep();
-                            },
-                            title: _activeStep == 2
-                                ? 'Review Inspection'
-                                : 'Continue',
+                    ActiveStepWidget(
+                      activeStep: _activeStep,
+                      onStepTapped: (step) {
+                        if (step == 0 || _inspectionId != null) {
+                          setState(() => _activeStep = step);
+                        } else {
+                          ToastUtil.showShortToast('Please complete Step 1 first');
+                        }
+                      },
+                    ),
+                    UIHelper.verticalSpace(28.h),
+                    Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          buildCurrentStepWidget(),
+                          UIHelper.verticalSpace(24.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: isLoading
+                                    ? Container(
+                                        height: 56.h,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.buttonbgColor,
+                                          borderRadius:
+                                              BorderRadius.circular(50.r),
+                                        ),
+                                        child: Center(
+                                          child: SpinKitCircle(
+                                            color: AppColors.cFFFFFF,
+                                            size: 26.sp,
+                                          ),
+                                        ),
+                                      )
+                                    : CustomButton(
+                                        onTap: () {
+                                          _nextStep();
+                                        },
+                                        title: _activeStep == 2
+                                            ? 'Generate Report'
+                                            : 'Continue',
+                                      ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

@@ -11,6 +11,7 @@ class HistoryInProgressWidget extends StatelessWidget {
   final String address;
   final String date;
   final String sectionCompleteValue;
+  final int totalSections;
   final VoidCallback onTap;
 
   const HistoryInProgressWidget({
@@ -19,70 +20,92 @@ class HistoryInProgressWidget extends StatelessWidget {
     required this.address,
     required this.date,
     required this.sectionCompleteValue,
+    this.totalSections = 10,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final completed = int.tryParse(sectionCompleteValue) ?? 0;
+    final total = totalSections > 0 ? totalSections : 10;
+    final progress = (completed / total).clamp(0.0, 1.0);
+
     return Align(
       alignment: Alignment.topCenter,
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.grey200Color,
-          borderRadius: BorderRadius.circular(24.r),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(12.sp),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextFontStyle.headlinePoppins50016),
-              UIHelper.verticalSpace(4.h),
-              Row(
-                children: [
-                  Text(
-                    address,
-                    style: TextFontStyle.headlinePoppins40014.copyWith(
-                      color: AppColors.grey500,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.grey200Color,
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(12.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextFontStyle.headlinePoppins50016,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                UIHelper.verticalSpace(4.h),
+                Row(
+                  children: [
+                    if (address.isNotEmpty) ...[
+                      Flexible(
+                        child: Text(
+                          address,
+                          style: TextFontStyle.headlinePoppins40014.copyWith(
+                            color: AppColors.grey500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      UIHelper.horizontalSpace(8.w),
+                      CircleAvatar(radius: 4.r, backgroundColor: AppColors.grey500),
+                      UIHelper.horizontalSpace(8.w),
+                    ],
+                    Text(
+                      date,
+                      style: TextFontStyle.headlinePoppins40014.copyWith(
+                        color: AppColors.grey500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  UIHelper.horizontalSpace(8.w),
-                  CircleAvatar(radius: 4.r, backgroundColor: AppColors.grey500),
-                  UIHelper.horizontalSpace(8.w),
-                  Text(
-                    date,
-                    style: TextFontStyle.headlinePoppins40014.copyWith(
-                      color: AppColors.grey500,
-                    ),
-                  ),
-                ],
-              ),
-              UIHelper.verticalSpace(16.h),
-              UIHelper.customDivider(color: AppColors.grey300),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                "$sectionCompleteValue / 10 Sections Complete",
-                style: TextFontStyle.headlinePoppins50014,
-              ),
-              UIHelper.verticalSpace(6.h),
-              LinearProgressIndicator(
-                borderRadius: BorderRadius.circular(12.r),
-                color: AppColors.c000000,
-                value: double.parse(sectionCompleteValue) / 10,
-                minHeight: 5.h,
-              ),
-              UIHelper.verticalSpace(20.h),
-              CustomIconButton(
-                onTap: onTap,
-                title: "Continue Inspection",
-                borderRadius: BorderRadius.circular(12.r),
-                image: AppIcons.inspectionIcon,
-                fillColor: AppColors.grey300,
-                textColor: AppColors.c000000,
-              ),
-            ],
+                  ],
+                ),
+                UIHelper.verticalSpace(16.h),
+                UIHelper.customDivider(color: AppColors.grey300),
+                UIHelper.verticalSpace(16.h),
+                Text(
+                  "$completed / $total Sections Complete",
+                  style: TextFontStyle.headlinePoppins50014,
+                ),
+                UIHelper.verticalSpace(6.h),
+                LinearProgressIndicator(
+                  borderRadius: BorderRadius.circular(12.r),
+                  color: AppColors.c000000,
+                  value: progress,
+                  minHeight: 5.h,
+                ),
+                UIHelper.verticalSpace(20.h),
+                CustomIconButton(
+                  onTap: onTap,
+                  title: "Continue Inspection",
+                  borderRadius: BorderRadius.circular(12.r),
+                  image: AppIcons.inspectionIcon,
+                  fillColor: AppColors.grey300,
+                  textColor: AppColors.c000000,
+                ),
+              ],
+            ),
           ),
         ),
       ),

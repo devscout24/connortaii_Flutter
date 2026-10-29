@@ -28,13 +28,21 @@ final class AddYesAccessibileApi {
         "id": id,
       });
       if (photo != null && await File(photo.path).exists()) {
+        final ext = photo.path.split('.').last.toLowerCase();
+        final mediaType = ext == 'png'
+            ? MediaType('image', 'png')
+            : (ext == 'webp'
+                ? MediaType('image', 'webp')
+                : MediaType('image', 'jpeg'));
         formData.files.add(
           MapEntry(
             'photo',
             await MultipartFile.fromFile(
               photo.path,
-              filename: photo.name,
-              contentType: MediaType('image', 'jpeg'),
+              filename: photo.name.isNotEmpty
+                  ? photo.name
+                  : photo.path.split('/').last,
+              contentType: mediaType,
             ),
           ),
         );

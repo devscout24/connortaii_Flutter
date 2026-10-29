@@ -39,6 +39,11 @@ final class Endpoints {
   static String getTermsAndConditions() => "/api/pages/terms-conditions";
 
   //steps
+  static String getHomeInspections() => "/api/home/inspections";
+  static String getAllInspections() => "/api/inspections";
+  static String getUserReports() => "/api/reports";
+  static String generateReport({required int inspectionId}) =>
+      "/api/inspections/$inspectionId/report";
   static String storeInspectionDetails() => "/api/inspections";
   // create new health safety response (POST)
   static String createHealthSafetyResponse() => "/api/health-safety-responses";

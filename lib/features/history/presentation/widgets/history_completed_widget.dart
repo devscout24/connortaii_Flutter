@@ -36,24 +36,37 @@ class HistoryCompletedWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TextFontStyle.headlinePoppins50016),
+              Text(
+                title,
+                style: TextFontStyle.headlinePoppins50016,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               UIHelper.verticalSpace(4.h),
               Row(
                 children: [
-                  Text(
-                    address,
-                    style: TextFontStyle.headlinePoppins40014.copyWith(
-                      color: AppColors.grey500,
+                  if (address.isNotEmpty) ...[
+                    Flexible(
+                      child: Text(
+                        address,
+                        style: TextFontStyle.headlinePoppins40014.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                  UIHelper.horizontalSpace(8.w),
-                  CircleAvatar(radius: 4.r, backgroundColor: AppColors.grey500),
-                  UIHelper.horizontalSpace(8.w),
+                    UIHelper.horizontalSpace(8.w),
+                    CircleAvatar(radius: 4.r, backgroundColor: AppColors.grey500),
+                    UIHelper.horizontalSpace(8.w),
+                  ],
                   Text(
                     date,
                     style: TextFontStyle.headlinePoppins40014.copyWith(
                       color: AppColors.grey500,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

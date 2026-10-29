@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:connortaii_app/assets_helper/app_colors.dart';
 import 'package:connortaii_app/common_widget/custom_app_bar_widget.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
@@ -18,10 +19,12 @@ import 'package:image_picker/image_picker.dart';
 class InspectionAccessibilityScreen extends StatefulWidget {
   final String title;
   final int id;
+  final int? inspectionId;
   const InspectionAccessibilityScreen({
     super.key,
     required this.title,
     required this.id,
+    this.inspectionId,
   });
 
   @override
@@ -31,53 +34,20 @@ class InspectionAccessibilityScreen extends StatefulWidget {
 
 class _InspectionAccessibilityScreenState
     extends State<InspectionAccessibilityScreen> {
-  bool? isRestricted;
+  bool? isRestricted = false;
   String selectedRestrictionReason = '';
   final TextEditingController restrictionController = TextEditingController();
-  final TextEditingController roofTypeController = TextEditingController();
-  final TextEditingController roofObservationController =
-      TextEditingController();
-  final TextEditingController overallConditionTypeController =
-      TextEditingController();
-  final TextEditingController overallConditionObservationController =
-      TextEditingController();
-  final TextEditingController roofCoveringTypeController =
-      TextEditingController();
-  final TextEditingController roofCoveringObservationController =
-      TextEditingController();
-  final TextEditingController gluttersTypeController = TextEditingController();
-  final TextEditingController gluttersObservationController =
-      TextEditingController();
-  final TextEditingController flashingsTypeController = TextEditingController();
-  final TextEditingController flashingsObservationController =
-      TextEditingController();
 
   final Set<int> expandedCheckpointIds = {};
   final Map<int, _CheckpointFormState> _checkpointStates = {};
+  StreamSubscription? _subscription;
+  bool isLoading = false;
+
+  final ImagePicker _picker = ImagePicker();
 
   _CheckpointFormState _getCheckpointState(int itemId) {
     return _checkpointStates.putIfAbsent(itemId, () => _CheckpointFormState());
   }
-
-  String roofTypeLevelOfConcern = '';
-  String overallConditionLevelOfConcern = '';
-  String roofCoveringLevelOfConcern = '';
-  String gluttersLevelOfConcern = '';
-  String flashingsLevelOfConcern = '';
-
-  bool sectionOneExpanded = false;
-  bool sectionTwoExpanded = false;
-  bool sectionThreeExpanded = false;
-  bool sectionFourExpanded = false;
-  bool sectionFiveExpanded = false;
-
-  final List<XFile> roofTypeImageFiles = [];
-  final List<XFile> overallConditionImageFiles = [];
-  final List<XFile> roofCoveringImageFiles = [];
-  final List<XFile> guttersImageFiles = [];
-  final List<XFile> flashingsImageFiles = [];
-
-  final ImagePicker _picker = ImagePicker();
 
   void toggleCheckpointExpansion(int itemId) {
     setState(() {
@@ -90,133 +60,117 @@ class _InspectionAccessibilityScreenState
   }
 
   @override
+  void initState() {
+    super.initState();
+    getSectionAccessibleRXObj.clean();
+    getSectionAccessibleRXObj.getSectionAccessibleRX(id: widget.id);
+
+    _subscription = getSectionAccessibleRXObj.dataFetcher.listen((model) {
+      if (!mounted) return;
+      final section = model.data;
+      if (section == null || section.id != widget.id) return;
+
+      setState(() {
+        if (section.accessibilityStatus == 'restricted') {
+          isRestricted = true;
+          if (section.restrictionReason != null) {
+            final reasonStr = section.restrictionReason.toString().trim();
+            final matchedKey = restrictionReasonsBackendMap.entries
+                .firstWhere(
+                  (entry) =>
+                      entry.value.toLowerCase() == reasonStr.toLowerCase(),
+                  orElse: () => const MapEntry('', ''),
+                )
+                .key;
+            if (matchedKey.isNotEmpty) {
+              selectedRestrictionReason = matchedKey;
+            }
+          }
+          if (section.restrictionDescription != null) {
+            restrictionController.text =
+                section.restrictionDescription.toString();
+          }
+        } else if (section.accessibilityStatus == 'accessible') {
+          isRestricted = false;
+        }
+
+        // Pre-fill checkpoints
+        if (section.checkpoints != null) {
+          for (final cp in section.checkpoints!) {
+            final cpId = cp.id ?? cp.order;
+            if (cpId == null) continue;
+            final formState = _getCheckpointState(cpId);
+
+            if (formState.typeController.text.isEmpty && cp.type != null) {
+              formState.typeController.text = cp.type.toString();
+            }
+            if (formState.observationController.text.isEmpty &&
+                cp.observations != null) {
+              formState.observationController.text = cp.observations.toString();
+            }
+            if (formState.levelOfConcern.isEmpty &&
+                cp.levelOfConcern != null) {
+              final loc = cp.levelOfConcern.toString().toLowerCase();
+              if (loc == 'green') {
+                formState.levelOfConcern = 'Green';
+              } else if (loc == 'orange') {
+                formState.levelOfConcern = 'Orange';
+              } else if (loc == 'red') {
+                formState.levelOfConcern = 'Red';
+              } else if (loc == 'na' || loc == 'n/a') {
+                formState.levelOfConcern = 'N/A';
+              } else {
+                formState.levelOfConcern = cp.levelOfConcern.toString();
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  @override
   void dispose() {
+    _subscription?.cancel();
     restrictionController.dispose();
-    roofTypeController.dispose();
-    roofObservationController.dispose();
-    overallConditionTypeController.dispose();
-    overallConditionObservationController.dispose();
-    roofCoveringTypeController.dispose();
-    roofCoveringObservationController.dispose();
-    gluttersTypeController.dispose();
-    gluttersObservationController.dispose();
-    flashingsTypeController.dispose();
-    flashingsObservationController.dispose();
     for (final state in _checkpointStates.values) {
       state.dispose();
     }
     super.dispose();
   }
 
-  Future<void> onImageButtonPressed(List<XFile> targetList) async {
-    final selectedSource = await showModalBottomSheet<ImageSource>(
-      context: context,
-      backgroundColor: AppColors.cFFFFFF,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(16.sp),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 48.w,
-                  height: 4.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.grey300,
-                    borderRadius: BorderRadius.circular(100.r),
-                  ),
-                ),
-                UIHelper.verticalSpace(16.h),
-                ListTile(
-                  leading: Icon(
-                    Icons.camera_alt_outlined,
-                    color: AppColors.c000000,
-                  ),
-                  title: Text(
-                    'Camera',
-                    style: TextFontStyle.headlinePoppins50016,
-                  ),
-                  onTap: () => Navigator.pop(context, ImageSource.camera),
-                ),
-                Divider(color: AppColors.grey300),
-                ListTile(
-                  leading: Icon(
-                    Icons.photo_library_outlined,
-                    color: AppColors.c000000,
-                  ),
-                  title: Text(
-                    'Gallery',
-                    style: TextFontStyle.headlinePoppins50016,
-                  ),
-                  onTap: () => Navigator.pop(context, ImageSource.gallery),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-
-    if (selectedSource == null) return;
-
-    try {
-      if (selectedSource == ImageSource.camera) {
-        final pickedFile = await _picker.pickImage(
-          source: ImageSource.camera,
-          imageQuality: 80,
-        );
-
-        if (pickedFile != null) {
-          setState(() {
-            targetList.add(pickedFile);
-          });
-        }
-        return;
-      }
-
-      final pickedFiles = await _picker.pickMultiImage(imageQuality: 80);
-      if (pickedFiles.isNotEmpty) {
-        setState(() {
-          targetList.addAll(pickedFiles);
-        });
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  @override
-  void initState() {
-    getSectionAccessibleRXObj.getSectionAccessibleRX(id: widget.id);
-    super.initState();
-  }
-
-  bool isLoading = false;
-
   Future<void> accessibilityRestrictedMethod() async {
-    // if (!formKey.currentState!.validate()) return;
+    if (isLoading) return;
+    if (selectedRestrictionReason.isEmpty) {
+      ToastUtil.showShortToast('Please select a restriction reason');
+      return;
+    }
 
     try {
       setState(() {
         isLoading = true;
       });
 
+      final reasonBackend =
+          restrictionReasonsBackendMap[selectedRestrictionReason] ?? 'other';
+
       final isSuccess = await addRestrictedAccessibilityRxOBJ
           .addRestrictedAccessibilityRx(
             accessibilityStatus: 'restricted',
-            restrictionReason:
-                restrictionReasonsBackendMap[selectedRestrictionReason] ??
-                'other',
-            restrictionDescription: restrictionController.text,
+            restrictionReason: reasonBackend,
+            restrictionDescription: restrictionController.text.trim(),
             id: widget.id,
           );
 
       if (isSuccess) {
         ToastUtil.showShortToast('Restriction added successfully');
+        final inspectionId = widget.inspectionId ??
+            getSectionAccessibleRXObj.dataFetcher.valueOrNull?.data?.inspectionId;
+        if (inspectionId != null) {
+          getInspectionOverViewRXObj.getInspectionOverViewRX(
+            inspectionId: inspectionId,
+          );
+        }
         NavigationService.goBack;
       } else {
         ToastUtil.showShortToast('Restriction added Failed');
@@ -224,9 +178,107 @@ class _InspectionAccessibilityScreenState
     } catch (e) {
       ToastUtil.showShortToast('Error: ${e.toString()}');
     } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> accessibilityAccessibleMethod() async {
+    if (isLoading) return;
+
+    try {
       setState(() {
-        isLoading = false;
+        isLoading = true;
       });
+
+      // 1. Update section accessibility status to 'accessible'
+      final isSuccess = await addRestrictedAccessibilityRxOBJ
+          .addRestrictedAccessibilityRx(
+            accessibilityStatus: 'accessible',
+            restrictionReason: '',
+            restrictionDescription: '',
+            id: widget.id,
+          );
+
+      if (!isSuccess) {
+        ToastUtil.showShortToast('Failed to save section accessibility');
+        return;
+      }
+
+      // 2. Save any filled checkpoints
+      final checkpoints =
+          getSectionAccessibleRXObj.dataFetcher.valueOrNull?.data?.checkpoints ??
+              [];
+      bool hasErrors = false;
+
+      for (final cp in checkpoints) {
+        final cpId = cp.id;
+        if (cpId == null) continue;
+
+        final formState = _checkpointStates[cpId];
+        if (formState == null) continue;
+
+        final typeText = formState.typeController.text.trim();
+        final obsText = formState.observationController.text.trim();
+        final locText = formState.levelOfConcern.trim();
+        final hasPhotos = formState.imageFiles.isNotEmpty;
+
+        // Skip saving this checkpoint if nothing was entered
+        if (typeText.isEmpty &&
+            obsText.isEmpty &&
+            locText.isEmpty &&
+            !hasPhotos) {
+          continue;
+        }
+
+        String loc = locText.toLowerCase();
+        if (loc == 'n/a' || loc == 'na') {
+          loc = 'na';
+        } else if (loc.isEmpty) {
+          loc = 'na';
+        }
+
+        final cpSaved = await addYesAccessibleRxObj.addYesAccessibleRx(
+          type: typeText.isNotEmpty ? typeText : (cp.label ?? 'General'),
+          levelOfConcern: loc,
+          observations: obsText,
+          id: cpId,
+          photo: hasPhotos ? formState.imageFiles.first : null,
+        );
+
+        if (!cpSaved) {
+          hasErrors = true;
+        }
+      }
+
+      if (hasErrors) {
+        ToastUtil.showShortToast('Section saved with some checkpoint warnings');
+      } else {
+        ToastUtil.showShortToast('Section saved successfully');
+      }
+
+      // 3. Refresh overview
+      final inspectionId = widget.inspectionId ??
+          getSectionAccessibleRXObj.dataFetcher.valueOrNull?.data?.inspectionId;
+      if (inspectionId != null) {
+        getInspectionOverViewRXObj.getInspectionOverViewRX(
+          inspectionId: inspectionId,
+        );
+      }
+
+      // 4. Return back
+      NavigationService.goBack;
+    } catch (e) {
+      ToastUtil.showShortToast('Error: ${e.toString()}');
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -354,9 +406,11 @@ class _InspectionAccessibilityScreenState
                         SizedBox(
                           width: double.infinity,
                           child: GestureDetector(
-                            onTap: () {
-                              accessibilityRestrictedMethod();
-                            },
+                            onTap: isLoading
+                                ? null
+                                : () {
+                                    accessibilityRestrictedMethod();
+                                  },
                             child: Container(
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(vertical: 14.h),
@@ -364,11 +418,16 @@ class _InspectionAccessibilityScreenState
                                 color: AppColors.c000000,
                                 borderRadius: BorderRadius.circular(40.r),
                               ),
-                              child: Text(
-                                'Save Section',
-                                style: TextFontStyle.headlinePoppins60024
-                                    .copyWith(color: AppColors.cFFFFFF),
-                              ),
+                              child: isLoading
+                                  ? SpinKitThreeBounce(
+                                      color: AppColors.cFFFFFF,
+                                      size: 24.sp,
+                                    )
+                                  : Text(
+                                      'Save Section',
+                                      style: TextFontStyle.headlinePoppins60024
+                                          .copyWith(color: AppColors.cFFFFFF),
+                                    ),
                             ),
                           ),
                         ),
@@ -380,31 +439,44 @@ class _InspectionAccessibilityScreenState
                           builder: (context, snapshot) {
                             final data = snapshot.data?.data;
 
-                            if (snapshot.connectionState ==
-                                    ConnectionState.waiting &&
-                                data == null) {
+                            if (data == null) {
                               return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.h),
+                                padding: EdgeInsets.symmetric(vertical: 24.h),
                                 child: const Center(
                                   child: SpinKitPulse(
                                     color: AppColors.c000000,
-                                    size: 70.0,
+                                    size: 50.0,
                                   ),
                                 ),
                               );
                             }
                             if (snapshot.hasError) {
-                              return const Center(child: Text(""));
+                              return const Center(
+                                child: Text("Failed to load checkpoints"),
+                              );
+                            }
+
+                            final checkpoints = data.checkpoints ?? [];
+                            if (checkpoints.isEmpty) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16.h),
+                                child: Center(
+                                  child: Text(
+                                    'No checkpoints available for this section.',
+                                    style: TextFontStyle.headlinePoppins40014,
+                                  ),
+                                ),
+                              );
                             }
 
                             return ListView.builder(
-                              itemCount: data?.checkpoints?.length ?? 0,
+                              itemCount: checkpoints.length,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               padding: EdgeInsets.zero,
                               itemBuilder: (context, index) {
-                                final checkPoints = data?.checkpoints?[index];
+                                final checkPoints = checkpoints[index];
                                 final itemId =
                                     checkPoints?.id ??
                                     checkPoints?.order ??
@@ -571,7 +643,11 @@ class _InspectionAccessibilityScreenState
                         SizedBox(
                           width: double.infinity,
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: isLoading
+                                ? null
+                                : () {
+                                    accessibilityAccessibleMethod();
+                                  },
                             child: Container(
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(vertical: 14.h),
@@ -579,11 +655,16 @@ class _InspectionAccessibilityScreenState
                                 color: AppColors.c000000,
                                 borderRadius: BorderRadius.circular(40.r),
                               ),
-                              child: Text(
-                                'Save Section',
-                                style: TextFontStyle.headlinePoppins60024
-                                    .copyWith(color: AppColors.cFFFFFF),
-                              ),
+                              child: isLoading
+                                  ? SpinKitThreeBounce(
+                                      color: AppColors.cFFFFFF,
+                                      size: 24.sp,
+                                    )
+                                  : Text(
+                                      'Save Section',
+                                      style: TextFontStyle.headlinePoppins60024
+                                          .copyWith(color: AppColors.cFFFFFF),
+                                    ),
                             ),
                           ),
                         ),

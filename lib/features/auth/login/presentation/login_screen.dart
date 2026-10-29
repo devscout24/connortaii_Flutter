@@ -36,28 +36,163 @@ class _LoginScreenState extends State<LoginScreen>
   Future<void> loginMethod() async {
     if (!formKey.currentState!.validate()) return;
 
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+
     try {
       setState(() {
         isLoading = true;
       });
 
       final isSuccess = await loginRXObj.logInRX(
-        email: emailController.text,
-        password: passwordController.text,
+        email: email,
+        password: password,
       );
 
       if (isSuccess) {
         ToastUtil.showShortToast('Success Log In');
-        NavigationService.navigateTo(Routes.navigationScreen);
-      } else {
-        // ToastUtil.showShortToast('Log In Failed');
+        NavigationService.navigateToReplacementUntil(Routes.navigationScreen);
+      } else if (loginRXObj.isEmailUnverified) {
+        if (mounted) {
+          _showEmailNotVerifiedDialog(email);
+        }
       }
     } catch (e) {
       ToastUtil.showShortToast('Error: ${e.toString()}');
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _showEmailNotVerifiedDialog(String email) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          backgroundColor: AppColors.cFFFFFF,
+          child: Padding(
+            padding: EdgeInsets.all(20.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Verify Email',
+                  style: TextFontStyle.headlinePoppins70024.copyWith(
+                    color: AppColors.grey800,
+                  ),
+                ),
+                UIHelper.verticalSpace(8.h),
+                Text(
+                  'The email "$email" has not been verified yet. Would you like to verify it now?',
+                  textAlign: TextAlign.center,
+                  style: TextFontStyle.headlinePoppins40014.copyWith(
+                    color: AppColors.fontGreyColor,
+                  ),
+                ),
+                UIHelper.verticalSpace(24.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.grey200Color,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 12.h,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Cancel',
+                              style: TextFontStyle.headlinePoppins60016.copyWith(
+                                color: AppColors.fontGreyColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    UIHelper.horizontalSpace(10.w),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          Navigator.of(dialogContext).pop();
+                          _triggerEmailVerification(email);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.buttonbgColor,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 12.h,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Verify Now',
+                              style: TextFontStyle.headlinePoppins60016.copyWith(
+                                color: AppColors.cFFFFFF,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _triggerEmailVerification(String email) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: SpinKitCircle(
+          color: AppColors.buttonbgColor,
+          size: 60.0,
+        ),
+      ),
+    );
+
+    try {
+      final sent = await signupResendOtpRxOBJ.signupResendOtpRx(email: email);
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
+      if (sent) {
+        ToastUtil.showShortToast('Verification OTP sent to your email.');
+      }
+
+      NavigationService.navigateToWithArgs(
+        Routes.signupVerifyScreen,
+        {'email': email},
+      );
+    } catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      ToastUtil.showShortToast('Error: ${e.toString()}');
     }
   }
 

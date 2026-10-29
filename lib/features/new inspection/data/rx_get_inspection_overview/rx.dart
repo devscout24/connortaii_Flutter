@@ -26,6 +26,9 @@ final class GetInspectionOverViewRX
     }
   }
 
+  Future<void> getInspectionOverView({required int inspectionId}) =>
+      getInspectionOverViewRX(inspectionId: inspectionId);
+
   @override
   handleErrorWithReturn(dynamic error) {
     if (error is DioException) {

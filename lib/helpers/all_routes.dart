@@ -224,23 +224,41 @@ final class RouteGenerator {
               );
 
       case Routes.newInspectionScreen:
+        final title = settings.arguments is Map
+            ? (settings.arguments as Map)['title'] as String?
+            : (settings.arguments is String
+                ? settings.arguments as String
+                : null);
+
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: const NewInspectionScreen(),
+                widget: NewInspectionScreen(title: title),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) => const NewInspectionScreen(),
+                builder: (context) => NewInspectionScreen(title: title),
               );
 
       case Routes.reportGeneratedScreen:
+        final Map? reportArgs =
+            settings.arguments is Map ? settings.arguments as Map : null;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: const ReportGeneratedScreen(),
+                widget: ReportGeneratedScreen(
+                  pdfUrl: reportArgs?['pdfUrl'],
+                  title: reportArgs?['title'],
+                  address: reportArgs?['address'],
+                  inspectionId: reportArgs?['inspectionId'],
+                ),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) => const ReportGeneratedScreen(),
+                builder: (context) => ReportGeneratedScreen(
+                  pdfUrl: reportArgs?['pdfUrl'],
+                  title: reportArgs?['title'],
+                  address: reportArgs?['address'],
+                  inspectionId: reportArgs?['inspectionId'],
+                ),
               );
 
       case Routes.inspectionAccessibilityScreen:
@@ -251,6 +269,7 @@ final class RouteGenerator {
                 widget: InspectionAccessibilityScreen(
                   title: args['title'],
                   id: args['id'],
+                  inspectionId: args['inspectionId'],
                 ),
                 settings: settings,
               )
@@ -258,6 +277,7 @@ final class RouteGenerator {
                 builder: (context) => InspectionAccessibilityScreen(
                   title: args['title'],
                   id: args['id'],
+                  inspectionId: args['inspectionId'],
                 ),
               );
 

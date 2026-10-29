@@ -90,9 +90,10 @@ class _SecurityScreenState extends State<SecurityScreen> {
                         NavigationService.goBack;
                       },
                       confirmOnTap: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
+                        // Pop the confirmation dialog first
+                        NavigationService.goBack;
+
+                        // Show loading indicator
                         showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -104,24 +105,22 @@ class _SecurityScreenState extends State<SecurityScreen> {
                           ),
                         );
 
-                        final value = await deleteAccountRxObj
-                            .deleteAccountRx();
-                        setState(() {
-                          isLoading = false;
-                          appData.write(kKeyIsLoggedIn, false);
-                          appData.write(kKeyAccessToken, null);
-                          appData.write(kKeyFCMToken, null);
-                        });
+                        final value =
+                            await deleteAccountRxObj.deleteAccountRx();
+
+                        // Dismiss loading dialog
+                        NavigationService.goBack;
 
                         if (value) {
                           await appData.write(kKeyIsLoggedIn, false);
                           await appData.write(kKeyAccessToken, null);
                           await appData.write(kKeyFCMToken, null);
-                          ToastUtil.showShortToast(
-                            "Account delete successfully.",
-                          );
-                          await appData.write(kKeyIsLoggedIn, false);
+                          await appData.remove(kKeyInspectionID);
                           DioSingleton.instance.update("");
+
+                          ToastUtil.showShortToast(
+                            "Account deleted successfully.",
+                          );
 
                           NavigationService.navigateToReplacementUntil(
                             Routes.signupScreen,

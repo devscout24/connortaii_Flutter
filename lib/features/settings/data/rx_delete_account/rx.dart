@@ -27,10 +27,12 @@ final class DeleteAccountRx extends RxResponseInt<Map> {
   @override
   handleErrorWithReturn(dynamic error) {
     if (error is DioException) {
-      if (error.response?.statusCode == 404) {
-        ToastUtil.showShortToast(error.response!.data["error"]);
-      } else {
-        // ToastUtil.showShortToast(error.response!.data["message"]);
+      final resData = error.response?.data;
+      if (resData is Map) {
+        final msg = resData["message"] ?? resData["error"];
+        if (msg != null) {
+          ToastUtil.showShortToast(msg.toString());
+        }
       }
     }
     log(error.toString());

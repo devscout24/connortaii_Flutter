@@ -11,13 +11,12 @@ final class DeleteAccountApi {
 
   Future<Map> deleteAccountApi() async {
     try {
-      FormData data = FormData.fromMap({});
+      Response response = await deleteHttp(Endpoints.deleteAccount());
 
-      Response response = await deleteHttp(Endpoints.deleteAccount(), data);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(json.encode(response.data));
-        // ToastUtil.showShortToast("Updated Successfully");
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        final data = response.data != null
+            ? json.decode(json.encode(response.data))
+            : {'success': true};
         return data;
       } else {
         throw DataSource.DEFAULT.getFailure();

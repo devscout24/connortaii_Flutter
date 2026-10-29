@@ -9,10 +9,17 @@ import 'package:connortaii_app/features/auth/login/model/login_response_model.da
 import 'package:connortaii_app/features/auth/signup/data/rx_post_resend_otp_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/data/rx_post_verify/rx.dart';
 import 'package:connortaii_app/features/auth/signup/model/signup_verify_response_model.dart';
+import 'package:connortaii_app/features/history/data/rx_get_all_inspections/rx.dart';
+import 'package:connortaii_app/features/history/data/rx_get_user_reports/rx.dart';
+import 'package:connortaii_app/features/history/model/inspections_response_model.dart';
+import 'package:connortaii_app/features/history/model/user_reports_response_model.dart';
+import 'package:connortaii_app/features/home/data/rx_get_home_inspections/rx.dart';
+import 'package:connortaii_app/features/home/model/home_inspections_response_model.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_get_health_safety_item_by_inspection/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_get_inspection_overview/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_get_inspection_section_accessible/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_post_add_health_safety_check/rx.dart';
+import 'package:connortaii_app/features/new%20inspection/data/rx_post_generate_report/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_post_store_inspection_details/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_post_yes_accessible/rx.dart';
 import 'package:connortaii_app/features/new%20inspection/data/rx_put_restricted_accessibility/rx.dart';
@@ -139,3 +146,24 @@ AddYesAccessibleRx addYesAccessibleRxObj = AddYesAccessibleRx(
   empty: {},
   dataFetcher: BehaviorSubject<Map>(),
 );
+
+GetHomeInspectionsRX getHomeInspectionsRXObj = GetHomeInspectionsRX(
+  empty: HomeInspectionsResponseModel(),
+  dataFetcher: BehaviorSubject<HomeInspectionsResponseModel>(),
+);
+
+GetAllInspectionsRX getAllInspectionsRXObj = GetAllInspectionsRX(
+  empty: InspectionsResponseModel(),
+  dataFetcher: BehaviorSubject<InspectionsResponseModel>(),
+);
+
+GetUserReportsRX getUserReportsRXObj = GetUserReportsRX(
+  empty: UserReportsResponseModel(),
+  dataFetcher: BehaviorSubject<UserReportsResponseModel>(),
+);
+
+GenerateReportRx generateReportRxObj = GenerateReportRx(
+  empty: {},
+  dataFetcher: BehaviorSubject<Map>(),
+);
+
