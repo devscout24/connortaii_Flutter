@@ -38,6 +38,13 @@ class UserReportsResponseModel {
             .whereType<Map>()
             .map((x) => UserReportItemModel.fromJson(Map<String, dynamic>.from(x)))
             .toList();
+      } else if (rawData["download_url"] != null ||
+          rawData["pdf_url"] != null ||
+          rawData["file_name"] != null ||
+          rawData["id"] != null) {
+        items = [
+          UserReportItemModel.fromJson(Map<String, dynamic>.from(rawData)),
+        ];
       }
     }
 

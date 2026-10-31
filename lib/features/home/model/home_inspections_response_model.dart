@@ -102,6 +102,7 @@ class RecentInspectionItem {
   dynamic healthSafetyCompleted;
   int? totalSections;
   int? completedSections;
+  int? currentStep;
 
   RecentInspectionItem({
     this.id,
@@ -112,6 +113,7 @@ class RecentInspectionItem {
     this.healthSafetyCompleted,
     this.totalSections,
     this.completedSections,
+    this.currentStep,
   });
 
   factory RecentInspectionItem.fromRawJson(String str) =>
@@ -133,6 +135,11 @@ class RecentInspectionItem {
         completedSections: json["completed_sections"] != null
             ? int.tryParse(json["completed_sections"].toString())
             : 0,
+        currentStep: json["current_step"] != null
+            ? int.tryParse(json["current_step"].toString())
+            : (json["step"] != null
+                ? int.tryParse(json["step"].toString())
+                : null),
       );
 
   Map<String, dynamic> toJson() => {
@@ -144,5 +151,6 @@ class RecentInspectionItem {
     "health_safety_completed": healthSafetyCompleted,
     "total_sections": totalSections,
     "completed_sections": completedSections,
+    "current_step": currentStep,
   };
 }

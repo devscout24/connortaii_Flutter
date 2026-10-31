@@ -186,6 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           date: date,
                           sectionCompleteValue: '${item.completedSections ?? 0}',
                           totalSections: item.totalSections ?? 10,
+                          healthSafetyCompleted: item.healthSafetyCompleted,
+                          currentStep: item.currentStep,
                           isLoading: _openingInspectionId == item.id,
                           onTap: () async {
                             if (_openingInspectionId != null) return;

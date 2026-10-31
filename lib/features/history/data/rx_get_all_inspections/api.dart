@@ -23,6 +23,18 @@ final class GetAllInspectionsApi {
         throw DataSource.DEFAULT.getFailure();
       }
     } catch (error) {
+      if (error is DioException && error.response?.statusCode == 404) {
+        final resData = error.response?.data;
+        if (resData is Map<String, dynamic>) {
+          return InspectionsResponseModel.fromJson(resData);
+        }
+        return InspectionsResponseModel(
+          success: false,
+          message: "No inspections found",
+          data: [],
+          code: 404,
+        );
+      }
       rethrow;
     }
   }

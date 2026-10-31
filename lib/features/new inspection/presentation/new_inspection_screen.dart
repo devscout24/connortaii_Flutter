@@ -19,6 +19,7 @@ import 'package:connortaii_app/networks/dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 
 class NewInspectionScreen extends StatefulWidget {
   final String? title;
@@ -79,21 +80,21 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
         final d = response.data['data'];
         if (d is Map) {
           setState(() {
-            inspectorNameController.text =
-                (d['inspector_name'] ?? '').toString();
+            inspectorNameController.text = (d['inspector_name'] ?? '')
+                .toString();
             emailController.text = (d['email'] ?? '').toString();
             mobileController.text = (d['mobile_number'] ?? '').toString();
             addressController.text = (d['property_address'] ?? '').toString();
-            propertyNameController.text =
-                (d['property_name'] ?? '').toString();
+            propertyNameController.text = (d['property_name'] ?? '').toString();
             final rawDate = (d['inspection_date'] ?? '').toString();
             inspectionDateController.text = rawDate.contains('T')
                 ? rawDate.split('T')[0]
                 : rawDate;
-            propertyOwnerNameController.text =
-                (d['property_owner_name'] ?? '').toString();
+            propertyOwnerNameController.text = (d['property_owner_name'] ?? '')
+                .toString();
             final ownerPresence = d['property_owner_presence'];
-            propertyOwnerPresenceValue = (ownerPresence == true ||
+            propertyOwnerPresenceValue =
+                (ownerPresence == true ||
                     ownerPresence == 1 ||
                     ownerPresence == '1')
                 ? 'Yes'
@@ -101,28 +102,24 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
             otherPeoplePresenceController.text =
                 (d['other_people_presence'] ?? '').toString();
             final occupied = d['house_occupied'];
-            houseOccupiedValue = (occupied == true ||
-                    occupied == 1 ||
-                    occupied == '1')
+            houseOccupiedValue =
+                (occupied == true || occupied == 1 || occupied == '1')
                 ? 'Yes'
                 : 'No';
             final furnished = d['property_furnished'];
-            wasPropertyFurnishedValue = (furnished == true ||
-                    furnished == 1 ||
-                    furnished == '1')
+            wasPropertyFurnishedValue =
+                (furnished == true || furnished == 1 || furnished == '1')
                 ? 'Yes'
                 : 'No';
-            buildingTypeController.text =
-                (d['building_type'] ?? '').toString();
-            statusOfUtilitiesController.text =
-                (d['status_of_utilities'] ?? '').toString();
+            buildingTypeController.text = (d['building_type'] ?? '').toString();
+            statusOfUtilitiesController.text = (d['status_of_utilities'] ?? '')
+                .toString();
             weatherDuringInspectionController.text =
                 (d['weather_during_inspection'] ?? '').toString();
 
             final hsCompleted = d['health_safety_completed'];
-            final isHsDone = hsCompleted == 1 ||
-                hsCompleted == true ||
-                hsCompleted == '1';
+            final isHsDone =
+                hsCompleted == 1 || hsCompleted == true || hsCompleted == '1';
             if (isHsDone) {
               _activeStep = 2;
             } else {
@@ -453,6 +450,42 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
       return;
     }
 
+    String formattedDate = inspectionDateController.text.trim();
+    if (formattedDate.contains('/')) {
+      final parts = formattedDate.split('/');
+      if (parts.length == 3) {
+        int? p0 = int.tryParse(parts[0]);
+        int? p1 = int.tryParse(parts[1]);
+        int? p2 = int.tryParse(parts[2]);
+        if (p0 != null && p1 != null && p2 != null) {
+          int year = p2;
+          int month = p0;
+          int day = p1;
+          if (year < 100) year += 2000;
+          if (month > 12 && day <= 12) {
+            month = p1;
+            day = p0;
+          }
+          if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+            formattedDate =
+                '$year-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+          }
+        }
+      }
+    }
+
+    try {
+      final parsed = DateTime.tryParse(formattedDate);
+      if (parsed == null) {
+        ToastUtil.showShortToast('Please select a valid date (YYYY-MM-DD)');
+        return;
+      }
+      formattedDate = DateFormat('yyyy-MM-dd').format(parsed);
+    } catch (_) {
+      ToastUtil.showShortToast('Please select a valid date (YYYY-MM-DD)');
+      return;
+    }
+
     try {
       setState(() => isLoading = true);
 
@@ -463,7 +496,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
             mobileNumber: mobileController.text.trim(),
             propertyAddress: addressController.text.trim(),
             propertyName: propertyNameController.text.trim(),
-            inspectionDate: inspectionDateController.text.trim(),
+            inspectionDate: formattedDate,
             propertyOwnerName: propertyOwnerNameController.text.trim(),
             propertyOwnerPresence:
                 propertyOwnerPresenceValue?.toLowerCase() == 'yes',
@@ -541,19 +574,16 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
     final title = propertyNameController.text.trim().isNotEmpty
         ? propertyNameController.text.trim()
         : (addressController.text.trim().isNotEmpty
-            ? addressController.text.trim()
-            : 'Inspection #$id');
+              ? addressController.text.trim()
+              : 'Inspection #$id');
 
     final address = addressController.text.trim();
 
-    NavigationService.navigateToWithArgs(
-      Routes.reportGeneratedScreen,
-      {
-        'inspectionId': id,
-        'title': title,
-        'address': address,
-      },
-    );
+    NavigationService.navigateToWithArgs(Routes.reportGeneratedScreen, {
+      'inspectionId': id,
+      'title': title,
+      'address': address,
+    });
   }
 
   Widget _buildStepThree() {
@@ -1245,10 +1275,7 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SpinKitPulse(
-                    color: AppColors.buttonbgColor,
-                    size: 60.sp,
-                  ),
+                  SpinKitPulse(color: AppColors.buttonbgColor, size: 60.sp),
                   UIHelper.verticalSpace(16.h),
                   Text(
                     'Loading inspection details...',
@@ -1271,7 +1298,9 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                         if (step == 0 || _inspectionId != null) {
                           setState(() => _activeStep = step);
                         } else {
-                          ToastUtil.showShortToast('Please complete Step 1 first');
+                          ToastUtil.showShortToast(
+                            'Please complete Step 1 first',
+                          );
                         }
                       },
                     ),
@@ -1290,8 +1319,9 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
                                         height: 56.h,
                                         decoration: BoxDecoration(
                                           color: AppColors.buttonbgColor,
-                                          borderRadius:
-                                              BorderRadius.circular(50.r),
+                                          borderRadius: BorderRadius.circular(
+                                            50.r,
+                                          ),
                                         ),
                                         child: Center(
                                           child: SpinKitCircle(
@@ -1322,119 +1352,111 @@ class _NewInspectionScreenState extends State<NewInspectionScreen> {
   }
 }
 
-
-
-
-
-
-
-
-
-         // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '2',
-          //   title: 'Roof Space',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'Roof Space'},
-          //     );
-          //   },
-          // ),
-          // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '3',
-          //   title: 'External Wall Cladding',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'External Wall Cladding'},
-          //     );
-          //   },
-          // ),
-          // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '4',
-          //   title: 'Foundation & Subfloor',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'Foundation & Subfloor'},
-          //     );
-          //   },
-          // ),
-          // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '5',
-          //   title: 'Plumbing System',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'Plumbing System'},
-          //     );
-          //   },
-          // ),
-          // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '6',
-          //   title: 'Electrical System',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'Electrical System'},
-          //     );
-          //   },
-          // ),
-          // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '7',
-          //   title: 'Weather Tightness',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'Weather Tightness'},
-          //     );
-          //   },
-          // ),
-          // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '8',
-          //   title: 'Site Improvements',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'Site Improvements'},
-          //     );
-          //   },
-          // ),
-          // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '9',
-          //   title: 'Pest & Potential Hazards',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'Pest & Potential Hazards'},
-          //     );
-          //   },
-          // ),
-          // UIHelper.verticalSpace(12.h),
-          // OverviewItemListRowWidget(
-          //   index: '10',
-          //   title: 'Interior Elements',
-          //   status: 'Not Started',
-          //   onTap: () {
-          //     NavigationService.navigateToWithArgs(
-          //       Routes.inspectionStartedScreen,
-          //       {'title': 'Interior Elements'},
-          //     );
-          //   },
-          // ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '2',
+//   title: 'Roof Space',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'Roof Space'},
+//     );
+//   },
+// ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '3',
+//   title: 'External Wall Cladding',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'External Wall Cladding'},
+//     );
+//   },
+// ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '4',
+//   title: 'Foundation & Subfloor',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'Foundation & Subfloor'},
+//     );
+//   },
+// ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '5',
+//   title: 'Plumbing System',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'Plumbing System'},
+//     );
+//   },
+// ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '6',
+//   title: 'Electrical System',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'Electrical System'},
+//     );
+//   },
+// ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '7',
+//   title: 'Weather Tightness',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'Weather Tightness'},
+//     );
+//   },
+// ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '8',
+//   title: 'Site Improvements',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'Site Improvements'},
+//     );
+//   },
+// ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '9',
+//   title: 'Pest & Potential Hazards',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'Pest & Potential Hazards'},
+//     );
+//   },
+// ),
+// UIHelper.verticalSpace(12.h),
+// OverviewItemListRowWidget(
+//   index: '10',
+//   title: 'Interior Elements',
+//   status: 'Not Started',
+//   onTap: () {
+//     NavigationService.navigateToWithArgs(
+//       Routes.inspectionStartedScreen,
+//       {'title': 'Interior Elements'},
+//     );
+//   },
+// ),

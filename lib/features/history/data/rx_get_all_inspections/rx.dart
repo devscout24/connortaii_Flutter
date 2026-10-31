@@ -14,13 +14,12 @@ final class GetAllInspectionsRX
 
   ValueStream get getFileData => dataFetcher.stream;
 
-  Future<InspectionsResponseModel> getAllInspectionsRX() async {
+  Future<void> getAllInspectionsRX() async {
     try {
       InspectionsResponseModel data = await api.getAllInspectionsApi();
       handleSuccessWithReturn(data);
-      return data;
     } catch (error) {
-      return handleErrorWithReturn(error);
+      handleErrorWithReturn(error);
     }
   }
 
@@ -33,7 +32,6 @@ final class GetAllInspectionsRX
     }
     log(error.toString());
     dataFetcher.sink.addError(error);
-    return false;
   }
 }
 

@@ -13,6 +13,8 @@ class CustomIconButton extends StatelessWidget {
   final Color? textColor;
   final Color? borderColor;
   final String image;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
 
   const CustomIconButton({
     super.key,
@@ -23,12 +25,15 @@ class CustomIconButton extends StatelessWidget {
     this.textColor,
     this.borderColor,
     required this.image,
+    this.padding,
+    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: BoxDecoration(
           color: fillColor ?? AppColors.c000000,
@@ -36,16 +41,26 @@ class CustomIconButton extends StatelessWidget {
           border: Border.all(color: borderColor ?? Colors.transparent),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 32.w),
+          padding: padding ??
+              EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
               SvgPicture.asset(image),
-              UIHelper.horizontalSpace(4.w),
-              Text(
-                title,
-                style: TextFontStyle.headlinePoppins60018.copyWith(
-                  color: textColor ?? AppColors.cFFFFFF,
+              UIHelper.horizontalSpace(8.w),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: textStyle ??
+                        TextFontStyle.headlinePoppins60016.copyWith(
+                          color: textColor ?? AppColors.cFFFFFF,
+                        ),
+                  ),
                 ),
               ),
             ],

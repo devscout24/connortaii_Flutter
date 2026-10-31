@@ -5,17 +5,15 @@ import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/features/history/model/inspections_response_model.dart';
 import 'package:connortaii_app/features/history/model/user_reports_response_model.dart';
 import 'package:connortaii_app/features/history/presentation/widgets/history_completed_widget.dart';
+import 'package:connortaii_app/helpers/download_and_share_helper.dart';
 import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:connortaii_app/networks/api_acess.dart';
-import 'package:connortaii_app/networks/endpoints.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -53,36 +51,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
-  Future<void> _handleDownload(String? pdfUrl) async {
-    if (pdfUrl == null || pdfUrl.trim().isEmpty) {
-      ToastUtil.showShortToast('Report PDF is not available yet');
-      return;
-    }
-    final fullUrl = pdfUrl.startsWith('http') ? pdfUrl : '$url$pdfUrl';
-    try {
-      final uri = Uri.parse(fullUrl);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        ToastUtil.showShortToast('Could not open report link');
-      }
-    } catch (e) {
-      ToastUtil.showShortToast('Failed to open report link: $e');
-    }
+  Future<void> _handleDownload(String? pdfUrl, [String title = 'Inspection_Report']) async {
+    await DownloadAndShareHelper.downloadAndOpenPdf(
+      context: context,
+      pdfUrl: pdfUrl,
+      title: title,
+    );
   }
 
-  Future<void> _handleShare(String? pdfUrl, String title) async {
-    if (pdfUrl == null || pdfUrl.trim().isEmpty) {
-      ToastUtil.showShortToast('Report link is not available yet');
-      return;
-    }
-    final fullUrl = pdfUrl.startsWith('http') ? pdfUrl : '$url$pdfUrl';
-    try {
-      await Clipboard.setData(ClipboardData(text: fullUrl));
-      ToastUtil.showShortToast('Report link copied to clipboard');
-    } catch (e) {
-      ToastUtil.showShortToast('Failed to copy link: $e');
-    }
+  void _handleShare(String? pdfUrl, String title) {
+    DownloadAndShareHelper.showShareOptions(
+      context: context,
+      pdfUrl: pdfUrl,
+      title: title,
+    );
   }
 
   Widget _buildEmptyState({
@@ -250,7 +232,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         address: item.address,
                         date: item.date,
                         downloadInspectionOnTap: () =>
-                            _handleDownload(item.pdfUrl),
+                            _handleDownload(item.pdfUrl, item.title),
                         shareInspectionOnTap: () =>
                             _handleShare(item.pdfUrl, item.title),
                       );

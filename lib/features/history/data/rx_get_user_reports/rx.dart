@@ -14,13 +14,12 @@ final class GetUserReportsRX
 
   ValueStream get getFileData => dataFetcher.stream;
 
-  Future<UserReportsResponseModel> getUserReportsRX() async {
+  Future<void> getUserReportsRX() async {
     try {
       UserReportsResponseModel data = await api.getUserReportsApi();
       handleSuccessWithReturn(data);
-      return data;
     } catch (error) {
-      return handleErrorWithReturn(error);
+      handleErrorWithReturn(error);
     }
   }
 
@@ -33,7 +32,6 @@ final class GetUserReportsRX
     }
     log(error.toString());
     dataFetcher.sink.addError(error);
-    return false;
   }
 }
 

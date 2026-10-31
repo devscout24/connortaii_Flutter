@@ -3,9 +3,13 @@ import 'package:connortaii_app/assets_helper/app_icons.dart';
 import 'package:connortaii_app/common_widget/custom_text_form_field.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:intl_phone_field/country_picker_dialog.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:validator_kit/validator_kit.dart';
 
 class StepOneWidget extends StatelessWidget {
@@ -99,13 +103,78 @@ class StepOneWidget extends StatelessWidget {
           UIHelper.verticalSpace(12.h),
           Text('Mobile Number *', style: TextFontStyle.headlinePoppins50016),
           UIHelper.verticalSpace(8.h),
-          CustomTextFormField(
+          IntlPhoneField(
             controller: mobileController,
-            hintText: 'Enter number',
-            keyboardType: TextInputType.phone,
-            textInputAction: TextInputAction.next,
-            fillColor: AppColors.cFFFFFF,
-            validator: ValidatorKit.required(),
+            initialCountryCode: 'NZ',
+            disableLengthCheck: true,
+            style: TextFontStyle.headlinePoppins50014,
+            dropdownTextStyle: TextFontStyle.headlinePoppins50014,
+            dropdownIcon: const Icon(
+              Icons.arrow_drop_down,
+              color: AppColors.grey500,
+            ),
+            flagsButtonMargin: EdgeInsets.only(left: 8.w),
+            cursorColor: AppColors.c000000,
+            pickerDialogStyle: PickerDialogStyle(
+              backgroundColor: AppColors.cFFFFFF,
+              countryCodeStyle: TextFontStyle.headlinePoppins50014,
+              countryNameStyle: TextFontStyle.headlinePoppins50014,
+              searchFieldInputDecoration: InputDecoration(
+                hintText: 'Search country',
+                hintStyle: TextFontStyle.headlinePoppins40014grey,
+                prefixIcon: const Icon(Icons.search, color: AppColors.grey500),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 14.w,
+                  vertical: 12.h,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: BorderSide(color: AppColors.grey300),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: BorderSide(color: AppColors.grey300),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: const BorderSide(
+                    color: AppColors.c000000,
+                    width: 1.2,
+                  ),
+                ),
+              ),
+            ),
+            decoration: InputDecoration(
+              hintText: 'Enter mobile number',
+              hintStyle: TextFontStyle.headlinePoppins40014grey,
+              fillColor: AppColors.cFFFFFF,
+              filled: true,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 16.h,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                borderSide: const BorderSide(
+                  color: AppColors.c000000,
+                  width: 1.2,
+                ),
+              ),
+            ),
+            validator: (phone) {
+              if (phone == null || phone.number.trim().isEmpty) {
+                return 'Please enter mobile number';
+              }
+              return null;
+            },
           ),
           UIHelper.verticalSpace(12.h),
           Row(
@@ -151,10 +220,100 @@ class StepOneWidget extends StatelessWidget {
           UIHelper.verticalSpace(8.h),
           CustomTextFormField(
             controller: inspectionDateController,
-            hintText: 'mm/dd/yyyy',
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
+            hintText: 'YYYY-MM-DD',
+            readOnly: true,
             fillColor: AppColors.cFFFFFF,
+            suffixIcon: const Icon(
+              Icons.calendar_month,
+              color: AppColors.grey500,
+            ),
+            onTap: () {
+              DateTime initial = DateTime.now();
+              if (inspectionDateController.text.trim().isNotEmpty) {
+                try {
+                  initial = DateTime.parse(inspectionDateController.text.trim());
+                } catch (_) {}
+              }
+              DateTime tempDate = initial;
+
+              showCupertinoModalPopup<void>(
+                context: context,
+                builder: (BuildContext popupContext) {
+                  return Container(
+                    height: 320.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.cFFFFFF,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.r),
+                      ),
+                    ),
+                    child: SafeArea(
+                      top: false,
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 10.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.grey200Color,
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20.r),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextFontStyle.headlinePoppins50016
+                                        .copyWith(color: AppColors.grey500),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(popupContext).pop();
+                                  },
+                                ),
+                                Text(
+                                  'Select Date',
+                                  style: TextFontStyle.headlinePoppins60016,
+                                ),
+                                CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  child: Text(
+                                    'Done',
+                                    style: TextFontStyle.headlinePoppins60016
+                                        .copyWith(color: AppColors.c000000),
+                                  ),
+                                  onPressed: () {
+                                    inspectionDateController.text =
+                                        DateFormat('yyyy-MM-dd').format(tempDate);
+                                    Navigator.of(popupContext).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: CupertinoDatePicker(
+                              initialDateTime: initial,
+                              mode: CupertinoDatePickerMode.date,
+                              minimumDate: DateTime(2000),
+                              maximumDate: DateTime(2100),
+                              onDateTimeChanged: (DateTime newDate) {
+                                tempDate = newDate;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
             validator: ValidatorKit.required(),
           ),
           UIHelper.verticalSpace(12.h),

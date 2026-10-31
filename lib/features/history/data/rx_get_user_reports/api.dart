@@ -23,6 +23,18 @@ final class GetUserReportsApi {
         throw DataSource.DEFAULT.getFailure();
       }
     } catch (error) {
+      if (error is DioException && error.response?.statusCode == 404) {
+        final resData = error.response?.data;
+        if (resData is Map<String, dynamic>) {
+          return UserReportsResponseModel.fromJson(resData);
+        }
+        return UserReportsResponseModel(
+          success: false,
+          message: "No completed report found",
+          data: [],
+          code: 404,
+        );
+      }
       rethrow;
     }
   }

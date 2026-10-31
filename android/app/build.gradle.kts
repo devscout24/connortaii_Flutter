@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.connortaii_app"
+    namespace = "com.buildingassurance.app"
     compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
@@ -16,7 +16,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.connortaii_app"
+        applicationId = "com.buildingassurance.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

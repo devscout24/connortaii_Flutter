@@ -5,16 +5,14 @@ import 'package:connortaii_app/constants/app_constants.dart';
 import 'package:connortaii_app/constants/text_font_style.dart';
 import 'package:connortaii_app/helpers/all_routes.dart';
 import 'package:connortaii_app/helpers/di.dart';
+import 'package:connortaii_app/helpers/download_and_share_helper.dart';
 import 'package:connortaii_app/helpers/navigation_service.dart';
 import 'package:connortaii_app/helpers/toast.dart';
 import 'package:connortaii_app/helpers/ui_helpers.dart';
 import 'package:connortaii_app/networks/api_acess.dart';
-import 'package:connortaii_app/networks/endpoints.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ReportGeneratedScreen extends StatefulWidget {
   final String? pdfUrl;
@@ -152,37 +150,25 @@ class _ReportGeneratedScreenState extends State<ReportGeneratedScreen>
   }
 
   Future<void> _handleDownload() async {
-    final pdfUrl = _pdfUrl;
-    if (pdfUrl == null || pdfUrl.trim().isEmpty) {
-      ToastUtil.showShortToast('Report PDF is not available yet');
-      return;
-    }
-    final fullUrl = pdfUrl.startsWith('http') ? pdfUrl : '$url$pdfUrl';
-    try {
-      final uri = Uri.parse(fullUrl);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        ToastUtil.showShortToast('Could not open report link');
-      }
-    } catch (e) {
-      ToastUtil.showShortToast('Failed to open report link: $e');
-    }
+    final title = (widget.title != null && widget.title!.trim().isNotEmpty)
+        ? widget.title!.trim()
+        : 'Inspection_Report';
+    await DownloadAndShareHelper.downloadAndOpenPdf(
+      context: context,
+      pdfUrl: _pdfUrl,
+      title: title,
+    );
   }
 
-  Future<void> _handleShare() async {
-    final pdfUrl = _pdfUrl;
-    if (pdfUrl == null || pdfUrl.trim().isEmpty) {
-      ToastUtil.showShortToast('Report link is not available yet');
-      return;
-    }
-    final fullUrl = pdfUrl.startsWith('http') ? pdfUrl : '$url$pdfUrl';
-    try {
-      await Clipboard.setData(ClipboardData(text: fullUrl));
-      ToastUtil.showShortToast('Report link copied to clipboard');
-    } catch (e) {
-      ToastUtil.showShortToast('Failed to copy link: $e');
-    }
+  void _handleShare() {
+    final title = (widget.title != null && widget.title!.trim().isNotEmpty)
+        ? widget.title!.trim()
+        : 'Inspection Report';
+    DownloadAndShareHelper.showShareOptions(
+      context: context,
+      pdfUrl: _pdfUrl,
+      title: title,
+    );
   }
 
   Widget _buildGeneratingView() {
